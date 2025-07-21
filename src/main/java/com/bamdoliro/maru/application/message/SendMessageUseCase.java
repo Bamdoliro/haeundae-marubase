@@ -48,12 +48,8 @@ public class SendMessageUseCase {
 
     private List<Form> formListFilter(FormType formType, Boolean isChangedToRegular) {
         List<Form> formList;
-        if (formType.isMeister()) {
-            formList = formRepository.findMeisterTalentFirstRoundForm();
-        } else {
-            if (isChangedToRegular) formList = formRepository.findChangedToRegularFirstRoundForm();
-            else formList = formRepository.findNotExistsMeisterTalentAndChangedToRegularFirstRoundForm();
-        }
+        if (isChangedToRegular) formList = formRepository.findChangedToRegularFirstRoundForm();
+        else formList = formRepository.findNotExistsMeisterTalentAndChangedToRegularFirstRoundForm();
 
         return formList;
     }

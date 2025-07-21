@@ -57,9 +57,8 @@ public class FormFacade {
     private Map<FormType.Category, Integer> getOrderMap() {
         return Map.of(
                 FormType.Category.REGULAR, 1,
-                FormType.Category.MEISTER_TALENT, 2,
-                FormType.Category.SOCIAL_INTEGRATION, 3,
-                FormType.Category.SUPERNUMERARY, 4
+                FormType.Category.SPECIAL, 2,
+                FormType.Category.SUPERNUMERARY, 3
         );
     }
 }

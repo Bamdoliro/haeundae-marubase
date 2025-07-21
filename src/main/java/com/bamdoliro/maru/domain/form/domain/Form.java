@@ -208,21 +208,12 @@ public class Form extends BaseTimeEntity {
 
     public void changeToRegularSecondRound(CalculateFormScoreService calculateFormScoreService) {
         this.changedToRegular = true;
+        this.type = FormType.REGULAR;
+        Double subjectGradeScore = calculateFormScoreService.calculateSubjectGradeScore(this);
+        this.score.updateSubjectScore(subjectGradeScore);
 
-        if (type.isMeister()) {
-            this.type = FormType.REGULAR;
-            Double subjectGradeScore = calculateFormScoreService.calculateSubjectGradeScore(this);
-            this.score.updateSubjectScore(subjectGradeScore);
-
-            this.score.updateSecondRoundMeisterScoreToRegular();
-        } else if (type.isSocial()) {
-            this.type = FormType.REGULAR;
-            Double subjectGradeScore = calculateFormScoreService.calculateSubjectGradeScore(this);
-            this.score.updateSubjectScore(subjectGradeScore);
-
-            Double depthInterviewScore = calculateFormScoreService.calculateDepthInterviewScoreToRegular(this);
-            this.score.updateSecondRoundSocialScoreToRegular(depthInterviewScore);
-        }
+        Double depthInterviewScore = calculateFormScoreService.calculateDepthInterviewScoreToRegular(this);
+        this.score.updateSecondRoundSocialScoreToRegular(depthInterviewScore);
     }
 
     public void update(Applicant applicant, Parent parent, Education education, Grade grade, Document document, FormType type) {

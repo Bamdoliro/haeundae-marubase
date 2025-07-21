@@ -24,31 +24,21 @@ public class SelectFirstPassUseCase {
     @Transactional
     public void execute() {
         int regularCount = FixedNumber.REGULAR;
-        int meisterTalentCount = FixedNumber.MEISTER_TALENT;
-        int socialIntegrationCount = FixedNumber.SOCIAL_INTEGRATION;
+        int socialIntegrationCount = FixedNumber.SPECIAL;
         int nationalVeteransEducationCount = FixedNumber.NATIONAL_VETERANS_EDUCATION;
         int specialAdmissionCount = FixedNumber.SPECIAL_ADMISSION;
 
         List<Form> specialFormList = formRepository.findReceivedSpecialForm();
-        List<Form> meisterTalentFormList = classifyFormsByType(specialFormList, FormType::isMeister);
-        List<Form> socialIntegrationFormList = classifyFormsByType(specialFormList, FormType::isSocial);
         List<Form> equalOpportunityFormList = classifyFormsByType(specialFormList, FormType::isEqualOpportunity);
         List<Form> societyDiversityFormList = classifyFormsByType(specialFormList, FormType::isSocietyDiversity);
 
-        if (meisterTalentFormList.size() < FixedNumber.MEISTER_TALENT) {
-            int gap = FixedNumber.MEISTER_TALENT - meisterTalentFormList.size();
-            regularCount += gap;
-            meisterTalentCount -= gap;
-        }
-
-        if (socialIntegrationFormList.size() < FixedNumber.SOCIAL_INTEGRATION) {
-            int gap = FixedNumber.SOCIAL_INTEGRATION - socialIntegrationFormList.size();
+        if (specialFormList.size() < FixedNumber.SPECIAL) {
+            int gap = FixedNumber.SPECIAL - specialFormList.size();
             regularCount += gap;
             socialIntegrationCount -= gap;
         }
 
         regularCount = calculateMultiple(regularCount);
-        meisterTalentCount = calculateMultiple(meisterTalentCount);
         socialIntegrationCount = calculateMultiple(socialIntegrationCount);
         nationalVeteransEducationCount = calculateMultiple(nationalVeteransEducationCount);
         specialAdmissionCount = calculateMultiple(specialAdmissionCount);
@@ -57,7 +47,6 @@ public class SelectFirstPassUseCase {
 
         processForms(equalOpportunityFormList, equalOpportunityCount, this::changeToRegularAndCalculateGradeAgain);
         processForms(societyDiversityFormList, societyDiversityCount, this::changeToRegularAndCalculateGradeAgain);
-        processForms(meisterTalentFormList, meisterTalentCount, this::changeToRegularAndCalculateGradeAgain);
 
         formRepository.flush();
         List<Form> regularFormList = formRepository.findReceivedRegularForm();
