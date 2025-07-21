@@ -13,17 +13,22 @@ import lombok.NoArgsConstructor;
 public class DocumentRequest {
 
     @NotBlank(message = "필수값입니다.")
-    @Size(max = 1000, message = "1000자 이하여야 합니다.")
-    private String coverLetter;
+    @Size(max = 800, message = "800자 이하여야 합니다.")
+    private String learningExperience;
 
     @NotBlank(message = "필수값입니다.")
-    @Size(max = 1000, message = "1000자 이하여야 합니다.")
+    @Size(max = 500, message = "띄어쓰기 제외 300자 이하여야 합니다.")
     private String statementOfPurpose;
+
+    @NotBlank(message = "필수값입니다.")
+    @Size(max = 700, message = "띄어쓰기 제외 500자 이하여야 합니다.")
+    private String personality;
 
     public Document toValue() {
         return new Document(
-                coverLetter,
-                statementOfPurpose
+                learningExperience,
+                statementOfPurpose,
+                personality
         );
     }
 }

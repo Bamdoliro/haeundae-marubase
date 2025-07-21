@@ -17,9 +17,14 @@ public class Document {
 
     @Convert(converter = StringEncryptedConverter.class)
     @Column(nullable = false, columnDefinition = "TEXT")
-    private String coverLetter;
+    private String learningExperience;
+    ;
 
     @Convert(converter = StringEncryptedConverter.class)
     @Column(nullable = false, columnDefinition = "TEXT")
     private String statementOfPurpose;
+
+    @Convert(converter = StringEncryptedConverter.class)
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String personality;
 }
