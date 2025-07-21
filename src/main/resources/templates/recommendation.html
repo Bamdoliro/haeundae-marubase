@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-    <meta charset="UTF-8"/>
+    <meta charset="UTF-8" />
+    <title>서식3 - 학교장 추천 의견서</title>
     <style>
         @page {
             size: A4;
@@ -55,6 +56,11 @@
             text-align: left;
         }
 
+
+        .right {
+            text-align: right;
+        }
+
         .text-box {
             padding: 15px 10px;
             vertical-align: text-top;
@@ -62,6 +68,10 @@
 
         .middle {
             font-size: 18px;
+        }
+
+        .large {
+            font-size: 24px;
         }
 
         .school {
@@ -92,72 +102,92 @@
             padding: 16px;
         }
     </style>
-    <title>원서</title>
 </head>
 <body>
 <table>
-    <p class="format">[서식4]</p>
-    <caption>학교장 추천서</caption>
+    <p class="forma">[서식3]</p>
+    <caption>학교장 추천위원회 의견서</caption>
     <tr>
-        <th scope="row" class="ba" style="width:15%;">성명</th>
-        <td class="ba" style="width:35%;" th:text="${form.applicant.name}"></td>
-        <th scope="row" class="ba" style="width:15%;">수험번호</th>
-        <td class="ba" style="width:35%;" th:text="${form.getExaminationNumber()}"></td>
+        <th scope="rowgroup" class="ba" style="width:10%" rowspan="3">지원자</th>
+        <th scope="row" class="ba" style="width:15%">성명</th>
+        <td class="ba"  style="width:30%" th:text="${form.applicant.name}">밤돌이</td>
+        <th scope="row" class="ba" style="width:15%">수험번호</th>
+        <td class="ba" style="width:30%" th:text="${form.examinationNumber}">2001</td>
     </tr>
     <tr>
-        <th scope="row" class="ba">출신중학교</th>
-        <td class="ba" colspan="3" th:text="${form.education.school.name}"></td>
+        <th scope="row" class="ba">주민등록번호</th>
+        <td class="ba" colspan="3" th:text="${form.applicant.registrationNumber}">070605-3122916</td>
     </tr>
     <tr>
-        <td style="height: 24px"></td>
+        <th scope="row" class="ba">출신학교</th>
+        <td class="ba" th:text="${form.education.school.name}">밤돌중학교</td>
+        <th scope="row" class="ba">전화번호</th>
+        <td class="ba" th:text="${form.applicant.phoneNumber.toString()}">010-1234-1234</td>
     </tr>
     <tr>
-        <td class="ba text-box box" colspan="4">
-            <table class="special-type" aria-describedby="special-type">
-                <tr>
-                    <th id="special-type" scope="colgroup" class="middle ba" colspan="4">특별전형 추천분야</th>
-                </tr>
-                <tr>
-                    <th scope="colgroup" class="ba" style="width: 30%">전형 유형</th>
-                    <th scope="col" class="ba" style="width: 35%">마이스터인재전형</th>
-                    <th scope="col" class="ba" style="width: 35%">사회통합전형</th>
-                </tr>
-                <tr>
-                    <th scope="row" class="ba">
-                        부산광역시교육청 관내
-                    </th>
-                    <td class="ba"
-                        th:text="${form.education.school.isBusan() && form.type.isMeister() ? 'O' : null}"></td>
-                    <td class="ba"
-                        th:text="${form.education.school.isBusan() && form.type.isSocial() ? 'O' : null}"></td>
-                </tr>
-                <tr>
-                    <th scope="row" class="ba">
-                        부산광역시교육청 관외
-                    </th>
-                    <td class="ba"
-                        th:text="${!form.education.school.isBusan() && form.type.isMeister() ? 'O' : null}"></td>
-                    <td class="ba"
-                        th:text="${!form.education.school.isBusan() && form.type.isSocial() ? 'O' : null}"></td>
-                </tr>
-            </table>
-            <div style="height: 72px;"></div>
-            <p class="left indent">위 학생을 <span th:text="${year}"></span>학년도 부산소프트웨어마이스터고등학교 특별전형 대상자로 추천합니다.</p>
-            <div style="height: 81px;"></div>
-            <p class="middle" th:text="${#dates.format(#dates.createNow(),'YYYY년 MM월 dd일')}"></p>
-            <div style="height: 96px;"></div>
-            <p class="middle">
-                작성자 담임:&nbsp;&nbsp;
-                <span th:text="${form.education.teacher.name}"></span>&nbsp;&nbsp;&nbsp;
-                <span class="guide">(서명)</span>
-            </p>
-            <div style="height: 96px;"></div>
+        <th scope="rowgroup" class="ba">보호자</th>
+        <th scope="row" class="ba">성명</th>
+        <td class="ba"th:text="${form.parent.name}">밤호자</td>
+        <th scope="row" class="ba">전화번호</th>
+        <td class="ba" th:text="${form.parent.phoneNumber.toString()}">010-1234-1234</td>
+    </tr>
+    <tr>
+        <th scope="row" class="ba" colspan="3">학교장 추천위원회 위원 명단</th>
+        <th scope="row" class="ba">3학년 재적 수</th>
+        <td class="ba right">명&nbsp;&nbsp;&nbsp;&nbsp;</td>
+    </tr>
+    <tr>
+        <th scope="row" class="ba" colspan="2">직위</th>
+        <th scope="row" class="ba">성명</th>
+        <th scope="row" class="ba">학교추천위원회<br>개최 일시</th>
+        <td class="ba">
+            <span style="margin-right: 20px">년</span>
+            <span style="margin-right: 20px">월</span>
+            <span>일</span>
+        </td>
+    </tr>
+    <tr>
+        <th scope="row" class="ba" colspan="2">학교장</th>
+        <td class="ba"></td>
+        <th scope="rowgroup" class="ba" rowspan="3">증빙서류<br>목록</th>
+        <td class="ba left">&nbsp;&nbsp;1.</td>
+    </tr>
+    <tr>
+        <th scope="row" class="ba" colspan="2">교원</th>
+        <td class="ba"></td>
+        <td class="ba left">&nbsp;&nbsp;2. </td>
+    </tr>
+    <tr>
+        <th scope="row" class="ba" colspan="2">학교운영위원회</th>
+        <td class="ba"></td>
+        <td class="ba left">&nbsp;&nbsp;3. </td>
+    </tr>
+    <tr>
+        <td class="ba left middle text-box" style="height: 230px" colspan="5">
+            &nbsp;&nbsp;추천 사유
+        </td>
+    </tr>
+    <tr>
+        <td class="ba text-box" style="height: 230px" colspan="5">
+            <p class="middle">위의 사항이 사실과 틀림없음을 확인함</p>
+            <br>
+            <span class="middle" style="margin-right: 20px">년</span>
+            <span class="middle" style="margin-right: 20px">월</span>
+            <span class="middle">일</span>
             <p class="school">
-                <span th:text="${form.education.school.name}"></span>장&nbsp;&nbsp;
+                <br>
+                <span th:text="${form.education.school.name}"></span>장&nbsp;
                 <span class="guide">(직인)</span>
             </p>
-            <div style="height: 96px;"></div>
-            <p class="school center">부산소프트웨어마이스터고등학교장 귀하</p>
+            <br>
+            <p class="school">해운대고등학교장 귀하</p>
+        </td>
+    </tr>
+    <tr>
+        <td class="left" colspan="5">
+            ※ 본 추천서는 입학관련 업무 이외의 다른 목적에 이용되거나 공개되지 않습니다.
+            <br>
+            ※ 본 추천서는 봉투에 넣어 봉인한 후 송부해 주시기 바랍니다.
         </td>
     </tr>
 </table>

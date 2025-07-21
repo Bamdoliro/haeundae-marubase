@@ -33,6 +33,10 @@ public class Applicant {
     @Column(nullable = false)
     private LocalDate birthday;
 
+    @Convert(converter = StringEncryptedConverter.class)
+    @Column(nullable = false)
+    private String registrationNumber;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 6)
     private Gender gender;
