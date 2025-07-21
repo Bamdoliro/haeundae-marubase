@@ -30,14 +30,20 @@ public class ApplicantRequest {
     @Past(message = "과거여야 합니다.")
     private LocalDate birthday;
 
+    @NotBlank(message = "필수값입니다.")
+    @Size(min = 14, max = 14, message = "14자여야 합니다.")
+    private String registrationNumber;
+
     @NotNull(message = "필수값입니다.")
     private Gender gender;
 
     public Applicant toValue() {
+        System.out.println("sex: " + registrationNumber.length());
         return new Applicant(
                 name,
                 new PhoneNumber(phoneNumber),
                 birthday,
+                registrationNumber,
                 gender
         );
     }
