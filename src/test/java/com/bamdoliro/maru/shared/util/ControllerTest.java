@@ -1,6 +1,5 @@
 package com.bamdoliro.maru.shared.util;
 
-import com.bamdoliro.maru.application.analysis.QueryGenderRatioUseCase;
 import com.bamdoliro.maru.application.analysis.QueryGradeDistributionUseCase;
 import com.bamdoliro.maru.application.analysis.QueryNumberOfApplicantsUseCase;
 import com.bamdoliro.maru.application.analysis.QuerySchoolStatusUseCase;
@@ -230,9 +229,6 @@ public abstract class ControllerTest {
 
     @MockBean
     protected QueryGradeDistributionUseCase queryGradeDistributionUseCase;
-
-    @MockBean
-    protected QueryGenderRatioUseCase queryGenderRatioUseCase;
 
     @MockBean
     protected QuerySchoolStatusUseCase querySchoolStatusUseCase;

@@ -1,9 +1,7 @@
 package com.bamdoliro.maru.presentation.analysis;
 
 
-import com.bamdoliro.maru.domain.form.domain.type.FormType;
 import com.bamdoliro.maru.domain.user.domain.User;
-import com.bamdoliro.maru.presentation.analysis.dto.request.GenderRatioRequest;
 import com.bamdoliro.maru.presentation.analysis.dto.request.GradeDistributionRequest;
 import com.bamdoliro.maru.presentation.analysis.dto.request.SchoolStatusRequest;
 import com.bamdoliro.maru.shared.fixture.AnalysisFixture;
@@ -129,42 +127,6 @@ class AnalysisControllerTest extends RestDocsTestSupport {
                         queryParameters(
                                 parameterWithName("statusList")
                                         .description("조회할 원서 상태 목록(전체 조회면, RECEIVED, FIRST_PASSED, FIRST_FAILED, FAILED, PASSED, 1차 합격자면 FIRST_PASSED, FAILED, PASSED, 2차 전형자면 FAILED, PASSED, 최종 합격자면 PASSED)")
-                        )
-                ));
-    }
-
-    @Test
-    void 전형별_성비를_조회한다() throws Exception {
-        User user = UserFixture.createAdminUser();
-        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
-        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
-        MultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
-        multiValueMap.put("statusList", List.of("FIRST_PASSED", "FAILED", "PASSED"));
-        multiValueMap.add("mainCategory", "REGULAR");
-        multiValueMap.add("type", "CURRENT");
-        given(queryGenderRatioUseCase.execute(any(GenderRatioRequest.class))).willReturn(AnalysisFixture.createGenderRatioResponse(
-                FormType.Category.valueOf(Objects.requireNonNull(multiValueMap.get("mainCategory")).get(0))
-        ));
-
-        mockMvc.perform(get("/analysis/gender-ratio")
-                        .params(multiValueMap)
-                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON))
-
-                .andExpect(status().isOk())
-
-                .andDo(restDocs.document(
-                        requestHeaders(
-                                headerWithName(HttpHeaders.AUTHORIZATION).description("Bearer token")
-                        ),
-                        queryParameters(
-                                parameterWithName("statusList")
-                                        .description("조회할 원서 상태 목록(전체 조회면, RECEIVED, FIRST_PASSED, FIRST_FAILED, FAILED, PASSED, 1차 합격자면 FIRST_PASSED, FAILED, PASSED, 2차 전형자면 FAILED, PASSED, 최종 합격자면 PASSED)"),
-                                parameterWithName("mainCategory")
-                                        .description("메인 카테고리(FormType.Category 참고)"),
-                                parameterWithName("type")
-                                        .description("CURRENT(지원전형) / ORIGINAL(최종 전형)")
                         )
                 ));
     }

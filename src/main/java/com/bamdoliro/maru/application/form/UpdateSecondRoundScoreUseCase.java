@@ -89,7 +89,7 @@ public class UpdateSecondRoundScoreUseCase {
                     type,
                     isShow ? row.getCell(3).getNumericCellValue() : null,
                     isShow ? row.getCell(4).getNumericCellValue() : null,
-                    isShow && type == FormType.Category.MEISTER_TALENT ? row.getCell(5).getNumericCellValue() : null,
+                    null,
                     isShow
             );
         } else {
@@ -241,18 +241,10 @@ public class UpdateSecondRoundScoreUseCase {
     }
 
     private void updateFormSecondRoundScore(Form form, SecondScoreVo secondScoreVo) {
-        if (secondScoreVo.getType().equals(FormType.Category.MEISTER_TALENT)) {
-            form.getScore().updateSecondRoundMeisterScore(
-                    secondScoreVo.getDepthInterviewScore(),
-                    secondScoreVo.getNcsScore(),
-                    secondScoreVo.getCodingTestScore()
-            );
-        } else {
-            form.getScore().updateSecondRoundScore(
-                    secondScoreVo.getDepthInterviewScore(),
-                    secondScoreVo.getNcsScore()
-            );
-        }
+        form.getScore().updateSecondRoundScore(
+                secondScoreVo.getDepthInterviewScore(),
+                secondScoreVo.getNcsScore()
+        );
     }
 
     private void setErrorCell(Cell errorCell, String message) {
