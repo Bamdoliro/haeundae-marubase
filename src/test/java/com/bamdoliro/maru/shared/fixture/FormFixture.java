@@ -619,6 +619,7 @@ public class FormFixture {
                 "김밤돌",
                 "01012345678",
                 LocalDate.of(2005, 4, 15),
+                "070605-3111111",
                 Gender.FEMALE
         );
     }
@@ -637,7 +638,8 @@ public class FormFixture {
     private static DocumentRequest createDocumentRequest() {
         return new DocumentRequest(
                 "하이난김밤돌",
-                "공부열심히할게용"
+                "공부열심히할게용",
+                "ㅎ"
         );
     }
 
