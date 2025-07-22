@@ -62,19 +62,7 @@ public class Subject {
     }
 
     public Integer getScore() {
-        if (subjectName.equals("수학")) {
-            return achievementLevel.getScore() * 2;
-        }
-
         return achievementLevel.getScore();
-    }
-
-    public Integer getCount() {
-        if (subjectName.equals("수학")) {
-            return 2;
-        }
-
-        return 1;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.bamdoliro.maru.application.form;
 
 import com.bamdoliro.maru.domain.form.domain.Form;
+import com.bamdoliro.maru.domain.form.domain.value.Subject;
 import com.bamdoliro.maru.domain.form.exception.FormAlreadySubmittedException;
 import com.bamdoliro.maru.domain.form.service.AssignExaminationNumberService;
 import com.bamdoliro.maru.domain.form.service.CalculateFormScoreService;
@@ -12,6 +13,8 @@ import com.bamdoliro.maru.shared.annotation.ValidateApplicationFormPeriod;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -36,6 +39,13 @@ public class SubmitFormUseCase {
                 .type(request.getType())
                 .user(user)
                 .build();
+
+        List<Subject> subjectList = form.getGrade().getSubjectList().getSubjectMap().getValue().get("21");
+        for (Subject subject : subjectList) {
+            if (Objects.equals(subject.getSubjectName(), "수학")) {
+                System.out.println(subject.getScore());
+            }
+        }
 
         calculateFormScoreService.execute(form);
         assignExaminationNumberService.execute(form);

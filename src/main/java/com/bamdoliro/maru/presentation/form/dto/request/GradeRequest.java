@@ -35,21 +35,6 @@ public class GradeRequest {
     @Valid
     private AttendanceRequest attendance3;
 
-    @Nullable
-    @Min(value = 0, message = "0 이상이여야 합니다.")
-    private Integer volunteerTime1;
-
-    @Nullable
-    @Min(value = 0, message = "0 이상이여야 합니다.")
-    private Integer volunteerTime2;
-
-    @Nullable
-    @Min(value = 0, message = "0 이상이여야 합니다.")
-    private Integer volunteerTime3;
-
-    @Nullable
-    private List<Certificate> certificateList;
-
     public Grade toValue() {
         List<Subject> subjectList = new ArrayList<>();
         this.subjectList.stream()
@@ -60,11 +45,7 @@ public class GradeRequest {
                 new SubjectList(subjectList),
                 attendance1 == null ? null : attendance1.toValue(),
                 attendance2 == null ? null : attendance2.toValue(),
-                attendance3 == null ? null : attendance3.toValue(),
-                volunteerTime1,
-                volunteerTime2,
-                volunteerTime3,
-                new CertificateList(certificateList)
+                attendance3 == null ? null : attendance3.toValue()
         );
     }
 }

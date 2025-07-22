@@ -45,9 +45,7 @@ public class ExportFirstRoundResultUseCase {
                 form -> form.getEducation().getSchool().getName(),
                 form -> form.getEducation().getSchool().getCode(),
                 form -> MathUtil.roundTo(form.getScore().getSubjectGradeScore(), 3),
-                form -> form.getScore().getVolunteerScore(),
                 form -> form.getScore().getAttendanceScore(),
-                form -> form.getScore().getBonusScore(),
                 form -> MathUtil.roundTo(form.getScore().getFirstRoundScore(), 3)
         );
 

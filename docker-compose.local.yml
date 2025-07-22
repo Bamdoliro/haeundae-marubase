@@ -2,18 +2,18 @@ version: '3'
 
 services:
   mysql:
-    container_name: maru.local.db
+    container_name: haeundae-maru.local.db
     image: postgres:15-alpine
     environment:
       POSTGRES_USER: "bamdoliro"
       POSTGRES_PASSWORD: "bamdoliro"
-      POSTGRES_DB: "maru"
+      POSTGRES_DB: "haeundae-maru"
     ports:
       - "5432:5432"
 
   redis:
     image: redis:7.0-alpine
-    container_name: maru.local.redis
+    container_name: haeundae-maru.local.redis
     command: /bin/sh -c "redis-server --requirepass bamdoliro"
     ports:
       - "6379:6379"
