@@ -81,7 +81,6 @@ public class LogAspect {
         User user = (User) args[0];
         Form originalForm = formFacade.getForm(user);
         Hibernate.initialize(originalForm.getGrade().getSubjectList().getValue());
-        Hibernate.initialize(originalForm.getGrade().getCertificateList().getValue());
         entityManager.detach(originalForm);
 
         joinPoint.proceed();

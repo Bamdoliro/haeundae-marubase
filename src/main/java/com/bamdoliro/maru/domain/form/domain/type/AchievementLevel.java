@@ -7,11 +7,11 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum AchievementLevel implements EnumProperty {
-    A("A", 5, "수", "우수"),
-    B("B", 4, "우", "보통"),
-    C("C", 3, "미", "미흡"),
-    D("D", 2, "양", null),
-    E("E", 1, "가", null);
+    A("A", 40, "수", "우수"),
+    B("B", 32, "우", "보통"),
+    C("C", 24, "미", "미흡"),
+    D("D", 16, "양", null),
+    E("E", 8, "가", null);
 
     private final String description;
     private final int score;

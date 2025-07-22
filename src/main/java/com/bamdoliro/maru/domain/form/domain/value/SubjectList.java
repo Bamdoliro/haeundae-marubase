@@ -42,8 +42,6 @@ public class SubjectList {
     }
 
     public Integer size() {
-        return value.stream()
-                .mapToInt(Subject::getCount)
-                .sum();
+        return value.size();
     }
 }

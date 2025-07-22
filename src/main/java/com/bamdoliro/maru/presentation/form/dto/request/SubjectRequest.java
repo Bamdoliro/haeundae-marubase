@@ -34,6 +34,9 @@ public class SubjectRequest {
     private AchievementLevel achievementLevel31;
 
     @Nullable
+    private AchievementLevel achievementLevel32;
+
+    @Nullable
     @Min(value = 0, message = "0 이상이여야 합니다.")
     @Max(value = 100, message = "100 이하여야 합니다.")
     private Integer score;
@@ -54,6 +57,10 @@ public class SubjectRequest {
 
             if (Objects.nonNull(achievementLevel31)) {
                 subjectList.add(new Subject(3, 1, subjectName, achievementLevel31));
+            }
+
+            if (Objects.nonNull(achievementLevel32)) {
+                subjectList.add(new Subject(3, 2, subjectName, achievementLevel32));
             }
         }
 

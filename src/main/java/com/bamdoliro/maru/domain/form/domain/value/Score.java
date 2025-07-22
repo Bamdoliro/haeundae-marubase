@@ -23,12 +23,6 @@ public class Score {
     @Column(nullable = false)
     private Integer attendanceScore;
 
-    @Column(nullable = false)
-    private Integer volunteerScore;
-
-    @Column(nullable = false)
-    private Integer bonusScore;
-
     @Column(nullable = true)
     private Double depthInterviewScore;
 
@@ -44,26 +38,22 @@ public class Score {
     @Column(nullable = true)
     private Double totalScore;
 
-    public Score(Double subjectGradeScore, Double thirdGradeFirstSemesterSubjectGradeScore, Integer attendanceScore, Integer volunteerScore, Integer bonusScore) {
+    public Score(Double subjectGradeScore, Double thirdGradeFirstSemesterSubjectGradeScore, Integer attendanceScore) {
         this.subjectGradeScore = MathUtil.roundTo(subjectGradeScore, 3);
         this.thirdGradeFirstSemesterSubjectGradeScore = MathUtil.roundTo(thirdGradeFirstSemesterSubjectGradeScore, 3);
         this.attendanceScore = attendanceScore;
-        this.volunteerScore = volunteerScore;
-        this.bonusScore = bonusScore;
-        this.firstRoundScore = MathUtil.roundTo(subjectGradeScore + attendanceScore + volunteerScore + bonusScore, 3);
+        this.firstRoundScore = MathUtil.roundTo(subjectGradeScore + attendanceScore, 3);
     }
 
-    public Score(Double subjectGradeScore, Integer attendanceScore, Integer volunteerScore, Integer bonusScore) {
+    public Score(Double subjectGradeScore, Integer attendanceScore) {
         this.subjectGradeScore = MathUtil.roundTo(subjectGradeScore, 3);
         this.attendanceScore = attendanceScore;
-        this.volunteerScore = volunteerScore;
-        this.bonusScore = bonusScore;
-        this.firstRoundScore = MathUtil.roundTo(subjectGradeScore + attendanceScore + volunteerScore + bonusScore, 3);
+        this.firstRoundScore = MathUtil.roundTo(subjectGradeScore + attendanceScore , 3);
     }
 
     public void updateSubjectScore(Double subjectGradeScore) {
         this.subjectGradeScore = subjectGradeScore;
-        this.firstRoundScore = subjectGradeScore + attendanceScore + volunteerScore + bonusScore;
+        this.firstRoundScore = subjectGradeScore + attendanceScore;
     }
 
     public void updateSecondRoundMeisterScore(Double depthInterviewScore, Double ncsScore, Double codingTestScore) {

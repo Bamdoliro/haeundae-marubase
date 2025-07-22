@@ -45,8 +45,6 @@ public class ExportSecondRoundResultUseCase {
                 form -> form.getEducation().getSchool().getCode(),
                 form -> MathUtil.roundTo(form.getScore().getSubjectGradeScore(), 3),
                 form -> form.getScore().getAttendanceScore(),
-                form -> form.getScore().getVolunteerScore(),
-                form -> form.getScore().getBonusScore(),
                 form -> form.getScore().getDepthInterviewScore(),
                 form -> form.getScore().getNcsScore(),
                 form -> form.getScore().getCodingTestScore(),

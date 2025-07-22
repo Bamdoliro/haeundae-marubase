@@ -47,27 +47,11 @@ public class Grade {
     })
     private Attendance attendance3;
 
-    @Column(nullable = true)
-    private Integer volunteerTime1;
-
-    @Column(nullable = true)
-    private Integer volunteerTime2;
-
-    @Column(nullable = true)
-    private Integer volunteerTime3;
-
-    @Embedded
-    private CertificateList certificateList;
-
-    public Grade(SubjectList subjectList, Attendance attendance1, Attendance attendance2, Attendance attendance3, Integer volunteerTime1, Integer volunteerTime2, Integer volunteerTime3, CertificateList certificateList) {
+    public Grade(SubjectList subjectList, Attendance attendance1, Attendance attendance2, Attendance attendance3) {
         this.subjectList = subjectList;
         this.attendance1 = attendance1;
         this.attendance2 = attendance2;
         this.attendance3 = attendance3;
-        this.volunteerTime1 = volunteerTime1;
-        this.volunteerTime2 = volunteerTime2;
-        this.volunteerTime3 = volunteerTime3;
-        this.certificateList = certificateList;
     }
 
     public Attendance getTotalAttendance() {
@@ -95,15 +79,7 @@ public class Grade {
         return attendance1.getClassAbsenceCount() + attendance2.getClassAbsenceCount() + attendance3.getClassAbsenceCount();
     }
 
-    public Integer getTotalVolunteerTime() {
-        return volunteerTime1 + volunteerTime2 + volunteerTime3;
-    }
-
     public List<Subject> getSubjectListValue() {
         return subjectList.getValue();
-    }
-
-    public List<Certificate> getCertificateListValue() {
-        return certificateList.getValue();
     }
 }

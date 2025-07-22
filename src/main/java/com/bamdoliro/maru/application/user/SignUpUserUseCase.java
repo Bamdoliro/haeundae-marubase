@@ -21,7 +21,7 @@ public class SignUpUserUseCase {
 
     @Transactional
     public void execute(SignUpUserRequest request) {
-        validate(request);
+//        validate(request);
 
         userRepository.save(
                 User.builder()
