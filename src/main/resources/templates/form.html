@@ -104,7 +104,7 @@
     <colgroup>
         <col style="width:6.39%"/>
         <col style="width:1.46%"/>
-        <col style="width:4.83%"/>
+        <col style="width:5.5%"/>
         <col style="width:1.31%"/>
         <col style="width:1.37%"/>
         <col style="width:3.62%"/>
@@ -144,8 +144,8 @@
         </td>
     </tr>
     <tr>
-        <th scope="row" class="ba" colspan="3">생년월일</th>
-        <td class="ba" colspan="5" th:text="${#temporals.format(form.applicant.birthday, 'YYYY년 MM월 dd일')}"></td>
+        <th scope="row" class="ba" colspan="3">주민등록번호</th>
+        <td class="ba" colspan="5" th:text="${form.applicant.registrationNumber}"></td>
         <th scope="row" class="ba" colspan="2">출신학교</th>
         <td class="ba" colspan="7" th:text="${form.education.school.name}"></td>
     </tr>
@@ -197,10 +197,8 @@
     <tr>
         <th scope="rowgroup" class="ba" rowspan="2">학년</th>
         <th scope="colgroup" class="ba" colspan="8">교과성적</th>
-        <th scope="colgroup" class="ba" colspan="7">출결상황</th>
-        <th scope="colgroup" class="ba" colspan="3">봉사활동</th>
-        <th scope="col" class="ba">가산점</th>
-        <th scope="col" class="ba" rowspan="2">총점</th>
+        <th scope="colgroup" class="ba" colspan="8">출결상황</th>
+        <th scope="col" class="ba" rowspan="2" colspan="4">총점</th>
     </tr>
     <tr>
         <th scope="col" class="ba" colspan="2">학기</th>
@@ -211,10 +209,7 @@
         <th scope="col" class="ba" colspan="2">미인정<br/>지각</th>
         <th scope="col" class="ba">미인정<br/>조퇴</th>
         <th scope="col" class="ba" colspan="2">미인정<br/>결과</th>
-        <th scope="col" class="ba">점수</th>
-        <th scope="col" class="ba">시간</th>
         <th scope="col" class="ba" colspan="2">점수</th>
-        <th scope="col" class="ba">점수</th>
     </tr>
     <tr th:if="${form.education.isQualificationExamination()}">
         <th scope="row" class="ba" rowspan="2">1</th>
@@ -230,11 +225,7 @@
         <td class="ba" rowspan="7" colspan="1"
             th:text="${form.score.attendanceScore}"></td>
         <td class="ba disabled" rowspan="2" colspan="1"></td>
-        <td class="ba" rowspan="7" colspan="2"
-            th:text="${form.score.volunteerScore}"></td>
-        <td class="ba" rowspan="7" colspan="1"
-            th:text="${form.score.bonusScore}"></td>
-        <td class="ba" rowspan="7" colspan="1"
+        <td class="ba" rowspan="7" colspan="4"
             th:text="${form.score.getFirstRoundScore()}"></td>
     </tr>
     <tr th:unless="${form.education.isQualificationExamination()}">
@@ -257,19 +248,10 @@
         <td class="ba" rowspan="2" colspan="2"
             th:unless="${form.education.isQualificationExamination()}"
             th:text="${form.grade.attendance1.classAbsenceCount}"></td>
-        <td class="ba" rowspan="7" colspan="1"
-            th:unless="${form.education.isQualificationExamination()}"
-            th:text="${form.score.attendanceScore}"></td>
-        <td class="ba" rowspan="2" colspan="1"
-            th:unless="${form.education.isQualificationExamination()}"
-            th:text="${form.grade.volunteerTime1}"></td>
         <td class="ba" rowspan="7" colspan="2"
             th:unless="${form.education.isQualificationExamination()}"
-            th:text="${form.score.volunteerScore}"></td>
-        <td class="ba" rowspan="7" colspan="1"
-            th:unless="${form.education.isQualificationExamination()}"
-            th:text="${form.score.bonusScore}"></td>
-        <td class="ba" rowspan="7" colspan="1"
+            th:text="${form.score.attendanceScore}"></td>
+        <td class="ba" rowspan="7" colspan="4"
             th:unless="${form.education.isQualificationExamination()}"
             th:text="${form.score.getFirstRoundScore()}"></td>
     </tr>
@@ -310,9 +292,6 @@
         <td class="ba" rowspan="2" colspan="2"
             th:unless="${form.education.isQualificationExamination()}"
             th:text="${form.grade.attendance2.classAbsenceCount}"></td>
-        <td class="ba" rowspan="2" colspan="1"
-            th:unless="${form.education.isQualificationExamination()}"
-            th:text="${form.grade.volunteerTime2}"></td>
     </tr>
     <tr th:if="${form.education.isQualificationExamination()}">
         <td class="ba disabled" colspan="2">-</td>
@@ -352,8 +331,6 @@
             th:text="${form.grade.attendance3.earlyLeaveCount}"></td>
         <td class="ba" colspan="2" rowspan="2"
             th:text="${form.grade.attendance3.classAbsenceCount}"></td>
-        <td class="ba" colspan="1" rowspan="2"
-            th:text="${form.grade.volunteerTime3}"></td>
     </tr>
     <tr>
         <td class="ba disabled" colspan="2">-</td>
@@ -386,60 +363,58 @@
             th:text="${form.grade.getTotalEarlyLeaveCount()}"></td>
         <td class="ba" colspan="2"
             th:text="${form.grade.getTotalClassAbsenceCount()}"></td>
-        <td class="ba" colspan="1"
-            th:text="${form.grade.getTotalVolunteerTime()}"></td>
     </tr>
     <tr>
         <td style="height: 14px"></td>
     </tr>
     <tr>
         <td class="ba text-box" colspan="21">
-            <p class="center medium">
-                <b>〈개인정보 수집 이용 및 제공 동의서></b><br/><br/>
+            <p class="middle left">
+                <span style="margin-left: 20px">위 지원자는 </span> <span class="middle" style="margin-right: 20px; margin-left: 30px">년</span>
+                <span class="middle" style="margin-right: 20px">월</span>
+                <span class="middle">일</span>
+                <span class="middle" th:text="${form.education.school.name}"></span>
+                <span th:if="${form.education.isExpected()}" class="middle">졸업예정자</span>
+                <span th:unless="${form.education.isExpected()}" class="middle">졸업자</span>임을 증명함.
             </p>
-            <p class="left small">
-                ※ 개인정보의 수집 이용 및 제공 목적: 2025학년도 부산소프트웨어마이스터고등학교 입학전형 업무 수행<br/>
-                ※ 수집하려는 개인정보의 항목: 성명, 생년월일, 사진, 전화번호(자택, 본인, 보호자), 주소, 출신중학교, 학교생활기록부 자료, 사회통합전형 대상자 등의 자격 확인 증빙자료 등<br/>
-                ※ 개인정보의 보관 기간: 5년<br/>
+            <div class="space"></div>
+            <p class="middle" th:text="${#dates.format(#dates.createNow(),'YYYY년 MM월 dd일')}"></p>
+            <div class="space"></div>
+            <p class="school right space-right">
+                <span th:text="${form.education.school.name}"></span>장&nbsp;&nbsp;
+                <span class="g
+                uide">(직인)</span>
             </p>
-            <p class="center medium">
-                위 내용에 대한 동의를 거부할 수 있으나 동의 거부 시 입학 원서를 접수 할 수 없음<br/><br/>
-                <b>개인정보 활용에&nbsp;&nbsp;&nbsp;&nbsp; 동의함&nbsp;<input type="checkbox"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 동의하지 않음&nbsp;<input type="checkbox"/></b><br/><br/>
-            </p>
-            <p class="left medium">
-                본인은 2025학년도 귀고 입학전형에 응시하고자 소정의 서류를 갖추어 지원하며 교칙을 준수하고, 다른 마이스터고등학교에 이중 지원을 하지 않을 것을 서약합니다.
-            </p>
+            <p class=
+        </td>
+    </tr>
+    <tr>
+        <td class="ba text-box" colspan="21">
+            <p class="middle">본인은 귀교에 입학하고자 소정의 서류를 갖추어 지원합니다.</p>
             <div class="space"></div>
             <p class="middle" th:text="${#dates.format(#dates.createNow(),'YYYY년 MM월 dd일')}"></p>
             <div class="space"></div>
             <div class="right">
                 <div class="left middle inline">
                     <p>
-                        지원자&nbsp;&nbsp;
+                        작성교사&nbsp;&nbsp;
+                        <span th:text="${form.education.teacher.name}"></span>&nbsp;&nbsp;&nbsp;
+                        <span class="guide">(인)</span>
+                    </p>
+                    <p>
+                        지원자&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <span th:text="${form.applicant.name}"></span>&nbsp;&nbsp;&nbsp;
                         <span class="guide">(인)</span>
                     </p>
                     <p>
-                        보호자&nbsp;&nbsp;
+                        보호자&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <span th:text="${form.parent.name}"></span>&nbsp;&nbsp;&nbsp;
                         <span class="guide">(인)</span>&nbsp;&nbsp;&nbsp;&nbsp;
                         관계:&nbsp;&nbsp;<span th:text="${form.parent.relation}"></span>&nbsp;&nbsp;
                     </p>
                 </div>
             </div>
-        </td>
-    </tr>
-    <tr>
-        <td class="ba text-box" colspan="21">
-            <p class="left middle">위의 기재 사항은 사실과 상위없음을 확인하고, 귀교의 신입생 입학전형 대상자로 추천합니다.</p>
-            <div class="space"></div>
-            <p class="middle" th:text="${#dates.format(#dates.createNow(),'YYYY년 MM월 dd일')}"></p>
-            <div class="space"></div>
-            <p class="school right space-right">
-                <span th:text="${form.education.school.name}"></span>장&nbsp;&nbsp;
-                <span class="guide">(직인)</span>
-            </p>
-            <p class="school left">부산소프트웨어마이스터고등학교장 귀하</p>
+            <p class="school">해운대고등학교장 귀하</p>
         </td>
     </tr>
     <tr>

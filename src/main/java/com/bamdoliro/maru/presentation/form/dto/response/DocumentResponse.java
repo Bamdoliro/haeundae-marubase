@@ -8,11 +8,13 @@ import lombok.Getter;
 @AllArgsConstructor
 public class DocumentResponse {
 
-    private String coverLetter;
+    private String learningExperience;
     private String statementOfPurpose;
+    private String personality;
 
     public DocumentResponse(Document document) {
-        this.coverLetter = document.getCoverLetter();
+        this.learningExperience = document.getLearningExperience();
         this.statementOfPurpose = document.getStatementOfPurpose();
+        this.personality = document.getPersonality();
     }
 }
