@@ -2,6 +2,7 @@ package com.bamdoliro.maru.application.form;
 
 import com.bamdoliro.maru.domain.form.domain.Form;
 import com.bamdoliro.maru.domain.form.domain.type.AchievementLevel;
+import com.bamdoliro.maru.domain.form.domain.type.FormType;
 import com.bamdoliro.maru.domain.form.domain.value.Subject;
 import com.bamdoliro.maru.domain.form.domain.value.SubjectMap;
 import com.bamdoliro.maru.domain.form.service.FormFacade;
@@ -110,21 +111,22 @@ public class ExportFormUseCase {
     }
 
     private List<String> getRequiredTemplates(Form form) {
-        if (form.getType().isRegular()) {
+        if (form.getType().equals(FormType.PRINCIPAL_RECOMMENDATION)) {
             return List.of(
                     Templates.FORM,
                     Templates.GRADE_TABLE,
                     Templates.DOCUMENT,
-                    Templates.WRITTEN_OATH
+                    Templates.RECOMMENDATION,
+                    Templates.INFORMATION
             );
         } else if (form.getType().isSpecialAdmission()) {
             return List.of(
                     Templates.FORM,
                     Templates.GRADE_TABLE,
                     Templates.DOCUMENT,
-                    Templates.WRITTEN_OATH,
                     Templates.SPECIAL_ADMISSION,
-                    Templates.CONFIRMATION
+                    Templates.CONFIRMATION,
+                    Templates.INFORMATION
             );
         }
 
@@ -132,8 +134,7 @@ public class ExportFormUseCase {
                 Templates.FORM,
                 Templates.GRADE_TABLE,
                 Templates.DOCUMENT,
-                Templates.WRITTEN_OATH,
-                Templates.RECOMMENDATION
+                Templates.INFORMATION
         );
     }
 }
