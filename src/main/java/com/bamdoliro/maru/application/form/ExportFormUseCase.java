@@ -48,6 +48,7 @@ public class ExportFormUseCase {
                 "grade21", subjectMap.getSubjectListOf(2, 1),
                 "grade22", subjectMap.getSubjectListOf(2, 2),
                 "grade31", subjectMap.getSubjectListOf(3, 1),
+                "grade32", subjectMap.getSubjectListOf(3, 2),
                 "subjectList", getSubjectList(form),
                 "year", scheduleService.getAdmissionYear(),
                 "identificationPictureUri", fileService.getDownloadPresignedUrl(FolderConstant.IDENTIFICATION_PICTURE, user.getUuid().toString())
@@ -96,8 +97,10 @@ public class ExportFormUseCase {
                 if (Objects.nonNull(v.getOriginalScore())) {
                     subject.score = v.getOriginalScore();
                 } else {
+                    String fieldName = "achievementLevel" + v.getGrade() + v.getSemester();
+                    log.info("fieldName = {}", fieldName);
                     try {
-                        SubjectVO.class.getField("achievementLevel" + v)
+                        SubjectVO.class.getField(fieldName)
                                 .set(subject, v.getAchievementLevel());
                     } catch (IllegalAccessException | NoSuchFieldException e) {
                         throw new RuntimeException(e);
@@ -149,6 +152,8 @@ class SubjectVO {
     public AchievementLevel achievementLevel22;
 
     public AchievementLevel achievementLevel31;
+
+    public AchievementLevel achievementLevel32;
 
     Integer score;
 

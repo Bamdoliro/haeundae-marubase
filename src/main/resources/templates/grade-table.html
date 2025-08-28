@@ -103,8 +103,10 @@
         <th class="ba">2학년 1학기</th>
         <th class="ba">2학년 2학기</th>
         <th class="ba">3학년 1학기</th>
+        <th class="ba">3학년 2학기</th>
     </tr>
     <tr>
+        <th class="ba">성취수준</th>
         <th class="ba">성취수준</th>
         <th class="ba">성취수준</th>
         <th class="ba">성취수준</th>
@@ -120,6 +122,9 @@
         <td class="ba disabled" th:if="${subject.achievementLevel31 == null}"></td>
         <td class="ba" th:unless="${subject.achievementLevel31 == null}"
             th:text="${subject.achievementLevel31.toString(subject.subjectName)}"></td>
+        <td class="ba disabled" th:if="${subject.achievementLevel32 == null}"></td>
+        <td class="ba" th:unless="${subject.achievementLevel32 == null}"
+            th:text="${subject.achievementLevel32.toString(subject.subjectName)}"></td>
     </tr>
 </table>
 <table th:if="${form.education.isQualificationExamination()}">
@@ -169,63 +174,18 @@
         <td class="ba" th:text="${form.grade.attendance3.classAbsenceCount}"></td>
     </tr>
 </table>
-<table th:if="${form.education.isQualificationExamination()}">
-    <caption th:text='${"3. 봉사활동 - " + form.score.volunteerScore + "점"}'></caption>
-    <tr>
-        <th class="ba">봉사활동</th>
-        <th class="ba">부여점수</th>
-    </tr>
-    <tr>
-        <th class="ba">봉사내역</th>
-        <td class="ba">14점(기본점수)</td>
-    </tr>
-</table>
-<table th:unless="${form.education.isQualificationExamination()}">
-    <caption th:text='${"3. 봉사활동 - " + form.score.volunteerScore + "점"}'></caption>
-    <tr>
-        <th class="ba" style="width: 20%">학년</th>
-        <th class="ba">봉사활동시간수</th>
-    </tr>
-    <tr>
-        <td class="ba">1학년</td>
-        <td class="ba" th:text="${form.grade.volunteerTime1}"></td>
-    </tr>
-    <tr>
-        <td class="ba">2학년</td>
-        <td class="ba" th:text="${form.grade.volunteerTime2}"></td>
-    </tr>
-    <tr>
-        <td class="ba">3학년</td>
-        <td class="ba" th:text="${form.grade.volunteerTime3}"></td>
-    </tr>
-</table>
 <table>
-    <caption th:text='${"4. 가산점 - " + form.score.bonusScore + "점"}'></caption>
-    <tr>
-        <th class="ba">자격증명</th>
-    </tr>
-    <tr>
-        <td class="ba disabled" th:if="${form.score.bonusScore == 0}">-</td>
-        <td class="ba" th:unless="${form.score.bonusScore == 0}"
-            th:text="${form.grade.certificateList.toString()}"></td>
-    </tr>
-</table>
-<table>
-    <caption>5. 산출내역</caption>
+    <caption>3. 산출내역</caption>
     <tr>
         <th class="ba">성명</th>
         <th class="ba">교과성적</th>
         <th class="ba">출결상황</th>
-        <th class="ba">봉사활동</th>
-        <th class="ba">가산점</th>
         <th class="ba">총점</th>
     </tr>
     <tr>
         <td class="ba" th:text="${form.applicant.name}"></td>
         <td class="ba" th:text="${form.score.subjectGradeScore}"></td>
         <td class="ba" th:text="${form.score.attendanceScore}"></td>
-        <td class="ba" th:text="${form.score.volunteerScore}"></td>
-        <td class="ba" th:text="${form.score.bonusScore}"></td>
         <td class="ba" th:text="${form.score.firstRoundScore}"></td>
     </tr>
 </table>
