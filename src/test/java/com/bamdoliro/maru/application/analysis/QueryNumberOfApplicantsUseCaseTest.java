@@ -30,7 +30,7 @@ class QueryNumberOfApplicantsUseCaseTest {
         // given
         List<NumberOfApplicantsVo> voList = List.of(
                 new NumberOfApplicantsVo(FormType.REGULAR, 1L),
-                new NumberOfApplicantsVo(FormType.MEISTER_TALENT, 1L),
+                new NumberOfApplicantsVo(FormType.NATIONAL_VETERANS, 1L),
                 new NumberOfApplicantsVo(FormType.NATIONAL_BASIC_LIVING, 1L),
                 new NumberOfApplicantsVo(FormType.FROM_NORTH_KOREA, 1L),
                 new NumberOfApplicantsVo(FormType.SPECIAL_ADMISSION, 1L)

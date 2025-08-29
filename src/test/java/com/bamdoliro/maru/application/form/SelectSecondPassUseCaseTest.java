@@ -68,7 +68,7 @@ public class SelectSecondPassUseCaseTest {
         selectFirstPassUseCase.execute();
         List<Form> firstPassedFormList = formRepository.findByStatus(FormStatus.FIRST_PASSED);
         firstPassedFormList.forEach(form -> {
-            if (form.getType().isMeister()) {
+            if (form.getType().isNationalVeteransEducation()) {
                 form.getScore().updateSecondRoundMeisterScore(RandomUtil.randomDouble(0, 100), RandomUtil.randomDouble(0, 100), RandomUtil.randomDouble(0, 100));
             } else {
                 form.getScore().updateSecondRoundScore(RandomUtil.randomDouble(0, 100), RandomUtil.randomDouble(0, 100));

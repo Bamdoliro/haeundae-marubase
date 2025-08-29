@@ -33,7 +33,7 @@ class QueryGradeDistributionUseCaseTest {
         // given
         List<GradeVo> voList = List.of(
                 new GradeVo(FormType.REGULAR, 238.241, 160.278, 208.963, null, null, null),
-                new GradeVo(FormType.MEISTER_TALENT, 158.758, 103.004, 147.213, null, null, null),
+                new GradeVo(FormType.NATIONAL_VETERANS, 158.758, 103.004, 147.213, null, null, null),
                 new GradeVo(FormType.NATIONAL_BASIC_LIVING, 158.758, 103.004, 147.213, null, null, null),
                 new GradeVo(FormType.FROM_NORTH_KOREA, 158.758, 103.004, 147.213, null, null, null),
                 new GradeVo(FormType.SPECIAL_ADMISSION, 158.758, 103.004, 147.213, null, null, null)
@@ -59,7 +59,7 @@ class QueryGradeDistributionUseCaseTest {
         // given
         List<GradeVo> voList = List.of(
                 new GradeVo(FormType.REGULAR, 238.241, 160.278, 208.963, 208.758, 153.004, 197.213),
-                new GradeVo(FormType.MEISTER_TALENT, 158.758, 103.004, 147.213, 208.758, 153.004, 197.213),
+                new GradeVo(FormType.NATIONAL_VETERANS, 158.758, 103.004, 147.213, 208.758, 153.004, 197.213),
                 new GradeVo(FormType.NATIONAL_BASIC_LIVING, 158.758, 103.004, 147.213, 208.758, 153.004, 197.213),
                 new GradeVo(FormType.FROM_NORTH_KOREA, 158.758, 103.004, 147.213, 208.758, 153.004, 197.213),
                 new GradeVo(FormType.SPECIAL_ADMISSION, 149.559, 149.559, 149.559, 199.559, 199.559, 199.559)
@@ -85,7 +85,7 @@ class QueryGradeDistributionUseCaseTest {
         // given
         List<GradeVo> voList = List.of(
                 new GradeVo(FormType.REGULAR, 238.241, 160.278, 208.963, 208.758, 153.004, 197.213),
-                new GradeVo(FormType.MEISTER_TALENT, 158.758, 103.004, 147.213, 208.758, 153.004, 197.213),
+                new GradeVo(FormType.NATIONAL_VETERANS, 158.758, 103.004, 147.213, 208.758, 153.004, 197.213),
                 new GradeVo(FormType.NATIONAL_BASIC_LIVING, 158.758, 103.004, 147.213, 208.758, 153.004, 197.213),
                 new GradeVo(FormType.FROM_NORTH_KOREA, 158.758, 103.004, 147.213, 208.758, 153.004, 197.213),
                 new GradeVo(FormType.SPECIAL_ADMISSION, 149.559, 149.559, 149.559, 199.559, 199.559, 199.559)

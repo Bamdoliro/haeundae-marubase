@@ -20,15 +20,9 @@ class GradeTest {
         );
 
         // when
-        Grade grade = new Grade(null, null, null, null, null, null, null, new CertificateList(certificateList));
+        Grade grade = new Grade(null, null, null, null);
 
         // then
-        Certificate computerSpecialistCertificate = grade.getCertificateListValue().stream()
-                .filter(Certificate::isComputerSpecialist)
-                .findFirst()
-                .get();
 
-        assertEquals(3, grade.getCertificateList().size());
-        assertEquals(Certificate.COMPUTER_SPECIALIST_LEVEL_2, computerSpecialistCertificate);
     }
 }

@@ -60,7 +60,7 @@ class QueryFormUseCaseTest {
         assertEquals(form.getId(), response.getId());
         assertEquals(form.getApplicant().getName(), response.getApplicant().getName());
         assertEquals(form.getParent().getName(), response.getParent().getName());
-        assertEquals(form.getDocument().getCoverLetter(), response.getDocument().getCoverLetter());
+        assertEquals(form.getDocument(), response.getDocument());
     }
 
     @Test

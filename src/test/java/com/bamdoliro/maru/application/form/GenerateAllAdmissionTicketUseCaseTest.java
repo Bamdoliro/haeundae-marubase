@@ -62,7 +62,7 @@ public class GenerateAllAdmissionTicketUseCaseTest {
         // given
         List<Form> formList = new ArrayList<>();
         formList.add(FormFixture.createForm(FormType.REGULAR));
-        formList.add(FormFixture.createForm(FormType.MEISTER_TALENT));
+        formList.add(FormFixture.createForm(FormType.NATIONAL_VETERANS));
         formList.forEach(Form::firstPass);
         given(scheduleService.getAdmissionYear()).willReturn(LocalDate.now().plusYears(1).getYear());
         givenScheduleProperties();

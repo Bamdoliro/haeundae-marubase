@@ -82,6 +82,9 @@ class FormControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("applicant.birthday")
                                         .type(JsonFieldType.STRING)
                                         .description("지원자 생년월일 (yyyy-MM-dd)"),
+                                fieldWithPath("applicant.registrationNumber")
+                                        .type(JsonFieldType.STRING)
+                                        .description("지원장 주민등록번호 (앞 6자리-뒷 7자리)"),
                                 fieldWithPath("applicant.gender")
                                         .type(JsonFieldType.STRING)
                                         .description("<<gender,지원자 성별>>"),
@@ -145,13 +148,14 @@ class FormControllerTest extends RestDocsTestSupport {
                                         .type(JsonFieldType.STRING)
                                         .description("<<achievement-level,3학년 1학기 성취도 (성적이 없는 경우 null)>>")
                                         .optional(),
+                                fieldWithPath("grade.subjectList[].achievementLevel32")
+                                        .type(JsonFieldType.STRING)
+                                        .description("<<achievement-level,3학년 2학기 성취도 (성적이 없는 경우 null)>>")
+                                        .optional(),
                                 fieldWithPath("grade.subjectList[].score")
                                         .type(JsonFieldType.NUMBER)
                                         .description("검정고시인 경우 점수 (검정고시가 아닐시 무조건 null)")
                                         .optional(),
-                                fieldWithPath("grade.certificateList[]")
-                                        .type(JsonFieldType.ARRAY)
-                                        .description("<<certificate,자격증 리스트>>"),
                                 fieldWithPath("grade.attendance1.absenceCount")
                                         .type(JsonFieldType.NUMBER)
                                         .description("1학년 미인정 결석 횟수 (출결 성적이 없는 경우 null)"),
@@ -188,28 +192,22 @@ class FormControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("grade.attendance3.classAbsenceCount")
                                         .type(JsonFieldType.NUMBER)
                                         .description("3학년 미인정 결과 횟수 (출결 성적이 없는 경우 null)"),
-                                fieldWithPath("grade.volunteerTime1")
-                                        .type(JsonFieldType.NUMBER)
-                                        .description("1학년 봉사시간 (봉사 성적이 없는 경우 null)"),
-                                fieldWithPath("grade.volunteerTime2")
-                                        .type(JsonFieldType.NUMBER)
-                                        .description("2학년 봉사시간 (봉사 성적이 없는 경우 null)"),
-                                fieldWithPath("grade.volunteerTime3")
-                                        .type(JsonFieldType.NUMBER)
-                                        .description("3학년 봉사시간 (봉사 성적이 없는 경우 null)"),
-                                fieldWithPath("document.coverLetter")
+                                fieldWithPath("document.learningExperience")
                                         .type(JsonFieldType.STRING)
-                                        .description("1600자 이내의 자기소개서"),
+                                        .description("800자 이하의 학습경험"),
                                 fieldWithPath("document.statementOfPurpose")
                                         .type(JsonFieldType.STRING)
-                                        .description("1600자 이내의 학업계획서")
+                                        .description("300자 이내의 학업계획서"),
+                                fieldWithPath("document.personality")
+                                        .type(JsonFieldType.STRING)
+                                        .description("500자 이하의 인성")
                         )
                 ));
     }
 
     @Test
     void 중졸_껌정고시_합격자가_원서를_제출한다() throws Exception {
-        SubmitFormRequest request = FormFixture.createQualificationExaminationFormRequest(FormType.MEISTER_TALENT);
+        SubmitFormRequest request = FormFixture.createQualificationExaminationFormRequest(FormType.NATIONAL_VETERANS);
         User user = UserFixture.createUser();
 
         given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
@@ -729,6 +727,9 @@ class FormControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("applicant.birthday")
                                         .type(JsonFieldType.STRING)
                                         .description("지원자 생년월일"),
+                                fieldWithPath("applicant.registrationNumber")
+                                        .type(JsonFieldType.STRING)
+                                        .description("지원자 주민등록번호"),
                                 fieldWithPath("applicant.gender")
                                         .type(JsonFieldType.STRING)
                                         .description("<<gender,지원자 성별>>"),
@@ -792,13 +793,14 @@ class FormControllerTest extends RestDocsTestSupport {
                                         .type(JsonFieldType.STRING)
                                         .description("<<achievement-level,3학년 1학기 성취도 (성적이 없는 경우 null)>>")
                                         .optional(),
+                                fieldWithPath("grade.subjectList[].achievementLevel32")
+                                        .type(JsonFieldType.STRING)
+                                        .description("<<achievement-level,3학년 2학기 성취도 (성적이 없는 경우 null)>>")
+                                        .optional(),
                                 fieldWithPath("grade.subjectList[].score")
                                         .type(JsonFieldType.NUMBER)
                                         .description("검정고시인 경우 점수 (검정고시가 아닐시 무조건 null)")
                                         .optional(),
-                                fieldWithPath("grade.certificateList[]")
-                                        .type(JsonFieldType.ARRAY)
-                                        .description("<<certificate,자격증 리스트>>"),
                                 fieldWithPath("grade.attendance1.absenceCount")
                                         .type(JsonFieldType.NUMBER)
                                         .description("1학년 미인정 결석 횟수 (출결 성적이 없는 경우 null)"),
@@ -835,21 +837,15 @@ class FormControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("grade.attendance3.classAbsenceCount")
                                         .type(JsonFieldType.NUMBER)
                                         .description("3학년 미인정 결과 횟수 (출결 성적이 없는 경우 null)"),
-                                fieldWithPath("grade.volunteerTime1")
-                                        .type(JsonFieldType.NUMBER)
-                                        .description("1학년 봉사시간 (봉사 성적이 없는 경우 null)"),
-                                fieldWithPath("grade.volunteerTime2")
-                                        .type(JsonFieldType.NUMBER)
-                                        .description("2학년 봉사시간 (봉사 성적이 없는 경우 null)"),
-                                fieldWithPath("grade.volunteerTime3")
-                                        .type(JsonFieldType.NUMBER)
-                                        .description("3학년 봉사시간 (봉사 성적이 없는 경우 null)"),
-                                fieldWithPath("document.coverLetter")
+                                fieldWithPath("document.learningExperience")
                                         .type(JsonFieldType.STRING)
-                                        .description("1600자 이내의 자기소개서"),
+                                        .description("800자 이하의 학습경험"),
                                 fieldWithPath("document.statementOfPurpose")
                                         .type(JsonFieldType.STRING)
-                                        .description("1600자 이내의 학업계획서")
+                                        .description("300자 이내의 학업계획서"),
+                                fieldWithPath("document.personality")
+                                        .type(JsonFieldType.STRING)
+                                        .description("500자 이하의 인성")
                         )
                 ));
 

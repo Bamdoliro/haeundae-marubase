@@ -45,13 +45,14 @@ public class AnalysisFixture {
         } else if (mainCategory.equals(FormType.Category.SPECIAL)) {
             return List.of(
                     new GenderRatioResponse(
-                            FormType.Category.MEISTER_TALENT,
+                            FormType.Category.EQUAL_OPPORTUNITY,
                             randomNumber(0, 30),
                             randomNumber(0, 15),
                             randomNumber(0, 30),
                             randomNumber(0, 15)
                     ),
-                    new GenderRatioResponse(FormType.Category.SOCIAL_INTEGRATION,
+                    new GenderRatioResponse(
+                            FormType.Category.SOCIETY_DIVERSITY,
                             randomNumber(0, 30),
                             randomNumber(0, 15),
                             randomNumber(0, 30),

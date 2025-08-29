@@ -221,10 +221,10 @@ public class SendMessageUseCaseTest {
     void 마이스터전형_1차_합격자들에게_메시지를_보낸다() {
 
         //given
-        Form form = FormFixture.createForm(FormType.MEISTER_TALENT);
+        Form form = FormFixture.createForm(FormType.NATIONAL_VETERANS);
         form.firstPass();
         given(formRepository.findMeisterTalentFirstRoundForm()).willReturn(List.of(form));
-        SendMessageByTypeRequest request = new SendMessageByTypeRequest("부산소마고 공지사항", "배고파요...", FormType.MEISTER_TALENT, false);
+        SendMessageByTypeRequest request = new SendMessageByTypeRequest("부산소마고 공지사항", "배고파요...", FormType.NATIONAL_VETERANS, false);
 
         //when
         sendMessageUseCase.execute(request);
@@ -238,7 +238,7 @@ public class SendMessageUseCaseTest {
     void 마이스터전형에서_일반전형으로_바뀐_1차_합격자들에게_메시지를_보낸다() {
 
         //given
-        Form form = FormFixture.createForm(FormType.MEISTER_TALENT);
+        Form form = FormFixture.createForm(FormType.NATIONAL_VETERANS);
 
         when(calculateFormScoreService.calculateSubjectGradeScore(any())).thenReturn(100.0);
         when(formRepository.findChangedToRegularFirstRoundForm()).thenReturn(List.of(form));
@@ -275,7 +275,7 @@ public class SendMessageUseCaseTest {
 
         //given
         willThrow(new FailedToSendException()).given(formRepository).findMeisterTalentFirstRoundForm();
-        SendMessageByTypeRequest request = new SendMessageByTypeRequest("부산소마고 공지사항", "오늘은 꼭 롯데가..!", FormType.MEISTER_TALENT, false);
+        SendMessageByTypeRequest request = new SendMessageByTypeRequest("부산소마고 공지사항", "오늘은 꼭 롯데가..!", FormType.NATIONAL_VETERANS, false);
 
         //when and then
         Assertions.assertThrows(FailedToSendException.class,
