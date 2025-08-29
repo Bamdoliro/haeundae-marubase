@@ -74,7 +74,15 @@ public class CalculateFormScoreService {
     private Integer calculateAttendanceScore(Form form) {
         Attendance totalAttendance = form.getGrade().getTotalAttendance();
         int convertedAbsenceCount = getConvertedAbsenceCount(totalAttendance);
-        return -convertedAbsenceCount;
+        int penalty;
+        if (convertedAbsenceCount <= 0) {
+            penalty = 0;
+        } else if (convertedAbsenceCount >= 17) {
+            penalty = -9;
+        } else {
+            penalty = -((convertedAbsenceCount - 1) / 2 + 1);
+        }
+        return penalty;
     }
 
     private Integer getConvertedAbsenceCount(Attendance attendance) {
