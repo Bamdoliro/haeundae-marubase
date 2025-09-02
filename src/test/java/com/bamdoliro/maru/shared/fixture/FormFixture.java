@@ -52,19 +52,21 @@ public class FormFixture {
                                         new Subject(2, 1, "사회", AchievementLevel.A),
                                         new Subject(2, 1, "과학", AchievementLevel.A),
                                         new Subject(2, 1, "영어", AchievementLevel.A),
-                                        new Subject(2, 1, "체육", AchievementLevel.A),
                                         new Subject(2, 2, "국어", AchievementLevel.A),
                                         new Subject(2, 2, "수학", AchievementLevel.A),
                                         new Subject(2, 2, "사회", AchievementLevel.A),
                                         new Subject(2, 2, "과학", AchievementLevel.A),
                                         new Subject(2, 2, "영어", AchievementLevel.A),
-                                        new Subject(2, 2, "체육", AchievementLevel.A),
                                         new Subject(3, 1, "국어", AchievementLevel.A),
                                         new Subject(3, 1, "수학", AchievementLevel.B),
                                         new Subject(3, 1, "사회", AchievementLevel.A),
                                         new Subject(3, 1, "과학", AchievementLevel.A),
                                         new Subject(3, 1, "영어", AchievementLevel.A),
-                                        new Subject(3, 1, "체육", AchievementLevel.A)
+                                        new Subject(3, 2, "국어", AchievementLevel.A),
+                                        new Subject(3, 2, "수학", AchievementLevel.B),
+                                        new Subject(3, 2, "사회", AchievementLevel.A),
+                                        new Subject(3, 2, "과학", AchievementLevel.A),
+                                        new Subject(3, 2, "영어", AchievementLevel.A)
                                 )),
                         new Attendance(0, 0, 0, 2),
                         new Attendance(2, 1, 0, 0),
@@ -393,9 +395,9 @@ public class FormFixture {
                                 new Subject(1, 1, "과학", AchievementLevel.D),
                                 new Subject(1, 1, "영어", AchievementLevel.A)
                         )),
-                        null,
-                        null,
-                        null
+                        new Attendance(0,0,0,0),
+                        new Attendance(0,0,0,0),
+                        new Attendance(0,0,0,0)
                 ),
                 new Document(
                         "하이난김밤돌",
