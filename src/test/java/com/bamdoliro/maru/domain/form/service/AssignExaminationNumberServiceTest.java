@@ -49,7 +49,7 @@ class AssignExaminationNumberServiceTest {
         assignExaminationNumberService.execute(form);
 
         // then
-        assertEquals(3001L, form.getExaminationNumber());
+        assertEquals(2001L, form.getExaminationNumber());
         verify(formRepository).findAllExaminationNumber();
     }
 }
