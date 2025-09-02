@@ -1,6 +1,7 @@
 package com.bamdoliro.maru.application.form;
 
 import com.bamdoliro.maru.domain.form.domain.Form;
+import com.bamdoliro.maru.domain.form.domain.value.Score;
 import com.bamdoliro.maru.domain.form.domain.value.Subject;
 import com.bamdoliro.maru.domain.form.exception.FormAlreadySubmittedException;
 import com.bamdoliro.maru.domain.form.service.AssignExaminationNumberService;
@@ -40,12 +41,15 @@ public class SubmitFormUseCase {
                 .user(user)
                 .build();
 
-        List<Subject> subjectList = form.getGrade().getSubjectList().getSubjectMap().getValue().get("21");
-        for (Subject subject : subjectList) {
-            if (Objects.equals(subject.getSubjectName(), "수학")) {
-                System.out.println(subject.getScore());
+        if (!form.getEducation().isQualificationExamination()) {
+            List<Subject> subjectList = form.getGrade().getSubjectList().getSubjectMap().getValue().get("21");
+            for (Subject subject : subjectList) {
+                if (Objects.equals(subject.getSubjectName(), "수학")) {
+                    System.out.println(subject.getScore());
+                }
             }
         }
+
 
         calculateFormScoreService.execute(form);
         assignExaminationNumberService.execute(form);
