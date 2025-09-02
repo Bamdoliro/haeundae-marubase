@@ -218,19 +218,19 @@ public class SendMessageUseCaseTest {
     }
 
     @Test
-    void 마이스터전형_1차_합격자들에게_메시지를_보낸다() {
+    void 특별전형_1차_합격자들에게_메시지를_보낸다() {
 
         //given
-        Form form = FormFixture.createForm(FormType.NATIONAL_VETERANS);
+        Form form = FormFixture.createForm(FormType.MULTICULTURAL);
         form.firstPass();
-        given(formRepository.findMeisterTalentFirstRoundForm()).willReturn(List.of(form));
+        given(formRepository.findFirstPassedSpecialForm()).willReturn(List.of(form));
         SendMessageByTypeRequest request = new SendMessageByTypeRequest("부산소마고 공지사항", "배고파요...", FormType.NATIONAL_VETERANS, false);
 
         //when
         sendMessageUseCase.execute(request);
 
         //then
-        verify(formRepository, times(1)).findMeisterTalentFirstRoundForm();
+        verify(formRepository, times(1)).findFirstPassedSpecialForm();
         verify(sendMessageService, times(1)).execute(List.of(form.getUser().getPhoneNumber()), request.getText(), request.getTitle());
     }
 
@@ -274,13 +274,13 @@ public class SendMessageUseCaseTest {
     void 조회할_전형대상이_없으면_오류가_발생한다() {
 
         //given
-        willThrow(new FailedToSendException()).given(formRepository).findMeisterTalentFirstRoundForm();
+        willThrow(new FailedToSendException()).given(formRepository).findFirstPassedSpecialForm();
         SendMessageByTypeRequest request = new SendMessageByTypeRequest("부산소마고 공지사항", "오늘은 꼭 롯데가..!", FormType.NATIONAL_VETERANS, false);
 
         //when and then
         Assertions.assertThrows(FailedToSendException.class,
                 () -> sendMessageUseCase.execute(request));
-        verify(formRepository, times(1)).findMeisterTalentFirstRoundForm();
+        verify(formRepository, times(1)).findFirstPassedSpecialForm();
         verify(sendMessageService, never()).execute(anyList(), anyString(), anyString());
     }
 
