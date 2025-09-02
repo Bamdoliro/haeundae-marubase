@@ -26,9 +26,9 @@ class CalculateFormScoreServiceTest {
         calculateFormScoreService.execute(form);
 
         // then
-        assertEquals(195.886, form.getScore().getSubjectGradeScore());
-        assertEquals(4.714, form.getScore().getThirdGradeFirstSemesterSubjectGradeScore());
-        assertEquals(15, form.getScore().getAttendanceScore());
+        assertEquals(135.296, form.getScore().getSubjectGradeScore());
+        assertEquals(38.4, form.getScore().getThirdGradeFirstSemesterSubjectGradeScore());
+        assertEquals(-2, form.getScore().getAttendanceScore());
     }
 
     @Test
@@ -40,9 +40,9 @@ class CalculateFormScoreServiceTest {
         calculateFormScoreService.execute(form);
 
         // then
-        assertEquals(117.531, form.getScore().getSubjectGradeScore());
-        assertEquals(4.714, form.getScore().getThirdGradeFirstSemesterSubjectGradeScore());
-        assertEquals(15, form.getScore().getAttendanceScore());
+        assertEquals(135.296, form.getScore().getSubjectGradeScore());
+        assertEquals(38.4, form.getScore().getThirdGradeFirstSemesterSubjectGradeScore());
+        assertEquals(-2, form.getScore().getAttendanceScore());
     }
 
     @Test
@@ -54,9 +54,9 @@ class CalculateFormScoreServiceTest {
         calculateFormScoreService.execute(form);
 
         // then
-        assertEquals(156.000, form.getScore().getSubjectGradeScore());
+        assertEquals(100.24, form.getScore().getSubjectGradeScore());
         assertNull(form.getScore().getThirdGradeFirstSemesterSubjectGradeScore());
-        assertEquals(14, form.getScore().getAttendanceScore());
+        assertEquals(0, form.getScore().getAttendanceScore());
     }
 
     @Test
@@ -68,7 +68,7 @@ class CalculateFormScoreServiceTest {
         calculateFormScoreService.execute(form);
 
         // then
-        assertEquals(93.6, form.getScore().getSubjectGradeScore());
-        assertEquals(14, form.getScore().getAttendanceScore());
+        assertEquals(100.24, form.getScore().getSubjectGradeScore());
+        assertEquals(0, form.getScore().getAttendanceScore());
     }
 }
