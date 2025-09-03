@@ -31,7 +31,7 @@ public class DownloadSecondRoundScoreFormatUseCase {
         Workbook workbook = xlsxService.openTemplate("2차전형점수양식");
         Sheet sheet = workbook.getSheetAt(0);
         CellStyle cellStyle = xlsxService.createDefaultCellStyle(workbook);
-        sheet.setColumnHidden(6, true);
+        sheet.setColumnHidden(5, true);
 
         for (int index = 0; index < formList.size(); index++) {
             Form form = formList.get(index);
@@ -50,18 +50,15 @@ public class DownloadSecondRoundScoreFormatUseCase {
             formTypeCell.setCellValue(form.getType().getCategory().getDescription());
             formTypeCell.setCellStyle(cellStyle);
 
-            Cell depthInterviewCell = row.createCell(3);
-            depthInterviewCell.setCellStyle(cellStyle);
+            Cell selfDirectedCell = row.createCell(3);
+            selfDirectedCell.setCellStyle(cellStyle);
 
-            Cell ncsCell = row.createCell(4);
-            ncsCell.setCellStyle(cellStyle);
+            Cell personalityCell = row.createCell(4);
+            personalityCell.setCellStyle(cellStyle);
 
-            Cell codingTestCell = row.createCell(5);
-            codingTestCell.setCellStyle(cellStyle);
-
-            Cell showCell = row.createCell(6);
+            Cell showCell = row.createCell(5);
             showCell.setCellStyle(cellStyle);
-            showCell.setCellFormula(String.format("IF(C%1$d=\"마이스터인재전형\", IF(OR(D%1$d=\"불참\", E%1$d=\"불참\", F%1$d=\"불참\"), FALSE, TRUE), IF(OR(D%1$d=\"불참\", E%1$d=\"불참\"), FALSE, TRUE))", xlsxIndex));
+            showCell.setCellFormula(String.format("IF(OR(D%1$d=\"불참\", E%1$d=\"불참\"), FALSE, TRUE)", xlsxIndex));
 
         }
 
