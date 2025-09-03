@@ -1,7 +1,6 @@
 package com.bamdoliro.maru.application.form;
 
 import com.bamdoliro.maru.domain.form.domain.Form;
-import com.bamdoliro.maru.domain.form.domain.value.Score;
 import com.bamdoliro.maru.domain.form.domain.value.Subject;
 import com.bamdoliro.maru.domain.form.exception.FormAlreadySubmittedException;
 import com.bamdoliro.maru.domain.form.service.AssignExaminationNumberService;
