@@ -176,37 +176,28 @@ public class FormFixture {
                         new SubjectList(
                                 List.of(
                                         new Subject(2, 1, "국어", randomAchievementLevel()),
-                                        new Subject(2, 1, "도덕", randomAchievementLevel()),
                                         new Subject(2, 1, "역사", randomAchievementLevel()),
                                         new Subject(2, 1, "수학", randomAchievementLevel()),
                                         new Subject(2, 1, "과학", randomAchievementLevel()),
                                         new Subject(2, 1, "영어", randomAchievementLevel()),
-                                        new Subject(2, 1, "체육", random3AchievementLevel()),
-                                        new Subject(2, 1, "미술", random3AchievementLevel()),
-                                        new Subject(2, 1, "음악", random3AchievementLevel()),
 
                                         new Subject(2, 2, "국어", randomAchievementLevel()),
-                                        new Subject(2, 2, "도덕", randomAchievementLevel()),
                                         new Subject(2, 2, "역사", randomAchievementLevel()),
                                         new Subject(2, 2, "수학", randomAchievementLevel()),
                                         new Subject(2, 2, "과학", randomAchievementLevel()),
                                         new Subject(2, 2, "영어", randomAchievementLevel()),
-                                        new Subject(2, 2, "체육", random3AchievementLevel()),
-                                        new Subject(2, 2, "미술", random3AchievementLevel()),
-                                        new Subject(2, 2, "음악", random3AchievementLevel()),
-                                        new Subject(2, 2, "한문", randomAchievementLevel()),
 
                                         new Subject(3, 1, "국어", randomAchievementLevel()),
                                         new Subject(3, 1, "사회", randomAchievementLevel()),
-                                        new Subject(3, 1, "역사", randomAchievementLevel()),
                                         new Subject(3, 1, "수학", randomAchievementLevel()),
                                         new Subject(3, 1, "과학", randomAchievementLevel()),
-                                        new Subject(3, 1, "기가", randomAchievementLevel()),
                                         new Subject(3, 1, "영어", randomAchievementLevel()),
-                                        new Subject(3, 1, "체육", random3AchievementLevel()),
-                                        new Subject(3, 1, "미술", random3AchievementLevel()),
-                                        new Subject(3, 1, "음악", random3AchievementLevel()),
-                                        new Subject(3, 1, "한문", randomAchievementLevel())
+
+                                        new Subject(3, 2, "국어", randomAchievementLevel()),
+                                        new Subject(3, 2, "사회", randomAchievementLevel()),
+                                        new Subject(3, 2, "수학", randomAchievementLevel()),
+                                        new Subject(3, 2, "과학", randomAchievementLevel()),
+                                        new Subject(3, 2, "영어", randomAchievementLevel())
                                 )),
                         new Attendance(randomNumber(0, 5), randomNumber(0, 5), randomNumber(0, 5), randomNumber(0, 5)),
                         new Attendance(randomNumber(0, 3), randomNumber(0, 3), randomNumber(0, 3), randomNumber(0, 3)),
