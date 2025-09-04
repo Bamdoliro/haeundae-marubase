@@ -97,7 +97,6 @@ public class ExportFormUseCase {
                     subject.score = v.getOriginalScore();
                 } else {
                     String fieldName = "achievementLevel" + v.getGrade() + v.getSemester();
-                    log.info("fieldName = {}", fieldName);
                     try {
                         SubjectVO.class.getField(fieldName)
                                 .set(subject, v.getAchievementLevel());
