@@ -65,7 +65,7 @@ class UpdateSecondRoundScoreUseCaseTest {
             if (form.getExaminationNumber() == 1001 ||
                     form.getExaminationNumber() == 1002 ||
                     form.getExaminationNumber() == 2001 ||
-                    form.getExaminationNumber() == 3001
+                    form.getExaminationNumber() == 2002
             ) {
                 formRepository.save(form);
             }
