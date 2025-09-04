@@ -58,7 +58,7 @@ class ExportSecondRoundResultUseCaseTest {
             }
 
             calculateFormScoreService.execute(form);
-            form.getScore().updateSecondRoundMeisterScore(100.2, 10.4, 100.7);
+            form.getScore().updateSecondRoundMeisterScore(100.2, 10.4);
             formRepository.save(form);
         });
     }

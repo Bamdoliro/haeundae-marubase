@@ -14,7 +14,6 @@ import com.bamdoliro.maru.shared.fixture.FormFixture;
 import com.bamdoliro.maru.shared.fixture.UserFixture;
 import com.bamdoliro.maru.shared.util.RandomUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -69,7 +68,7 @@ public class SelectSecondPassUseCaseTest {
         List<Form> firstPassedFormList = formRepository.findByStatus(FormStatus.FIRST_PASSED);
         firstPassedFormList.forEach(form -> {
             if (form.getType().isNationalVeteransEducation()) {
-                form.getScore().updateSecondRoundMeisterScore(RandomUtil.randomDouble(0, 100), RandomUtil.randomDouble(0, 100), RandomUtil.randomDouble(0, 100));
+                form.getScore().updateSecondRoundMeisterScore(RandomUtil.randomDouble(0, 100), RandomUtil.randomDouble(0, 100));
             } else {
                 form.getScore().updateSecondRoundScore(RandomUtil.randomDouble(0, 100), RandomUtil.randomDouble(0, 100));
             }

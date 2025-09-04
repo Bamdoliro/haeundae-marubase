@@ -113,7 +113,6 @@ class QueryAllFormUseCaseTest {
                 .filter(form -> form.getType() == FormType.NATIONAL_VETERANS)
                 .forEach(form -> form.getScore().updateSecondRoundMeisterScore(
                         RandomUtil.randomDouble(10, 50),
-                        RandomUtil.randomDouble(10, 50),
                         RandomUtil.randomDouble(10, 50)
                 ));
         formList.stream()
@@ -151,7 +150,6 @@ class QueryAllFormUseCaseTest {
         formList.stream()
                 .filter(form -> form.getType() == FormType.NATIONAL_VETERANS)
                 .forEach(form -> form.getScore().updateSecondRoundMeisterScore(
-                        RandomUtil.randomDouble(10, 50),
                         RandomUtil.randomDouble(10, 50),
                         RandomUtil.randomDouble(10, 50)
                 ));

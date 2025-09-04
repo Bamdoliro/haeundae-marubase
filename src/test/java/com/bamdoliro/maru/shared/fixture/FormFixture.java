@@ -340,7 +340,7 @@ public class FormFixture {
     }
 
     private static FormType randomFormType() {
-        FormType[] values = {FormType.REGULAR, FormType.REGULAR, FormType.REGULAR, FormType.REGULAR, FormType.ONE_PARENT, FormType.MULTI_CHILDREN};
+        FormType[] values = {FormType.REGULAR, FormType.REGULAR, FormType.REGULAR, FormType.ONE_PARENT, FormType.MULTI_CHILDREN, FormType.NATIONAL_VETERANS_EDUCATION};
         return values[new Random().nextInt(values.length)];
     }
 
