@@ -40,16 +40,6 @@ public class SubmitFormUseCase {
                 .user(user)
                 .build();
 
-        if (!form.getEducation().isQualificationExamination()) {
-            List<Subject> subjectList = form.getGrade().getSubjectList().getSubjectMap().getValue().get("21");
-            for (Subject subject : subjectList) {
-                if (Objects.equals(subject.getSubjectName(), "수학")) {
-                    System.out.println(subject.getScore());
-                }
-            }
-        }
-
-
         calculateFormScoreService.execute(form);
         assignExaminationNumberService.execute(form);
         formRepository.save(form);
