@@ -87,8 +87,8 @@ public class CalculateFormScoreService {
         return score;
     }
 
-    public Double calculateDepthInterviewScoreToRegular(Form form) {
-        return (form.getScore().getDepthInterviewScore() / 200) * 120;
+    public Double calculateSelfDirectedScoreToRegular(Form form) {
+        return form.getScore().getSelfDirectedScore();
     }
 
     private Integer calculateAttendanceScore(Form form) {

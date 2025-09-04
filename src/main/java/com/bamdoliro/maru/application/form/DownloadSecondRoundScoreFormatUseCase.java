@@ -31,7 +31,6 @@ public class DownloadSecondRoundScoreFormatUseCase {
         Workbook workbook = xlsxService.openTemplate("2차전형점수양식");
         Sheet sheet = workbook.getSheetAt(0);
         CellStyle cellStyle = xlsxService.createDefaultCellStyle(workbook);
-        sheet.setColumnHidden(5, true);
 
         for (int index = 0; index < formList.size(); index++) {
             Form form = formList.get(index);
@@ -58,7 +57,7 @@ public class DownloadSecondRoundScoreFormatUseCase {
 
             Cell showCell = row.createCell(5);
             showCell.setCellStyle(cellStyle);
-            showCell.setCellFormula(String.format("IF(OR(D%1$d=\"불참\", E%1$d=\"불참\"), FALSE, TRUE)", xlsxIndex));
+            showCell.setCellFormula(String.format("IF(AND(ISBLANK(D%1$d:E%1$d)),FALSE,TRUE)", xlsxIndex));
 
         }
 

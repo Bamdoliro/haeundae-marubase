@@ -81,7 +81,7 @@ public class UpdateSecondRoundScoreUseCase {
         boolean isValidScore = validateScore(row, invalidCellTypeList);
 
         if (invalidCellTypeList.isEmpty() && isValidScore) {
-            boolean isShow = row.getCell(6).getBooleanCellValue();
+            boolean isShow = row.getCell(5).getBooleanCellValue();
             FormType.Category type = getFormType(row.getCell(2).getStringCellValue());
 
             return new SecondScoreVo(
@@ -89,7 +89,6 @@ public class UpdateSecondRoundScoreUseCase {
                     type,
                     isShow ? row.getCell(3).getNumericCellValue() : null,
                     isShow ? row.getCell(4).getNumericCellValue() : null,
-                    null,
                     isShow
             );
         } else {
@@ -104,10 +103,9 @@ public class UpdateSecondRoundScoreUseCase {
         Cell examinationNumberCell = row.getCell(0);
         Cell nameCell = row.getCell(1);
         Cell typeCell = row.getCell(2);
-        Cell depthInterviewScoreCell = row.getCell(3);
-        Cell ncsScoreCell = row.getCell(4);
-        Cell codingTestScoreCell = row.getCell(5);
-        Cell isShowCell = row.getCell(6);
+        Cell selfDirectedScoreCell = row.getCell(3);
+        Cell personalityCell = row.getCell(4);
+        Cell isShowCell = row.getCell(5);
         boolean isShow = false;
 
         if (examinationNumberCell.getCellType() != CellType.NUMERIC) {
@@ -130,22 +128,13 @@ public class UpdateSecondRoundScoreUseCase {
         }
 
         if (isShow) {
-            if (depthInterviewScoreCell != null && depthInterviewScoreCell.getCellType() != CellType.NUMERIC) {
-                setErrorCell(depthInterviewScoreCell, "타입 불일치");
-                cellList.add(depthInterviewScoreCell);
+            if (selfDirectedScoreCell != null && selfDirectedScoreCell.getCellType() != CellType.NUMERIC) {
+                setErrorCell(selfDirectedScoreCell, "타입 불일치");
+                cellList.add(selfDirectedScoreCell);
             }
-            if (ncsScoreCell != null && ncsScoreCell.getCellType() != CellType.NUMERIC) {
-                setErrorCell(ncsScoreCell, "타입 불일치");
-                cellList.add(ncsScoreCell);
-            }
-            if (
-                    ("마이스터인재전형".equals(typeCell.getStringCellValue()) &&
-                            (codingTestScoreCell.getCellType() != CellType.NUMERIC)) ||
-                    (!"마이스터인재전형".equals(typeCell.getStringCellValue()) &&
-                            codingTestScoreCell != null && codingTestScoreCell.getCellType() != CellType.BLANK))
-            {
-                setErrorCell(codingTestScoreCell, "타입 불일치");
-                cellList.add(codingTestScoreCell);
+            if (personalityCell != null && personalityCell.getCellType() != CellType.NUMERIC) {
+                setErrorCell(personalityCell, "타입 불일치");
+                cellList.add(personalityCell);
             }
         }
 
@@ -157,60 +146,27 @@ public class UpdateSecondRoundScoreUseCase {
         boolean isValid = true;
 
         Cell typeCell = row.getCell(2);
-        Cell depthInterviewScoreCell = row.getCell(3);
-        Cell ncsScoreCell = row.getCell(4);
-        Cell codingTestScoreCell = row.getCell(5);
-        boolean isShow = row.getCell(6).getCellType() == CellType.FORMULA && row.getCell(6).getBooleanCellValue();
+        Cell selfDirectedScoreCell = row.getCell(3);
+        Cell personalityScoreCell = row.getCell(4);
+        boolean isShow = row.getCell(5).getCellType() == CellType.FORMULA && row.getCell(5).getBooleanCellValue();
 
         if (isShow) {
-            String type = typeCell.getStringCellValue();
-            double depthInterviewScore = !invalidCellTypeList.contains(depthInterviewScoreCell) ? depthInterviewScoreCell.getNumericCellValue() : 0;
-            double ncsScore = !invalidCellTypeList.contains(ncsScoreCell) ? ncsScoreCell.getNumericCellValue() : 0;
-            double codingTestScore = codingTestScoreCell != null && !invalidCellTypeList.contains(codingTestScoreCell)
-                    ? codingTestScoreCell.getNumericCellValue()
-                    : 0;
+            double selfDirectedScore = !invalidCellTypeList.contains(selfDirectedScoreCell) ? selfDirectedScoreCell.getNumericCellValue() : 0;
+            double personalityScore = !invalidCellTypeList.contains(personalityScoreCell) ? personalityScoreCell.getNumericCellValue() : 0;
 
-            switch (type) {
-                case "마이스터인재전형" -> {
-                    if (!invalidCellTypeList.contains(depthInterviewScoreCell) && !(0 <= depthInterviewScore && depthInterviewScore <= 120)) {
-                        setErrorCell(depthInterviewScoreCell, "범위 초과");
-                        isValid = false;
-                    }
-                    if (!invalidCellTypeList.contains(ncsScoreCell) && !(0 <= ncsScore && ncsScore <= 40)) {
-                        setErrorCell(ncsScoreCell, "범위 초과");
-                        isValid = false;
-                    }
-                    if (codingTestScoreCell != null && !invalidCellTypeList.contains(codingTestScoreCell)
-                            && !(0 <= codingTestScore && codingTestScore <= 80)) {
-                        setErrorCell(codingTestScoreCell, "범위 초과");
-                        isValid = false;
-                    }
-                }
-                case "사회통합전형" -> {
-                    if (!invalidCellTypeList.contains(depthInterviewScoreCell) && !(0 <= depthInterviewScore && depthInterviewScore <= 200)) {
-                        setErrorCell(depthInterviewScoreCell, "범위 초과");
-                        isValid = false;
-                    }
-                    if (!invalidCellTypeList.contains(ncsScoreCell) && !(0 <= ncsScore && ncsScore <= 40)) {
-                        setErrorCell(ncsScoreCell, "범위 초과");
-                        isValid = false;
-                    }
-                }
-                default -> {
-                    if (!invalidCellTypeList.contains(depthInterviewScoreCell) && !(0 <= depthInterviewScore && depthInterviewScore <= 120)) {
-                        setErrorCell(depthInterviewScoreCell, "범위 초과");
-                        isValid = false;
-                    }
-                    if (!invalidCellTypeList.contains(ncsScoreCell) && !(0 <= ncsScore && ncsScore <= 40)) {
-                        setErrorCell(ncsScoreCell, "범위 초과");
-                        isValid = false;
-                    }
-                }
+
+            if (!invalidCellTypeList.contains(selfDirectedScoreCell) && !(0 <= selfDirectedScore && selfDirectedScore <= 40)) {
+                setErrorCell(selfDirectedScoreCell, "범위 초과");
+                isValid = false;
             }
-        }
+            if (!invalidCellTypeList.contains(personalityScoreCell) && !(0 <= personalityScore && personalityScore <= 20)) {
+                setErrorCell(personalityScoreCell, "범위 초과");
+                isValid = false;
+            }
 
+            }
         return isValid;
-    }
+        }
 
     private FormType.Category getFormType(String description) {
         try {
@@ -242,8 +198,8 @@ public class UpdateSecondRoundScoreUseCase {
 
     private void updateFormSecondRoundScore(Form form, SecondScoreVo secondScoreVo) {
         form.getScore().updateSecondRoundScore(
-                secondScoreVo.getDepthInterviewScore(),
-                secondScoreVo.getNcsScore()
+                secondScoreVo.getSelfDirectedScore(),
+                secondScoreVo.getPersonalityScore()
         );
     }
 
@@ -258,8 +214,7 @@ public class UpdateSecondRoundScoreUseCase {
 class SecondScoreVo {
     private Long examinationNumber;
     private FormType.Category type;
-    private Double depthInterviewScore;
-    private Double ncsScore;
-    private Double codingTestScore;
+    private Double selfDirectedScore;
+    private Double personalityScore;
     private boolean isShow;
 }

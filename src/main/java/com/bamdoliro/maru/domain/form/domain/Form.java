@@ -212,8 +212,8 @@ public class Form extends BaseTimeEntity {
         Double subjectGradeScore = calculateFormScoreService.calculateSubjectGradeScore(this);
         this.score.updateSubjectScore(subjectGradeScore);
 
-        Double depthInterviewScore = calculateFormScoreService.calculateDepthInterviewScoreToRegular(this);
-        this.score.updateSecondRoundSocialScoreToRegular(depthInterviewScore);
+        Double selfDirectedScore = calculateFormScoreService.calculateSelfDirectedScoreToRegular(this);
+        this.score.updateSecondRoundSocialScoreToRegular(selfDirectedScore);
     }
 
     public void update(Applicant applicant, Parent parent, Education education, Grade grade, Document document, FormType type) {
