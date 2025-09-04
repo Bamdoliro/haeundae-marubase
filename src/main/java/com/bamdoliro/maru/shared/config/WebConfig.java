@@ -26,7 +26,9 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins(
                         "https://hhsapply.com",
-                        "https://madmin.hhsapply.com"
+                        "https://madmin.hhsapply.com",
+                        "https://www.hhsapply.com",
+                        "https://www.madmin.hhsapply.com"
                 )
                 .allowedMethods(
                         HttpMethod.GET.name(),
