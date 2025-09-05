@@ -34,6 +34,7 @@ public enum FormType implements EnumProperty {
     STREET_CLEANER("환경미화원 자녀", Category.SPECIAL, Category.SOCIETY_DIVERSITY),
     DEPLOYED_SOLDIER("해외파병군인 자녀", Category.SPECIAL, Category.SOCIETY_DIVERSITY),
     INTANGIBLE_CULTURAL_HERITAGE("무형문화재 보유자 자녀", Category.SPECIAL, Category.SOCIETY_DIVERSITY),
+    POSTMAN("우편집배원 자녀",Category.SPECIAL, Category.SOCIETY_DIVERSITY),
     SAILOR("선원 자녀", Category.SPECIAL, Category.SOCIETY_DIVERSITY),
 
     SPECIAL_ADMISSION("특례입학대상자", Category.SUPERNUMERARY, Category.SPECIAL_ADMISSION),
@@ -49,7 +50,7 @@ public enum FormType implements EnumProperty {
     public enum Category implements EnumProperty {
         // Main Category
         REGULAR("일반전형"),
-        SPECIAL("특별전형"),
+        SPECIAL("사회통합전형"),
         SUPERNUMERARY("정원 외 전형"),
 
         // Sub Category
