@@ -36,7 +36,7 @@ class QueryAllFormUseCaseTest {
         List<Form> formList = List.of(
                 FormFixture.createForm(FormType.REGULAR),
                 FormFixture.createForm(FormType.SPECIAL_ADMISSION),
-                FormFixture.createForm(FormType.MEISTER_TALENT),
+                FormFixture.createForm(FormType.NATIONAL_VETERANS),
                 FormFixture.createForm(FormType.MULTI_CHILDREN)
         );
 
@@ -59,7 +59,7 @@ class QueryAllFormUseCaseTest {
         List<Form> formList = List.of(
                 FormFixture.createForm(FormType.REGULAR),
                 FormFixture.createForm(FormType.SPECIAL_ADMISSION),
-                FormFixture.createForm(FormType.MEISTER_TALENT),
+                FormFixture.createForm(FormType.NATIONAL_VETERANS),
                 FormFixture.createForm(FormType.MULTI_CHILDREN)
         );
 
@@ -82,7 +82,7 @@ class QueryAllFormUseCaseTest {
         List<Form> formList = List.of(
                 FormFixture.createForm(FormType.REGULAR),
                 FormFixture.createForm(FormType.SPECIAL_ADMISSION),
-                FormFixture.createForm(FormType.MEISTER_TALENT),
+                FormFixture.createForm(FormType.NATIONAL_VETERANS),
                 FormFixture.createForm(FormType.MULTI_CHILDREN)
         );
 
@@ -91,7 +91,7 @@ class QueryAllFormUseCaseTest {
         given(formRepository.findByStatus(null)).willReturn(formList);
 
         // when
-        List<FormSimpleResponse> returnedFormList = queryAllFormUseCase.execute(null, FormType.Category.SOCIAL_INTEGRATION, null);
+        List<FormSimpleResponse> returnedFormList = queryAllFormUseCase.execute(null, FormType.Category.SOCIETY_DIVERSITY, null);
 
         // then
         assertEquals(1, returnedFormList.size());
@@ -105,19 +105,18 @@ class QueryAllFormUseCaseTest {
         List<Form> formList = List.of(
                 FormFixture.createForm(FormType.REGULAR),
                 FormFixture.createForm(FormType.SPECIAL_ADMISSION),
-                FormFixture.createForm(FormType.MEISTER_TALENT),
+                FormFixture.createForm(FormType.NATIONAL_VETERANS),
                 FormFixture.createForm(FormType.MULTI_CHILDREN)
         );
 
         formList.stream()
-                .filter(form -> form.getType() == FormType.MEISTER_TALENT)
+                .filter(form -> form.getType() == FormType.NATIONAL_VETERANS)
                 .forEach(form -> form.getScore().updateSecondRoundMeisterScore(
-                        RandomUtil.randomDouble(10, 50),
                         RandomUtil.randomDouble(10, 50),
                         RandomUtil.randomDouble(10, 50)
                 ));
         formList.stream()
-                .filter(form -> form.getType() != FormType.MEISTER_TALENT)
+                .filter(form -> form.getType() != FormType.NATIONAL_VETERANS)
                 .forEach(form -> form.getScore().updateSecondRoundScore(
                         RandomUtil.randomDouble(10, 50),
                         RandomUtil.randomDouble(10, 50)
@@ -144,19 +143,18 @@ class QueryAllFormUseCaseTest {
         List<Form> formList = List.of(
                 FormFixture.createForm(FormType.REGULAR),
                 FormFixture.createForm(FormType.SPECIAL_ADMISSION),
-                FormFixture.createForm(FormType.MEISTER_TALENT),
+                FormFixture.createForm(FormType.NATIONAL_VETERANS),
                 FormFixture.createForm(FormType.MULTI_CHILDREN)
         );
 
         formList.stream()
-                .filter(form -> form.getType() == FormType.MEISTER_TALENT)
+                .filter(form -> form.getType() == FormType.NATIONAL_VETERANS)
                 .forEach(form -> form.getScore().updateSecondRoundMeisterScore(
-                        RandomUtil.randomDouble(10, 50),
                         RandomUtil.randomDouble(10, 50),
                         RandomUtil.randomDouble(10, 50)
                 ));
         formList.stream()
-                .filter(form -> form.getType() != FormType.MEISTER_TALENT)
+                .filter(form -> form.getType() != FormType.NATIONAL_VETERANS)
                 .forEach(form -> form.getScore().updateSecondRoundScore(
                         RandomUtil.randomDouble(10, 50),
                         RandomUtil.randomDouble(10, 50)
@@ -183,14 +181,14 @@ class QueryAllFormUseCaseTest {
         List<Form> formList = List.of(
                 FormFixture.createForm(FormType.REGULAR),
                 FormFixture.createForm(FormType.SPECIAL_ADMISSION),
-                FormFixture.createForm(FormType.MEISTER_TALENT),
+                FormFixture.createForm(FormType.NATIONAL_VETERANS),
                 FormFixture.createForm(FormType.MULTI_CHILDREN)
         );
 
         given(formRepository.findByStatus(null)).willReturn(formList);
 
         // when
-        List<FormSimpleResponse> returnedFormList = queryAllFormUseCase.execute(null, FormType.Category.SOCIAL_INTEGRATION, "form-id");
+        List<FormSimpleResponse> returnedFormList = queryAllFormUseCase.execute(null, FormType.Category.SOCIETY_DIVERSITY, "form-id");
 
         // then
         assertEquals(1, returnedFormList.size());

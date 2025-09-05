@@ -100,7 +100,7 @@
 <body>
 <table>
     <p class="format">[서식1]</p>
-    <caption th:text='${year+"학년도 부산소프트웨어마이스터고등학교 입학원서"}'></caption>
+    <caption th:text='${year+"학년도 해운대고등학교 입학원서"}'></caption>
     <colgroup>
         <col style="width:6.39%"/>
         <col style="width:1.46%"/>
@@ -332,10 +332,17 @@
         <td class="ba" colspan="2" rowspan="2"
             th:text="${form.grade.attendance3.classAbsenceCount}"></td>
     </tr>
-    <tr>
+    <tr th:if="${form.education.isQualificationExamination()}">
         <td class="ba disabled" colspan="2">-</td>
         <td class="ba disabled" colspan="3"></td>
         <td class="ba disabled" colspan="1"></td>
+    </tr>
+    <tr th:unless="${form.education.isQualificationExamination()}">
+        <td class="ba" colspan="2">2</td>
+        <td class="ba" colspan="3"
+            th:text="${grade32.size()}"></td>
+        <td class="ba" colspan="1"
+            th:text="${grade32.totalScore()}"></td>
     </tr>
     <tr th:if="${form.education.isQualificationExamination()}">
         <th scope="row" class="ba">계</th>
@@ -346,15 +353,14 @@
         <td class="ba disabled" colspan="2"></td>
         <td class="ba disabled" colspan="1"></td>
         <td class="ba disabled" colspan="2"></td>
-        <td class="ba disabled" colspan="1"></td>
     </tr>
     <tr th:unless="${form.education.isQualificationExamination()}">
         <th scope="row" class="ba">계</th>
         <td class="ba disabled" colspan="2"></td>
         <td class="ba" colspan="3"
-            th:text="${grade21.size() + grade22.size() + grade31.size()}"></td>
+            th:text="${grade21.size() + grade22.size() + grade31.size() + grade32.size()}"></td>
         <td class="ba" colspan="1"
-            th:text="${grade21.totalScore() + grade22.totalScore() + grade31.totalScore()}"></td>
+            th:text="${grade21.totalScore() + grade22.totalScore() + grade31.totalScore() + grade32.totalScore}"></td>
         <td class="ba" colspan="1"
             th:text="${form.grade.getTotalAbsenceCount()}"></td>
         <td class="ba" colspan="2"

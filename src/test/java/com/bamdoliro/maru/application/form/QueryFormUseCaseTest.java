@@ -46,7 +46,7 @@ class QueryFormUseCaseTest {
         User user = form.getUser();
         Long id = user.getId();
 
-        
+
         given(formFacade.getForm(id)).willReturn(form);
         given(fileService.getDownloadPresignedUrl(eq(FolderConstant.IDENTIFICATION_PICTURE), any(String.class))).willReturn(SharedFixture.createIdentificationPictureUrlResponse().getDownloadUrl());
         given(fileService.getDownloadPresignedUrl(eq(FolderConstant.FORM), any(String.class))).willReturn(SharedFixture.createFormUrlResponse().getDownloadUrl());
@@ -55,12 +55,14 @@ class QueryFormUseCaseTest {
         FormResponse response = queryFormUseCase.execute(user, id);
 
         // then
-        
+
         verify(formFacade, times(1)).getForm(id);
         assertEquals(form.getId(), response.getId());
         assertEquals(form.getApplicant().getName(), response.getApplicant().getName());
         assertEquals(form.getParent().getName(), response.getParent().getName());
-        assertEquals(form.getDocument().getCoverLetter(), response.getDocument().getCoverLetter());
+        assertEquals(form.getDocument().getLearningExperience(), response.getDocument().getLearningExperience());
+        assertEquals(form.getDocument().getStatementOfPurpose(), response.getDocument().getStatementOfPurpose());
+        assertEquals(form.getDocument().getPersonality(), response.getDocument().getPersonality());
     }
 
     @Test
@@ -73,7 +75,7 @@ class QueryFormUseCaseTest {
 
         // when and then
         assertThrows(AuthorityMismatchException.class, () -> queryFormUseCase.execute(otherUser, form.getId()));
-        
+
         verify(formFacade, times(1)).getForm(form.getId());
     }
 
@@ -87,7 +89,7 @@ class QueryFormUseCaseTest {
 
         // when and then
         assertThrows(FormNotFoundException.class, () -> queryFormUseCase.execute(user, id));
-        
+
         verify(formFacade, times(1)).getForm(id);
     }
 }

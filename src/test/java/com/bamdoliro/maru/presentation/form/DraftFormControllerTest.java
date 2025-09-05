@@ -66,6 +66,10 @@ class DraftFormControllerTest extends RestDocsTestSupport {
                                         .type(JsonFieldType.STRING)
                                         .optional()
                                         .description("지원자 전화번호"),
+                                fieldWithPath("applicant.registrationNumber")
+                                        .type(JsonFieldType.STRING)
+                                        .optional()
+                                        .description("지원자 주민등록번호"),
                                 fieldWithPath("applicant.birthday")
                                         .type(JsonFieldType.STRING)
                                         .optional()

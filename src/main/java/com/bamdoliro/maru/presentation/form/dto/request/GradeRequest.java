@@ -1,13 +1,10 @@
 package com.bamdoliro.maru.presentation.form.dto.request;
 
-import com.bamdoliro.maru.domain.form.domain.type.Certificate;
-import com.bamdoliro.maru.domain.form.domain.value.CertificateList;
 import com.bamdoliro.maru.domain.form.domain.value.Grade;
 import com.bamdoliro.maru.domain.form.domain.value.Subject;
 import com.bamdoliro.maru.domain.form.domain.value.SubjectList;
 import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

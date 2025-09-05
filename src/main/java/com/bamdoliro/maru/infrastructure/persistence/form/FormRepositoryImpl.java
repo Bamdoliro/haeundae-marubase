@@ -139,8 +139,8 @@ public class FormRepositoryImpl implements FormRepositoryCustom {
                 )
                 .orderBy(form.score.totalScore.desc(),
                         form.score.subjectGradeScore.desc(),
-                        form.score.depthInterviewScore.desc(),
-                        form.score.ncsScore.desc(),
+                        form.score.selfDirectedScore.desc(),
+                        form.score.personalityScore.desc(),
                         form.score.thirdGradeFirstSemesterSubjectGradeScore.desc().nullsLast(),
                         form.score.attendanceScore.desc()
                 )
@@ -160,8 +160,8 @@ public class FormRepositoryImpl implements FormRepositoryCustom {
                 )
                 .orderBy(form.score.totalScore.desc(),
                         form.score.subjectGradeScore.desc(),
-                        form.score.depthInterviewScore.desc(),
-                        form.score.ncsScore.desc(),
+                        form.score.selfDirectedScore.desc(),
+                        form.score.personalityScore.desc(),
                         form.score.thirdGradeFirstSemesterSubjectGradeScore.desc().nullsLast(),
                         form.score.attendanceScore.desc()
                 )
@@ -181,8 +181,8 @@ public class FormRepositoryImpl implements FormRepositoryCustom {
                 )
                 .orderBy(form.score.totalScore.desc(),
                         form.score.subjectGradeScore.desc(),
-                        form.score.depthInterviewScore.desc(),
-                        form.score.ncsScore.desc(),
+                        form.score.selfDirectedScore.desc(),
+                        form.score.personalityScore.desc(),
                         form.score.thirdGradeFirstSemesterSubjectGradeScore.desc().nullsLast(),
                         form.score.attendanceScore.desc()
                 )

@@ -112,7 +112,7 @@ public class MessageControllerTest extends RestDocsTestSupport {
         given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
         given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
 
-        SendMessageByTypeRequest request = new SendMessageByTypeRequest("부산소마고 공지사항", "추카추카", FormType.MEISTER_TALENT, false);
+        SendMessageByTypeRequest request = new SendMessageByTypeRequest("부산소마고 공지사항", "추카추카", FormType.NATIONAL_VETERANS, false);
         willDoNothing().given(sendMessageUseCase).execute(request);
 
         mockMvc.perform(post("/messages/type")

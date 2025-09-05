@@ -65,7 +65,7 @@ class UpdateSecondRoundScoreUseCaseTest {
             if (form.getExaminationNumber() == 1001 ||
                     form.getExaminationNumber() == 1002 ||
                     form.getExaminationNumber() == 2001 ||
-                    form.getExaminationNumber() == 3001
+                    form.getExaminationNumber() == 2002
             ) {
                 formRepository.save(form);
             }
@@ -87,8 +87,11 @@ class UpdateSecondRoundScoreUseCaseTest {
                 .sorted(Comparator.comparing(Form::getExaminationNumber))
                 .toList();
         assertEquals(3, formList.size());
-        assertNull(formList.get(0).getScore().getCodingTestScore());
-        assertEquals(20, formList.get(1).getScore().getCodingTestScore());
-        assertNull(formList.get(2).getScore().getCodingTestScore());
+        assertEquals(40, formList.get(0).getScore().getSelfDirectedScore());
+        assertEquals(20, formList.get(0).getScore().getPersonalityScore());
+        assertEquals(35, formList.get(1).getScore().getSelfDirectedScore());
+        assertEquals(15, formList.get(1).getScore().getPersonalityScore());
+        assertEquals(10, formList.get(2).getScore().getSelfDirectedScore());
+        assertEquals(10, formList.get(2).getScore().getPersonalityScore());
     }
 }

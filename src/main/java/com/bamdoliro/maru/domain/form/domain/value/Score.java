@@ -24,13 +24,10 @@ public class Score {
     private Integer attendanceScore;
 
     @Column(nullable = true)
-    private Double depthInterviewScore;
+    private Double selfDirectedScore;
 
     @Column(nullable = true)
-    private Double codingTestScore;
-
-    @Column(nullable = true)
-    private Double ncsScore;
+    private Double personalityScore;
 
     @Column(nullable = false)
     private Double firstRoundScore;
@@ -56,26 +53,20 @@ public class Score {
         this.firstRoundScore = subjectGradeScore + attendanceScore;
     }
 
-    public void updateSecondRoundMeisterScore(Double depthInterviewScore, Double ncsScore, Double codingTestScore) {
-        this.depthInterviewScore = depthInterviewScore;
-        this.ncsScore = ncsScore;
-        this.codingTestScore = codingTestScore;
-        this.totalScore = firstRoundScore + depthInterviewScore + codingTestScore + ncsScore;
+    public void updateSecondRoundMeisterScore(Double selfDirectedScore, Double personalityScore) {
+        this.selfDirectedScore = selfDirectedScore;
+        this.personalityScore = personalityScore;
+        this.totalScore = firstRoundScore + selfDirectedScore + personalityScore;
     }
 
-    public void updateSecondRoundScore(Double depthInterviewScore, Double ncsScore) {
-        this.depthInterviewScore = depthInterviewScore;
-        this.ncsScore = ncsScore;
-        this.totalScore = firstRoundScore + depthInterviewScore + ncsScore;
+    public void updateSecondRoundScore(Double selfDirectedScore, Double personalityScore) {
+        this.selfDirectedScore = selfDirectedScore;
+        this.personalityScore = personalityScore;
+        this.totalScore = firstRoundScore + selfDirectedScore + personalityScore;
     }
 
-    public void updateSecondRoundMeisterScoreToRegular() {
-        this.codingTestScore = null;
-        this.totalScore = firstRoundScore + depthInterviewScore + ncsScore;
-    }
-
-    public void updateSecondRoundSocialScoreToRegular(Double depthInterviewScore) {
-        this.depthInterviewScore = depthInterviewScore;
-        this.totalScore = firstRoundScore + depthInterviewScore + ncsScore;
+    public void updateSecondRoundSocialScoreToRegular(Double selfDirectedScore) {
+        this.selfDirectedScore = selfDirectedScore;
+        this.totalScore = firstRoundScore + selfDirectedScore + personalityScore;
     }
 }

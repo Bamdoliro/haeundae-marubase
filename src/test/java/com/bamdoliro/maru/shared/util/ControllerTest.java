@@ -14,7 +14,6 @@ import com.bamdoliro.maru.application.question.*;
 import com.bamdoliro.maru.application.school.SearchSchoolUseCase;
 import com.bamdoliro.maru.application.user.*;
 import com.bamdoliro.maru.domain.auth.service.TokenService;
-import com.bamdoliro.maru.infrastructure.message.SendMessageService;
 import com.bamdoliro.maru.infrastructure.neis.SearchSchoolService;
 import com.bamdoliro.maru.presentation.analysis.AnalysisController;
 import com.bamdoliro.maru.presentation.auth.AuthController;
@@ -240,8 +239,6 @@ public abstract class ControllerTest {
     @MockBean
     protected SearchSchoolService searchSchoolService;
 
-    @MockBean
-    protected SendMessageService sendMessageService;
 
 
     @MockBean

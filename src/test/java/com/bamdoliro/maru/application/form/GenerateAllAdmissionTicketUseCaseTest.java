@@ -52,7 +52,7 @@ public class GenerateAllAdmissionTicketUseCaseTest {
         // given
         List<Form> formList = new ArrayList<>();
         formList.add(FormFixture.createForm(FormType.REGULAR));
-        formList.add(FormFixture.createForm(FormType.MEISTER_TALENT));
+        formList.add(FormFixture.createForm(FormType.NATIONAL_VETERANS));
         formList.forEach(Form::firstPass);
         given(formRepository.findByStatus(FormStatus.FIRST_PASSED)).willReturn(formList);
         given(processTemplateService.execute(any(String.class), anyMap())).willReturn("html");
