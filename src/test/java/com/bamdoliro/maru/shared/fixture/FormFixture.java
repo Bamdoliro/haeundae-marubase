@@ -504,7 +504,7 @@ public class FormFixture {
                         "https://maru.com/photo.png",
                         "김밤돌",
                         "01012345678",
-                        LocalDate.of(2005, 4, 15),
+                        "080409-3111111",
                         Gender.FEMALE
                 ),
                 new ParentResponse(
