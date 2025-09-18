@@ -17,9 +17,9 @@ public class FairFixture {
 
     public static Fair createFair() {
         return new Fair(
-                LocalDateTime.of(2025, 10, 26, 11, 0),
+                LocalDateTime.now().plusWeeks(3),
                 120,
-                "부산소프트웨어마이스터고등학교 1층 SRC관",
+                "해운대고등학교 5층 대동관",
                 FairType.STUDENT_AND_PARENT,
                 LocalDate.now(),
                 LocalDate.now().plusWeeks(2)
@@ -27,9 +27,9 @@ public class FairFixture {
     }
     public static CreateFairRequest createFairRequest() {
         return new CreateFairRequest(
-                LocalDateTime.of(2025, 10, 26, 11, 0),
+                LocalDateTime.now().plusWeeks(3),
                 120,
-                "부산소프트웨어마이스터고등학교 1층 SRC관",
+                "해운대고등학교 5층 대동관",
                 FairType.STUDENT_AND_PARENT,
                 LocalDate.now(),
                 LocalDate.now().plusWeeks(2)
@@ -38,12 +38,12 @@ public class FairFixture {
 
     public static Fair createClosedFair() {
         return new Fair(
-                LocalDateTime.of(2024, 8, 26, 11, 0),
+                LocalDateTime.now().minusWeeks(1),
                 120,
-                "부산소프트웨어마이스터고등학교 1층 SRC관",
+                "해운대고등학교 5층 대동관",
                 FairType.STUDENT_AND_PARENT,
-                LocalDate.now(),
-                LocalDate.now().plusWeeks(2)
+                LocalDate.now().minusWeeks(4),
+                LocalDate.now().minusWeeks(2)
         );
     }
 
