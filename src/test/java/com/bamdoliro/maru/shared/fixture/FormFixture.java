@@ -373,7 +373,7 @@ public class FormFixture {
                         new SubjectList(List.of(
                                 new Subject(1, 1, "국어", AchievementLevel.A),
                                 new Subject(1, 1, "수학", AchievementLevel.E),
-                                new Subject(1, 1, "사회", AchievementLevel.A),
+                                new Subject(1, 1, "사회", AchievementLevel.F),
                                 new Subject(1, 1, "과학", AchievementLevel.D),
                                 new Subject(1, 1, "영어", AchievementLevel.A)
                         )),
