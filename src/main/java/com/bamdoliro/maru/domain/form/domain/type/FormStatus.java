@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 public enum FormStatus implements EnumProperty {
     SUBMITTED("제출됨"),
     FINAL_SUBMITTED("최종 제출됨"),
+    ARRIVED("학교 도착"),
+    NOT_ARRIVED("도착 안함"),
     APPROVED("승인됨"),
     REJECTED("반려됨"),
     RECEIVED("접수됨"),
