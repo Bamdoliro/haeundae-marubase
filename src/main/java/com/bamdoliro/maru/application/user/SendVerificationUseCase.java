@@ -23,7 +23,7 @@ public class SendVerificationUseCase {
         if (request.getType() == VerificationType.SIGNUP) {
             SignUpVerification signUpVerification = new SignUpVerification(request.getPhoneNumber());
             String text = String.format(
-                    "[부산소프트웨어마이스터고] 회원가입 인증번호는 [%s]입니다.",
+                    "[해운대고등학교] 회원가입 인증번호는 [%s]입니다.",
                     signUpVerification.getCode()
             );
 
@@ -36,7 +36,7 @@ public class SendVerificationUseCase {
         } else {
             UpdatePasswordVerification updatePasswordVerification = new UpdatePasswordVerification(request.getPhoneNumber());
             String text = String.format(
-                    "[부산소프트웨어마이스터고] 비밀번호 변경 인증번호는 [%s]입니다.",
+                    "[해운대고등학교] 비밀번호 변경 인증번호는 [%s]입니다.",
                     updatePasswordVerification.getCode()
             );
 
