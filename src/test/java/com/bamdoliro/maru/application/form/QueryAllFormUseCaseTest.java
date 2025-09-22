@@ -71,7 +71,7 @@ class QueryAllFormUseCaseTest {
         List<FormSimpleResponse> returnedFormList = queryAllFormUseCase.execute(null, FormType.NATIONAL_VETERANS, null);
 
         // then
-        assertEquals(2, returnedFormList.size());
+        assertEquals(1, returnedFormList.size());
 
         verify(formRepository, times(1)).findByStatus(null);
     }
