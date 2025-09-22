@@ -42,6 +42,8 @@ public class ExportResultUseCase {
                 form -> form.getGrade().getSubjectList().getSubjectMap().getSubjectListOf(2, 2).totalScore(),
                 form -> form.getGrade().getSubjectList().getSubjectMap().getSubjectListOf(3, 1).size(),
                 form -> form.getGrade().getSubjectList().getSubjectMap().getSubjectListOf(3, 1).totalScore(),
+                form -> form.getGrade().getSubjectList().getSubjectMap().getSubjectListOf(3, 2).size(),
+                form -> form.getGrade().getSubjectList().getSubjectMap().getSubjectListOf(3, 2).totalScore(),
                 form -> MathUtil.roundTo(form.getScore().getSubjectGradeScore(), 3),
                 form -> form.getScore().getAttendanceScore(),
                 form -> form.getScore().getSelfDirectedScore(),
