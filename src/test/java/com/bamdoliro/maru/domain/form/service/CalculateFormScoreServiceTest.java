@@ -28,7 +28,7 @@ class CalculateFormScoreServiceTest {
         // then
         assertEquals(135.296, form.getScore().getSubjectGradeScore());
         assertEquals(38.4, form.getScore().getThirdGradeFirstSemesterSubjectGradeScore());
-        assertEquals(-2, form.getScore().getAttendanceScore());
+        assertEquals(-3, form.getScore().getAttendanceScore());
     }
 
     @Test
@@ -42,7 +42,7 @@ class CalculateFormScoreServiceTest {
         // then
         assertEquals(135.296, form.getScore().getSubjectGradeScore());
         assertEquals(38.4, form.getScore().getThirdGradeFirstSemesterSubjectGradeScore());
-        assertEquals(-2, form.getScore().getAttendanceScore());
+        assertEquals(-3, form.getScore().getAttendanceScore());
     }
 
     @Test
