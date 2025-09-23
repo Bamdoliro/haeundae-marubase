@@ -3,12 +3,7 @@ package com.bamdoliro.maru.domain.form.domain;
 import com.bamdoliro.maru.domain.auth.exception.AuthorityMismatchException;
 import com.bamdoliro.maru.domain.form.domain.type.FormStatus;
 import com.bamdoliro.maru.domain.form.domain.type.FormType;
-import com.bamdoliro.maru.domain.form.domain.value.Applicant;
-import com.bamdoliro.maru.domain.form.domain.value.Document;
-import com.bamdoliro.maru.domain.form.domain.value.Education;
-import com.bamdoliro.maru.domain.form.domain.value.Grade;
-import com.bamdoliro.maru.domain.form.domain.value.Parent;
-import com.bamdoliro.maru.domain.form.domain.value.Score;
+import com.bamdoliro.maru.domain.form.domain.value.*;
 import com.bamdoliro.maru.domain.form.service.CalculateFormScoreService;
 import com.bamdoliro.maru.domain.user.domain.User;
 import com.bamdoliro.maru.infrastructure.persistence.converter.LongEncryptedConverter;
@@ -85,6 +80,14 @@ public class Form extends BaseTimeEntity {
 
     public void submit() {
         this.status = FormStatus.FINAL_SUBMITTED;
+    }
+
+    public void arrive() {
+        this.status = FormStatus.ARRIVED;
+    }
+
+    public void notArrive() {
+        this.status = FormStatus.NOT_ARRIVED;
     }
 
     public void updateScore(Score score) {

@@ -2402,4 +2402,98 @@ class FormControllerTest extends RestDocsTestSupport {
 
         verify(queryAdmissionAndPledgeUseCase, times(1)).execute(idList);
     }
+
+    @Test
+    void 원서를_도착으로_변경한다() throws Exception {
+        Long formId = 1L;
+        User user = UserFixture.createAdminUser();
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+        willDoNothing().given(arriveFormUseCase).execute(formId);
+
+        mockMvc.perform(patch("/forms/{form-id}/arrive", formId)
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+
+                .andExpect(status().isNoContent())
+
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("Bearer token")
+                        ),
+                        pathParameters(
+                                parameterWithName("form-id").description("도착한 원서 id")
+                        )
+                ));
+
+        verify(arriveFormUseCase, times(1)).execute(formId);
+    }
+
+    @Test
+    void 원서를_도착으로_변경할_때_원서가_없으면_에러가_발생한다() throws Exception {
+        Long formId = 1L;
+        User user = UserFixture.createAdminUser();
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+        doThrow(new FormNotFoundException()).when(arriveFormUseCase).execute(formId);
+
+        mockMvc.perform(patch("/forms/{form-id}/arrive", formId)
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+
+                .andExpect(status().isNotFound())
+
+                .andDo(restDocs.document());
+
+        verify(arriveFormUseCase, times(1)).execute(formId);
+    }
+
+    @Test
+    void 원서를_미도착으로_변경한다() throws Exception {
+        Long formId = 1L;
+        User user = UserFixture.createAdminUser();
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+        willDoNothing().given(notArriveFormUseCase).execute(formId);
+
+        mockMvc.perform(patch("/forms/{form-id}/not-arrive", formId)
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+
+                .andExpect(status().isNoContent())
+
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("Bearer token")
+                        ),
+                        pathParameters(
+                                parameterWithName("form-id").description("도착하지 않은 원서 id")
+                        )
+                ));
+
+        verify(notArriveFormUseCase, times(1)).execute(formId);
+    }
+
+    @Test
+    void 원서를_미도착으로_변경할_때_원서가_없으면_에러가_발생한다() throws Exception {
+        Long formId = 1L;
+        User user = UserFixture.createAdminUser();
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+        doThrow(new FormNotFoundException()).when(notArriveFormUseCase).execute(formId);
+
+        mockMvc.perform(patch("/forms/{form-id}/not-arrive", formId)
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON))
+
+                .andExpect(status().isNotFound())
+
+                .andDo(restDocs.document());
+
+        verify(notArriveFormUseCase, times(1)).execute(formId);
+    }
 }

@@ -35,6 +35,8 @@ public class FormController {
     private final SubmitFormUseCase submitFormUseCase;
     private final SubmitFinalFormUseCase submitFinalFormUseCase;
     private final ApproveFormUseCase approveFormUseCase;
+    private final ArriveFormUseCase arriveFormUseCase;
+    private final NotArriveFormUseCase notArriveFormUseCase;
     private final RejectFormUseCase rejectFormUseCase;
     private final ReceiveFormUseCase receiveFormUseCase;
     private final EnterFormUseCase enterFormUseCase;
@@ -79,6 +81,24 @@ public class FormController {
             @AuthenticationPrincipal(authority = Authority.USER) User user
     ) {
         submitFinalFormUseCase.execute(user);
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PatchMapping("/{form-id}/arrive")
+    public void arriveForm(
+            @AuthenticationPrincipal(authority = Authority.ADMIN) User user,
+            @PathVariable(name = "form-id") Long formId
+    ) {
+        arriveFormUseCase.execute(formId);
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PatchMapping("/{form-id}/not-arrive")
+    public void notArriveForm(
+            @AuthenticationPrincipal(authority = Authority.ADMIN) User user,
+            @PathVariable(name = "form-id") Long formId
+    ) {
+        notArriveFormUseCase.execute(formId);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
