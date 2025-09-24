@@ -1,12 +1,15 @@
 package com.bamdoliro.maru.domain.form.service;
 
 import com.bamdoliro.maru.domain.form.domain.Form;
+import com.bamdoliro.maru.domain.form.domain.type.AchievementLevel;
 import com.bamdoliro.maru.domain.form.domain.value.Attendance;
 import com.bamdoliro.maru.domain.form.domain.value.Score;
 import com.bamdoliro.maru.domain.form.domain.value.Subject;
+import com.bamdoliro.maru.domain.form.domain.value.SubjectMap;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.bamdoliro.maru.domain.form.constant.FormConstant.*;
@@ -25,7 +28,7 @@ public class CalculateFormScoreService {
                     attendanceScore
             ));
         } else {
-            Double thirdGradeFirstSemesterSubjectGradeScore = form.getGrade().getSubjectList().getSubjectMap().getScoreOf(3, 1);
+            Double thirdGradeFirstSemesterSubjectGradeScore = calculateThirdGradeFirstSemesterScore(form);
             form.updateScore(new Score(
                     subjectGradeScore,
                     thirdGradeFirstSemesterSubjectGradeScore,
@@ -35,26 +38,128 @@ public class CalculateFormScoreService {
     }
 
     public Double calculateSubjectGradeScore(Form form) {
-        double score = 0;
         if (form.getEducation().isQualificationExamination()) {
             List<Subject> subjectList = form.getGrade().getSubjectList().getValue();
-            score += getScore(subjectList);
+            return getScore(subjectList);
         }
-        else {
-            List<Subject> subjectList = form.getGrade().getSubjectList().getSubjectMap().getValue().get("21");
+
+        SubjectMap originalSubjectMap = form.getGrade().getSubjectList().getSubjectMap();
+        SubjectMap replacedSubjectMap = createReplacedSubjectMap(originalSubjectMap);
+
+        double score = 0;
+        List<Subject> subjectList;
+
+        subjectList = replacedSubjectMap.getValue().get("21");
+        if (subjectList != null) {
             score += getScore(subjectList, SECOND_GRADE_FIRST_SEMESTER_RATE);
+        }
 
-            subjectList = form.getGrade().getSubjectList().getSubjectMap().getValue().get("22");
+        subjectList = replacedSubjectMap.getValue().get("22");
+        if (subjectList != null) {
             score += getScore(subjectList, SECOND_GRADE_SECOND_SEMESTER_RATE);
+        }
 
-            subjectList = form.getGrade().getSubjectList().getSubjectMap().getValue().get("31");
+        subjectList = replacedSubjectMap.getValue().get("31");
+        if (subjectList != null) {
             score += getScore(subjectList, THIRD_GRADE_FIRST_SEMESTER_RATE);
+        }
 
-            subjectList = form.getGrade().getSubjectList().getSubjectMap().getValue().get("32");
+        subjectList = replacedSubjectMap.getValue().get("32");
+        if (subjectList != null) {
             score += getScore(subjectList, THIRD_GRADE_SECOND_SEMESTER_RATE);
         }
 
         return score;
+    }
+
+    private SubjectMap createReplacedSubjectMap(SubjectMap originalSubjectMap) {
+        List<Subject> originalSubjects = new ArrayList<>();
+        originalSubjectMap.getValue().values().forEach(originalSubjects::addAll);
+
+        List<Subject> replacedSubjects = new ArrayList<>(originalSubjects);
+        SubjectMap replacedSubjectMap = new SubjectMap(replacedSubjects);
+
+        replaceSubjectGrade(replacedSubjectMap, "국어");
+        replaceSubjectGrade(replacedSubjectMap, "수학");
+        replaceSubjectGrade(replacedSubjectMap, "사회");
+        replaceSubjectGrade(replacedSubjectMap, "과학");
+        replaceSubjectGrade(replacedSubjectMap, "영어");
+
+        return replacedSubjectMap;
+    }
+
+    private void replaceSubjectGrade(SubjectMap subjectMap, String subjectName) {
+        Subject grade21 = findSubject(subjectMap, subjectName, 2, 1);
+        Subject grade22 = findSubject(subjectMap, subjectName, 2, 2);
+        Subject grade31 = findSubject(subjectMap, subjectName, 3, 1);
+        Subject grade32 = findSubject(subjectMap, subjectName, 3, 2);
+
+        if (isIncomplete(grade21) && !isIncomplete(grade22)) {
+            replaceSubject(subjectMap, subjectName, 2, 1, grade22.getAchievementLevel());
+        }
+        if (isIncomplete(grade22) && !isIncomplete(grade21)) {
+            replaceSubject(subjectMap, subjectName, 2, 2, grade21.getAchievementLevel());
+        }
+        if (isIncomplete(grade31) && !isIncomplete(grade32)) {
+            replaceSubject(subjectMap, subjectName, 3, 1, grade32.getAchievementLevel());
+        }
+        if (isIncomplete(grade32) && !isIncomplete(grade31)) {
+            replaceSubject(subjectMap, subjectName, 3, 2, grade31.getAchievementLevel());
+        }
+
+        grade21 = findSubject(subjectMap, subjectName, 2, 1);
+        grade22 = findSubject(subjectMap, subjectName, 2, 2);
+        grade31 = findSubject(subjectMap, subjectName, 3, 1);
+        grade32 = findSubject(subjectMap, subjectName, 3, 2);
+
+        if (isIncomplete(grade21) && !isIncomplete(grade31)) {
+            replaceSubject(subjectMap, subjectName, 2, 1, grade31.getAchievementLevel());
+        }
+        if (isIncomplete(grade22) && !isIncomplete(grade32)) {
+            replaceSubject(subjectMap, subjectName, 2, 2, grade32.getAchievementLevel());
+        }
+        if (isIncomplete(grade31) && !isIncomplete(grade21)) {
+            replaceSubject(subjectMap, subjectName, 3, 1, grade21.getAchievementLevel());
+        }
+        if (isIncomplete(grade32) && !isIncomplete(grade22)) {
+            replaceSubject(subjectMap, subjectName, 3, 2, grade22.getAchievementLevel());
+        }
+    }
+
+    private Subject findSubject(SubjectMap subjectMap, String subjectName, int grade, int semester) {
+        String key = String.format("%d%d", grade, semester);
+        List<Subject> subjects = subjectMap.getValue().get(key);
+
+        if (subjects != null) {
+            return subjects.stream()
+                    .filter(subject -> subject.getSubjectName().equals(subjectName))
+                    .findFirst()
+                    .orElse(null);
+        }
+        return null;
+    }
+
+    private void replaceSubject(SubjectMap subjectMap, String subjectName, int grade, int semester, AchievementLevel newLevel) {
+        String key = String.format("%d%d", grade, semester);
+        List<Subject> subjects = subjectMap.getValue().get(key);
+
+        if (subjects != null) {
+            subjects.replaceAll(subject ->
+                    subject.getSubjectName().equals(subjectName)
+                            ? new Subject(grade, semester, subjectName, newLevel)
+                            : subject
+            );
+        }
+    }
+
+    private boolean isIncomplete(Subject subject) {
+        return subject == null || subject.getAchievementLevel() == AchievementLevel.F;
+    }
+
+    private Double calculateThirdGradeFirstSemesterScore(Form form) {
+        SubjectMap originalSubjectMap = form.getGrade().getSubjectList().getSubjectMap();
+        SubjectMap replacedSubjectMap = createReplacedSubjectMap(originalSubjectMap);
+        return replacedSubjectMap.getScoreOf(3, 1);
     }
 
     private double getScore(List<Subject> subjectList, double rate) {
