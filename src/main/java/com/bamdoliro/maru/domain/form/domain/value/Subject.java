@@ -26,7 +26,7 @@ public class Subject {
     private String subjectName;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 2)
+    @Column(nullable = false, length = 10)
     private AchievementLevel achievementLevel;
 
     @Column(nullable = true, name = "score")
