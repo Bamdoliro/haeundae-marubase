@@ -25,6 +25,7 @@ public class FormSimpleResponse {
     private Boolean isChangedToRegular;
     private Double totalScore;
     private Boolean hasDocument;
+    private Double firstRoundScore;
     private Boolean firstRoundPassed;
     private Boolean secondRoundPassed;
 
@@ -40,6 +41,7 @@ public class FormSimpleResponse {
         this.isChangedToRegular = form.getChangedToRegular();
         this.totalScore = form.getScore().getTotalScore();
         this.hasDocument = form.isReceived();
+        this.firstRoundScore = form.getScore().getFirstRoundScore();
         this.firstRoundPassed = form.isFirstPassed();
         this.secondRoundPassed = form.isPassed();
     }
