@@ -39,29 +39,28 @@ class UpdateFormUseCaseTest {
         form.reject();
         User user = form.getUser();
 
-        given(formFacade.getForm(form.getId())).willReturn(form);
+        given(formFacade.getForm(user)).willReturn(form);
 
         // when
-        updateFormUseCase.execute(user, form.getId(), FormFixture.createUpdateFormRequest(FormType.NATIONAL_VETERANS));
+        updateFormUseCase.execute(user, FormFixture.createUpdateFormRequest(FormType.NATIONAL_VETERANS));
 
         // then
-        verify(formFacade, times(1)).getForm(form.getId());
+        verify(formFacade, times(1)).getForm(user);
         assertEquals(FormType.NATIONAL_VETERANS, form.getType());
     }
 
     @Test
     void 원서를_수정할_때_원서가_없으면_에러가_발생한다() {
         // given
-        Long formId = 1L;
         User user = UserFixture.createUser();
 
-        willThrow(new FormNotFoundException()).given(formFacade).getForm(formId);
+        willThrow(new FormNotFoundException()).given(formFacade).getForm(user);
 
         // when and then
         assertThrows(FormNotFoundException.class, () ->
-                updateFormUseCase.execute(user, formId, FormFixture.createUpdateFormRequest(FormType.NATIONAL_VETERANS)));
+                updateFormUseCase.execute(user, FormFixture.createUpdateFormRequest(FormType.NATIONAL_VETERANS)));
 
-        verify(formFacade, times(1)).getForm(formId);
+        verify(formFacade, times(1)).getForm(user);
     }
 
     @Test
@@ -71,14 +70,14 @@ class UpdateFormUseCaseTest {
         form.reject();
         User otherUser = UserFixture.createUser();
 
-        given(formFacade.getForm(form.getId())).willReturn(form);
+        given(formFacade.getForm(otherUser)).willReturn(form);
 
         // when and then
         assertThrows(AuthorityMismatchException.class, () ->
-                updateFormUseCase.execute(otherUser, form.getId(), FormFixture.createUpdateFormRequest(FormType.NATIONAL_VETERANS))
+                updateFormUseCase.execute(otherUser, FormFixture.createUpdateFormRequest(FormType.NATIONAL_VETERANS))
         );
 
-        verify(formFacade, times(1)).getForm(form.getId());
+        verify(formFacade, times(1)).getForm(otherUser);
     }
 
     @Test
@@ -87,13 +86,13 @@ class UpdateFormUseCaseTest {
         Form form = FormFixture.createForm(FormType.REGULAR);
         User user = form.getUser();
 
-        given(formFacade.getForm(form.getId())).willReturn(form);
+        given(formFacade.getForm(user)).willReturn(form);
 
         // when and then
         assertThrows(CannotUpdateNotRejectedFormException.class, () ->
-                updateFormUseCase.execute(user, form.getId(), FormFixture.createUpdateFormRequest(FormType.NATIONAL_VETERANS))
+                updateFormUseCase.execute(user, FormFixture.createUpdateFormRequest(FormType.NATIONAL_VETERANS))
         );
 
-        verify(formFacade, times(1)).getForm(form.getId());
+        verify(formFacade, times(1)).getForm(user);
     }
 }
