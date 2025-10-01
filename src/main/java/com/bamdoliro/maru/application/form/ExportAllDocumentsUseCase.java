@@ -29,7 +29,6 @@ public class ExportAllDocumentsUseCase {
     private final FileService fileService;
 
     public ByteArrayResource execute() {
-        // 수정된 코드
         List<Form> forms = formRepository.findAll();
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
