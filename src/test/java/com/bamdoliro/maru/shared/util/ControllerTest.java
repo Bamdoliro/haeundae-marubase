@@ -128,6 +128,9 @@ public abstract class ControllerTest {
     protected ExportFormUseCase exportFormUseCase;
 
     @MockBean
+    protected ExportAllDocumentsUseCase exportAllDocumentsUseCase;
+
+    @MockBean
     protected QueryAllFormUseCase queryAllFormUseCase;
 
     @MockBean

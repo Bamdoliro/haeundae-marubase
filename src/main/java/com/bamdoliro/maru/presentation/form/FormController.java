@@ -65,6 +65,7 @@ public class FormController {
     private final SelectSecondPassUseCase selectSecondPassUseCase;
     private final GenerateAllAdmissionTicketUseCase generateAllAdmissionTicketUseCase;
     private final QueryAdmissionAndPledgeUseCase queryAdmissionAndPledgeUseCase;
+    private final ExportAllDocumentsUseCase exportAllDocumentsUseCase;
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
@@ -201,6 +202,15 @@ public class FormController {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(exportFormUseCase.execute(user));
+    }
+
+    @GetMapping("/documents/export")
+    public ResponseEntity<Resource> exportDocuments(
+            @AuthenticationPrincipal(authority = Authority.ADMIN) User use
+    ) {
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(exportAllDocumentsUseCase.execute());
     }
 
     @GetMapping( "/admission-and-pledge")
