@@ -1610,6 +1610,37 @@ class FormControllerTest extends RestDocsTestSupport {
     }
 
     @Test
+    void 모든_자기소개서를_pdf로_다운받는다() throws Exception {
+        User user = UserFixture.createUser();
+        MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "file.pdf",
+                MediaType.APPLICATION_PDF_VALUE,
+                "<<file>>".getBytes()
+        );
+
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+        given(exportAllDocumentsUseCase.execute()).willReturn(new ByteArrayResource(file.getBytes()));
+
+        mockMvc.perform(get("/forms/documents/export")
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .accept(MediaType.APPLICATION_PDF)
+                )
+
+                .andExpect(status().isOk())
+
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION)
+                                        .description("Bearer token")
+                        )
+                ));
+
+        verify(exportAllDocumentsUseCase, times(1)).execute();
+    }
+
+    @Test
     void 원서를_pdf로_다운받을_때_원서를_작성하지_않았다면_에러가_발생한다() throws Exception {
         User user = UserFixture.createUser();
 
