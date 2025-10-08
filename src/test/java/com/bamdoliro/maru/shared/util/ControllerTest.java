@@ -271,6 +271,12 @@ public abstract class ControllerTest {
     @MockBean
     protected NotArriveFormUseCase notArriveFormUseCase;
 
+    @MockBean
+    protected PayFormFeeUseCase payFormFeeUseCase;
+
+    @MockBean
+    protected CancelFormPaymentUseCase cancelFormPaymentUseCase;
+
     protected String toJson(Object object) throws JsonProcessingException {
         return objectMapper.writeValueAsString(object);
     }
