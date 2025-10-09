@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name = "neis", url = "https://open.neis.go.kr/hub")
 public interface NeisClient {
 
-    @GetMapping(value = "/schoolInfo?Type=json&pSize=10")
+    @GetMapping(value = "/schoolInfo?Type=json&pSize=40")
     String getSchoolInfo(
             @RequestParam("Key") String key,
             @RequestParam("SCHUL_NM") String schoolName,

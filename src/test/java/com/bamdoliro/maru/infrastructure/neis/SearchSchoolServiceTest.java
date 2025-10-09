@@ -19,18 +19,18 @@ class SearchSchoolServiceTest {
     private SearchSchoolService searchSchoolService;
 
     @Test
-    void 비전을_검색하면_비전중학교를_반환한다() throws JsonProcessingException {
-        String q = "비전";
+    void 영남을_검색하면_부산의_영남중학교만을_반환한다() throws JsonProcessingException {
+        String q = "영남";
         List<SchoolResponse> responseList = searchSchoolService.execute(q);
         assertEquals(1, responseList.size());
-        assertEquals("비전중학교", responseList.get(0).getName());
+        assertEquals("영남중학교", responseList.get(0).getName());
     }
 
     @Test
-    void 검색_결과가_많다면_상위_10개만_반환한다() throws JsonProcessingException {
-        String q = "가";
+    void 검색_결과가_많다면_필터를_거친_후_개수를_반환한다() throws JsonProcessingException {
+        String q = "중학교";
         List<SchoolResponse> responseList = searchSchoolService.execute(q);
-        assertEquals(10, responseList.size());
+        assertEquals(4, responseList.size());
     }
 
     @Test
