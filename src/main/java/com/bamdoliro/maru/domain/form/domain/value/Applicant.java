@@ -34,7 +34,7 @@ public class Applicant {
     private LocalDate birthday;
 
     @Convert(converter = StringEncryptedConverter.class)
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String registrationNumber;
 
     @Enumerated(EnumType.STRING)
