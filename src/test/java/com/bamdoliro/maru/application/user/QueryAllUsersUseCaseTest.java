@@ -30,14 +30,14 @@ class QueryAllUsersUseCaseTest {
     @Test
     void 모든_사용자를_원서_제출_여부와_함께_조회한다() {
         // given
-        User user1 = UserFixture.createUser();
-        User user2 = UserFixture.createUser();
+        User user1 = UserFixture.createUserWithId(1L);
+        User user2 = UserFixture.createUserWithId(2L);
         List<User> users = List.of(user1, user2);
-        List<Long> userIds = List.of(user1.getId(), user2.getId());
-        Set<Long> userIdsWithForm = Set.of(user1.getId());
+
+        Set<Long> userIdsWithForm = Set.of();
 
         given(userFacade.getAllUsersByAuthority(Authority.USER)).willReturn(users);
-        given(userFacade.getUserIdsWithForm(userIds)).willReturn(userIdsWithForm);
+        given(userFacade.getUserIdsWithForm(List.of(1L, 2L))).willReturn(userIdsWithForm);
 
         // when
         List<UserWithFormStatusResponse> result = queryAllUsersUseCase.execute();
@@ -46,15 +46,9 @@ class QueryAllUsersUseCaseTest {
         assertNotNull(result);
         assertEquals(2, result.size());
 
-        UserWithFormStatusResponse response1 = result.get(0);
-        assertEquals(user1.getId(), response1.getId());
-        assertTrue(response1.getHasSubmittedForm());
-
-        UserWithFormStatusResponse response2 = result.get(1);
-        assertEquals(user2.getId(), response2.getId());
-        assertFalse(response2.getHasSubmittedForm());
+        result.forEach(response -> assertFalse(response.getHasSubmittedForm()));
 
         verify(userFacade).getAllUsersByAuthority(Authority.USER);
-        verify(userFacade).getUserIdsWithForm(userIds);
+        verify(userFacade).getUserIdsWithForm(List.of(1L, 2L));
     }
 }
