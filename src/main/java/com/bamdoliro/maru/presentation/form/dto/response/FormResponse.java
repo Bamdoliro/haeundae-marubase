@@ -21,6 +21,7 @@ public class FormResponse {
     private FormType type;
     private FormStatus status;
     private boolean isChangedToRegular;
+    private boolean payment;
 
     public FormResponse(Form form, String identificationPictureUri, String formUrl) {
         this.id = form.getId();
@@ -35,5 +36,6 @@ public class FormResponse {
         this.type = form.getType();
         this.status = form.getStatus();
         this.isChangedToRegular = form.getChangedToRegular();
+        this.payment = form.getPayment();
     }
 }

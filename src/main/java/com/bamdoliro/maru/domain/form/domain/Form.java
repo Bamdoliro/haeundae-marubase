@@ -56,6 +56,9 @@ public class Form extends BaseTimeEntity {
     @Column(nullable = false)
     private Boolean changedToRegular;
 
+    @Column(nullable = false)
+    private Boolean payment;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
     private FormStatus status;
@@ -75,6 +78,7 @@ public class Form extends BaseTimeEntity {
         this.originalType = type;
         this.user = user;
         this.changedToRegular = false;
+        this.payment = false;
         this.status = FormStatus.SUBMITTED;
     }
 
@@ -127,6 +131,14 @@ public class Form extends BaseTimeEntity {
     }
 
     public void enter() { this.status = FormStatus.ENTERED; }
+
+    public void payFee() {
+        this.payment = true;
+    }
+
+    public void cancelPayment() {
+        this.payment = false;
+    }
 
     public void isApplicant(User user) {
         if (!this.user.equals(user)) {
@@ -227,6 +239,7 @@ public class Form extends BaseTimeEntity {
         this.document = document;
         this.type = type;
         this.originalType = type;
+        this.payment = false;
         this.status = FormStatus.SUBMITTED;
     }
 

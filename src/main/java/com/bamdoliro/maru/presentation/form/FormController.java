@@ -66,6 +66,8 @@ public class FormController {
     private final GenerateAllAdmissionTicketUseCase generateAllAdmissionTicketUseCase;
     private final QueryAdmissionAndPledgeUseCase queryAdmissionAndPledgeUseCase;
     private final ExportAllDocumentsUseCase exportAllDocumentsUseCase;
+    private final PayFormFeeUseCase payFormFeeUseCase;
+    private final CancelFormPaymentUseCase cancelFormPaymentUseCase;
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
@@ -387,5 +389,23 @@ public class FormController {
             @AuthenticationPrincipal(authority = Authority.ADMIN) User user
     ) {
         selectSecondPassUseCase.execute();
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PatchMapping("/{form-id}/pay")
+    public void payFormFee(
+            @AuthenticationPrincipal(authority = Authority.ADMIN) User user,
+            @PathVariable(name = "form-id") Long formId
+    ) {
+        payFormFeeUseCase.execute(formId);
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PatchMapping("/{form-id}/cancel-payment")
+    public void cancelFormPayment(
+            @AuthenticationPrincipal(authority = Authority.ADMIN) User user,
+            @PathVariable(name = "form-id") Long formId
+    ) {
+        cancelFormPaymentUseCase.execute(formId);
     }
 }

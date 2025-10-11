@@ -28,6 +28,7 @@ public class FormSimpleResponse {
     private Double firstRoundScore;
     private Boolean firstRoundPassed;
     private Boolean secondRoundPassed;
+    private Boolean payment;
 
     public FormSimpleResponse(Form form) {
         this.id = form.getId();
@@ -44,5 +45,6 @@ public class FormSimpleResponse {
         this.firstRoundScore = form.getScore().getFirstRoundScore();
         this.firstRoundPassed = form.isFirstPassed();
         this.secondRoundPassed = form.isPassed();
+        this.payment = form.getPayment();
     }
 }

@@ -563,6 +563,7 @@ public class FormFixture {
                 "https://maru.bamdoliro.com/form.pdf",
                 FormType.REGULAR,
                 FormStatus.FINAL_SUBMITTED,
+                false,
                 false
         );
     }
