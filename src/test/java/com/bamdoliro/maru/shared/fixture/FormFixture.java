@@ -90,7 +90,7 @@ public class FormFixture {
                         "김밤돌",
                         new PhoneNumber("01012345678"),
                         LocalDate.of(2005, 4, 15),
-                        "070605-3111111",
+                        "070605-3111112",
                         Gender.MALE
                 ),
                 new Parent(
@@ -153,7 +153,7 @@ public class FormFixture {
                         "김밤돌",
                         new PhoneNumber("01085852525"),
                         LocalDate.of(2005, 4, 15),
-                        "070605-3111111",
+                        "070605-" + (3000000 + new Random().nextInt(9000000)),
                         Gender.FEMALE
                 ),
                 new Parent(
@@ -219,7 +219,7 @@ public class FormFixture {
                         "김밤돌",
                         new PhoneNumber("01085852525"),
                         LocalDate.of(2005, 4, 15),
-                        "070605-3111111",
+                        "070605-" + (3000000 + new Random().nextInt(9000000)),
                         Gender.FEMALE
                 ),
                 new Parent(
@@ -285,7 +285,7 @@ public class FormFixture {
                         "김밤돌",
                         new PhoneNumber("01012345678"),
                         LocalDate.of(2005, 4, 15),
-                        "070605-3111111",
+                        "070605-" + (3000000 + new Random().nextInt(9000000)),
                         Gender.FEMALE
                 ),
                 new Parent(
@@ -350,7 +350,7 @@ public class FormFixture {
                         "김밤돌",
                         new PhoneNumber("01012345678"),
                         LocalDate.of(2005, 4, 15),
-                        "070605-3111111",
+                        "070605-3111116",
                         Gender.FEMALE
                 ),
                 new Parent(
@@ -504,7 +504,7 @@ public class FormFixture {
                         "https://maru.com/photo.png",
                         "김밤돌",
                         "01012345678",
-                        "080409-3111111",
+                        "080409-3111117",
                         Gender.FEMALE
                 ),
                 new ParentResponse(
@@ -572,7 +572,7 @@ public class FormFixture {
                 "김밤돌",
                 "01012345678",
                 LocalDate.of(2005, 4, 15),
-                "070605-3111111",
+                "070605-3111118",
                 Gender.FEMALE
         );
     }
