@@ -8,6 +8,7 @@ import com.bamdoliro.maru.infrastructure.s3.dto.request.FileMetadata;
 import com.bamdoliro.maru.infrastructure.s3.dto.response.UrlResponse;
 import com.bamdoliro.maru.presentation.form.dto.request.PassOrFailFormListRequest;
 import com.bamdoliro.maru.presentation.form.dto.request.SubmitFormRequest;
+import com.bamdoliro.maru.presentation.form.dto.request.UpdateExaminationNumberRequest;
 import com.bamdoliro.maru.presentation.form.dto.request.UpdateFormRequest;
 import com.bamdoliro.maru.presentation.form.dto.response.*;
 import com.bamdoliro.maru.shared.auth.AuthenticationPrincipal;
@@ -68,6 +69,7 @@ public class FormController {
     private final ExportAllDocumentsUseCase exportAllDocumentsUseCase;
     private final PayFormFeeUseCase payFormFeeUseCase;
     private final CancelFormPaymentUseCase cancelFormPaymentUseCase;
+    private final UpdateExaminationNumberUseCase updateExaminationNumberUseCase;
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
@@ -407,5 +409,15 @@ public class FormController {
             @PathVariable(name = "form-id") Long formId
     ) {
         cancelFormPaymentUseCase.execute(formId);
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PatchMapping("/{form-id}/examination-number")
+    public void updateExaminationNumber(
+            @AuthenticationPrincipal(authority = Authority.ADMIN) User user,
+            @PathVariable(name = "form-id") Long formId,
+            @RequestBody @Valid UpdateExaminationNumberRequest request
+    ) {
+        updateExaminationNumberUseCase.execute(formId, request.getExaminationNumber());
     }
 }
