@@ -562,6 +562,8 @@ public class FormFixture {
                 ),
                 "https://maru.bamdoliro.com/form.pdf",
                 FormType.REGULAR,
+                "일반전형",
+                null,
                 FormStatus.FINAL_SUBMITTED,
                 false
         );
