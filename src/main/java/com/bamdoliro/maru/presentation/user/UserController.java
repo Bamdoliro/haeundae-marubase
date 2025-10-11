@@ -4,8 +4,11 @@ import com.bamdoliro.maru.application.user.*;
 import com.bamdoliro.maru.domain.user.domain.User;
 import com.bamdoliro.maru.presentation.user.dto.request.*;
 import com.bamdoliro.maru.presentation.user.dto.response.UserResponse;
+import com.bamdoliro.maru.presentation.user.dto.response.UserWithFormStatusResponse;
 import com.bamdoliro.maru.shared.auth.AuthenticationPrincipal;
+import com.bamdoliro.maru.shared.auth.Authority;
 import com.bamdoliro.maru.shared.response.CommonResponse;
+import com.bamdoliro.maru.shared.response.ListCommonResponse;
 import com.bamdoliro.maru.shared.response.SingleCommonResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +27,7 @@ public class UserController {
     private final VerifyUseCase verifyUseCase;
     private final UpdatePasswordUseCase updatePasswordUseCase;
     private final DeleteUserUseCase deleteUserUseCase;
+    private final QueryAllUsersUseCase queryAllUsersUseCase;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -71,5 +75,14 @@ public class UserController {
             @RequestBody @Valid DeleteUserRequest request
     ) {
         deleteUserUseCase.execute(user, request);
+    }
+
+    @GetMapping("/all")
+    public ListCommonResponse<UserWithFormStatusResponse> getAllUsers(
+            @AuthenticationPrincipal(authority = Authority.ADMIN) User user
+    ) {
+        return ListCommonResponse.ok(
+                queryAllUsersUseCase.execute()
+        );
     }
 }
