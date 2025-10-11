@@ -19,6 +19,8 @@ public class FormResponse {
     private ScoreResponse score;
     private String formUrl;
     private FormType type;
+    private String mainCategory;
+    private String subCategory;
     private FormStatus status;
     private boolean isChangedToRegular;
 
@@ -33,6 +35,8 @@ public class FormResponse {
         this.score = new ScoreResponse(form.getScore());
         this.formUrl = formUrl;
         this.type = form.getType();
+        this.mainCategory = form.getType().getMainCategory().getDescription();
+        this.subCategory = form.getType().getSubCategory() != null ? form.getType().getSubCategory().getDescription() : null;
         this.status = form.getStatus();
         this.isChangedToRegular = form.getChangedToRegular();
     }

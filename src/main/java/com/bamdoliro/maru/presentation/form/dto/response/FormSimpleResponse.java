@@ -22,6 +22,8 @@ public class FormSimpleResponse {
     private String school;
     private FormStatus status;
     private FormType type;
+    private String mainCategory;
+    private String subCategory;
     private Boolean isChangedToRegular;
     private Double totalScore;
     private Boolean hasDocument;
@@ -38,6 +40,8 @@ public class FormSimpleResponse {
         this.school = form.getEducation().getSchool().getName();
         this.status = form.getStatus();
         this.type = form.getType();
+        this.mainCategory = form.getType().getMainCategory().getDescription();
+        this.subCategory = form.getType().getSubCategory() != null ? form.getType().getSubCategory().getDescription() : null;
         this.isChangedToRegular = form.getChangedToRegular();
         this.totalScore = form.getScore().getTotalScore();
         this.hasDocument = form.isReceived();
