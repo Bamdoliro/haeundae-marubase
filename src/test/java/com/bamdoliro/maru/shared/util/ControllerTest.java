@@ -71,6 +71,9 @@ public abstract class ControllerTest {
     protected DeleteUserUseCase deleteUserUseCase;
 
     @MockBean
+    protected QueryAllUsersUseCase queryAllUsersUseCase;
+
+    @MockBean
     protected RefreshTokenUseCase refreshTokenUseCase;
 
     @MockBean

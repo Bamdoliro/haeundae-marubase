@@ -6,6 +6,7 @@ import com.bamdoliro.maru.domain.user.exception.*;
 import com.bamdoliro.maru.domain.user.exception.error.UserErrorProperty;
 import com.bamdoliro.maru.infrastructure.message.exception.FailedToSendException;
 import com.bamdoliro.maru.presentation.user.dto.request.*;
+import com.bamdoliro.maru.presentation.user.dto.response.UserWithFormStatusResponse;
 import com.bamdoliro.maru.shared.fixture.AuthFixture;
 import com.bamdoliro.maru.shared.fixture.UserFixture;
 import com.bamdoliro.maru.shared.util.RestDocsTestSupport;
@@ -14,6 +15,8 @@ import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
+
+import java.util.List;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
@@ -440,5 +443,33 @@ class UserControllerTest extends RestDocsTestSupport {
                 .andDo(restDocs.document());
 
         verify(deleteUserUseCase, times(1)).execute(any(User.class), any(DeleteUserRequest.class));
+    }
+
+    @Test
+    void 모든_사용자를_원서_제출_여부와_함께_조회한다() throws Exception {
+        User admin = UserFixture.createAdminUser();
+        List<UserWithFormStatusResponse> responseList = List.of(
+                new UserWithFormStatusResponse(1L, "김밤돌", "01012345678", true),
+                new UserWithFormStatusResponse(2L, "이부산", "01098765432", false)
+        );
+
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(admin);
+        given(queryAllUsersUseCase.execute()).willReturn(responseList);
+
+        mockMvc.perform(get("/users/all")
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .accept(MediaType.APPLICATION_JSON))
+
+                .andExpect(status().isOk())
+
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION)
+                                        .description("Bearer token")
+                        )
+                ));
+
+        verify(queryAllUsersUseCase, times(1)).execute();
     }
 }
