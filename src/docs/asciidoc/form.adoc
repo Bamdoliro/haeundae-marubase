@@ -845,3 +845,28 @@ include::{snippets}/form-controller-test/전형료_납부를_취소한다/http-r
 
 ===== 원서가 없는 경우
 include::{snippets}/form-controller-test/전형료_납부를_취소할_때_원서가_없으면_에러가_발생한다/http-response.adoc[]
+
+=== 수험번호 수정
+어드민은 원서의 수험번호를 수정할 수 있습니다.
+
+==== 요청 형식
+
+===== Request Header
+include::{snippets}/form-controller-test/수험번호를_수정한다/request-headers.adoc[]
+
+===== Path Parameter
+include::{snippets}/form-controller-test/수험번호를_수정한다/path-parameters.adoc[]
+
+===== Request Body
+include::{snippets}/form-controller-test/수험번호를_수정한다/request-fields.adoc[]
+
+==== 요청
+include::{snippets}/form-controller-test/수험번호를_수정한다/http-request.adoc[]
+
+==== 응답
+
+===== 정상 응답
+include::{snippets}/form-controller-test/수험번호를_수정한다/http-response.adoc[]
+
+===== 원서가 없는 경우
+include::{snippets}/form-controller-test/수험번호를_수정할_때_원서가_없으면_에러가_발생한다/http-response.adoc[]
