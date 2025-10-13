@@ -11,10 +11,7 @@ import com.bamdoliro.maru.infrastructure.s3.dto.request.FileMetadata;
 import com.bamdoliro.maru.infrastructure.s3.exception.EmptyFileException;
 import com.bamdoliro.maru.infrastructure.s3.exception.FileSizeLimitExceededException;
 import com.bamdoliro.maru.infrastructure.s3.exception.MediaTypeMismatchException;
-import com.bamdoliro.maru.presentation.form.dto.request.PassOrFailFormListRequest;
-import com.bamdoliro.maru.presentation.form.dto.request.PassOrFailFormRequest;
-import com.bamdoliro.maru.presentation.form.dto.request.SubmitFormRequest;
-import com.bamdoliro.maru.presentation.form.dto.request.UpdateFormRequest;
+import com.bamdoliro.maru.presentation.form.dto.request.*;
 import com.bamdoliro.maru.presentation.form.dto.response.FormResultResponse;
 import com.bamdoliro.maru.presentation.form.dto.response.FormSimpleResponse;
 import com.bamdoliro.maru.shared.fixture.AuthFixture;
@@ -2319,6 +2316,150 @@ class FormControllerTest extends RestDocsTestSupport {
     }
 
     @Test
+    void 서류_도착_여부를_일괄로_변경한다() throws Exception {
+        User user = UserFixture.createAdminUser();
+
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+        willDoNothing().given(updateDocumentArrivalStatusUseCase).execute(any(DocumentArrivalStatusListRequest.class));
+
+        DocumentArrivalStatusListRequest request = new DocumentArrivalStatusListRequest(
+                List.of(
+                        new DocumentArrivalStatusRequest(1L, true),
+                        new DocumentArrivalStatusRequest(2L, false),
+                        new DocumentArrivalStatusRequest(3L, true),
+                        new DocumentArrivalStatusRequest(4L, false),
+                        new DocumentArrivalStatusRequest(5L, true)
+                )
+        );
+
+        mockMvc.perform(patch("/forms/documents/arrival-status")
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(request)))
+
+                .andExpect(status().isNoContent())
+
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION)
+                                        .description("Bearer token")
+                        ),
+                        requestFields(
+                                fieldWithPath("formList[]")
+                                        .type(JsonFieldType.ARRAY)
+                                        .description("서류 도착 여부 변경할 원서 목록"),
+                                fieldWithPath("formList[].formId")
+                                        .type(JsonFieldType.NUMBER)
+                                        .description("원서 id"),
+                                fieldWithPath("formList[].arrived")
+                                        .type(JsonFieldType.BOOLEAN)
+                                        .description("서류 도착 여부")
+                        )
+                ));
+
+        verify(updateDocumentArrivalStatusUseCase, times(1)).execute(any(DocumentArrivalStatusListRequest.class));
+    }
+
+    @Test
+    void 서류_도착_여부를_일괄로_변경할_때_원서가_없으면_에러가_발생한다() throws Exception {
+        User user = UserFixture.createAdminUser();
+
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+        willThrow(new FormNotFoundException()).given(updateDocumentArrivalStatusUseCase).execute(any(DocumentArrivalStatusListRequest.class));
+
+        DocumentArrivalStatusListRequest request = new DocumentArrivalStatusListRequest(
+                List.of(
+                        new DocumentArrivalStatusRequest(390L, true)
+                )
+        );
+
+        mockMvc.perform(patch("/forms/documents/arrival-status")
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(request)))
+
+                .andExpect(status().isNotFound())
+
+                .andDo(restDocs.document());
+
+        verify(updateDocumentArrivalStatusUseCase, times(1)).execute(any(DocumentArrivalStatusListRequest.class));
+    }
+
+    @Test
+    void 전형료_납부_여부를_일괄로_변경한다() throws Exception {
+        User user = UserFixture.createAdminUser();
+
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+        willDoNothing().given(updateAdmissionFeePaymentStatusUseCase).execute(any(AdmissionFeePaymentStatusListRequest.class));
+
+        AdmissionFeePaymentStatusListRequest request = new AdmissionFeePaymentStatusListRequest(
+                List.of(
+                        new AdmissionFeePaymentStatusRequest(1L, true),
+                        new AdmissionFeePaymentStatusRequest(2L, false),
+                        new AdmissionFeePaymentStatusRequest(3L, true),
+                        new AdmissionFeePaymentStatusRequest(4L, false),
+                        new AdmissionFeePaymentStatusRequest(5L, true)
+                )
+        );
+
+        mockMvc.perform(patch("/forms/admission-fees/payment-status")
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(request)))
+
+                .andExpect(status().isNoContent())
+
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION)
+                                        .description("Bearer token")
+                        ),
+                        requestFields(
+                                fieldWithPath("formList[]")
+                                        .type(JsonFieldType.ARRAY)
+                                        .description("진행료 납부 여부 변경할 원서 목록"),
+                                fieldWithPath("formList[].formId")
+                                        .type(JsonFieldType.NUMBER)
+                                        .description("원서 id"),
+                                fieldWithPath("formList[].paid")
+                                        .type(JsonFieldType.BOOLEAN)
+                                        .description("진행료 납부 여부")
+                        )
+                ));
+
+        verify(updateAdmissionFeePaymentStatusUseCase, times(1)).execute(any(AdmissionFeePaymentStatusListRequest.class));
+    }
+
+    @Test
+    void 전형료_납부_여부를_일괄로_변경할_때_원서가_없으면_에러가_발생한다() throws Exception {
+        User user = UserFixture.createAdminUser();
+
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+        willThrow(new FormNotFoundException()).given(updateAdmissionFeePaymentStatusUseCase).execute(any(AdmissionFeePaymentStatusListRequest.class));
+
+        AdmissionFeePaymentStatusListRequest request = new AdmissionFeePaymentStatusListRequest(
+                List.of(
+                        new AdmissionFeePaymentStatusRequest(390L, true)
+                )
+        );
+
+        mockMvc.perform(patch("/forms/admission-fees/payment-status")
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(request)))
+
+                .andExpect(status().isNotFound())
+
+                .andDo(restDocs.document());
+
+        verify(updateAdmissionFeePaymentStatusUseCase, times(1)).execute(any(AdmissionFeePaymentStatusListRequest.class));
+    }
+
+    @Test
     void 선택한_원서의_원서url을_조회한다() throws Exception {
         User user = UserFixture.createAdminUser();
         List<Long> idList = List.of(1L, 2L, 3L, 4L, 5L);
@@ -2428,195 +2569,5 @@ class FormControllerTest extends RestDocsTestSupport {
                 ));
 
         verify(queryAdmissionAndPledgeUseCase, times(1)).execute(idList);
-    }
-
-    @Test
-    void 원서를_도착으로_변경한다() throws Exception {
-        Long formId = 1L;
-        User user = UserFixture.createAdminUser();
-        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
-        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
-        willDoNothing().given(arriveFormUseCase).execute(formId);
-
-        mockMvc.perform(patch("/forms/{form-id}/arrive", formId)
-                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON))
-
-                .andExpect(status().isNoContent())
-
-                .andDo(restDocs.document(
-                        requestHeaders(
-                                headerWithName(HttpHeaders.AUTHORIZATION).description("Bearer token")
-                        ),
-                        pathParameters(
-                                parameterWithName("form-id").description("도착한 원서 id")
-                        )
-                ));
-
-        verify(arriveFormUseCase, times(1)).execute(formId);
-    }
-
-    @Test
-    void 원서를_도착으로_변경할_때_원서가_없으면_에러가_발생한다() throws Exception {
-        Long formId = 1L;
-        User user = UserFixture.createAdminUser();
-        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
-        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
-        doThrow(new FormNotFoundException()).when(arriveFormUseCase).execute(formId);
-
-        mockMvc.perform(patch("/forms/{form-id}/arrive", formId)
-                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON))
-
-                .andExpect(status().isNotFound())
-
-                .andDo(restDocs.document());
-
-        verify(arriveFormUseCase, times(1)).execute(formId);
-    }
-
-    @Test
-    void 원서를_미도착으로_변경한다() throws Exception {
-        Long formId = 1L;
-        User user = UserFixture.createAdminUser();
-        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
-        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
-        willDoNothing().given(notArriveFormUseCase).execute(formId);
-
-        mockMvc.perform(patch("/forms/{form-id}/not-arrive", formId)
-                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON))
-
-                .andExpect(status().isNoContent())
-
-                .andDo(restDocs.document(
-                        requestHeaders(
-                                headerWithName(HttpHeaders.AUTHORIZATION).description("Bearer token")
-                        ),
-                        pathParameters(
-                                parameterWithName("form-id").description("도착하지 않은 원서 id")
-                        )
-                ));
-
-        verify(notArriveFormUseCase, times(1)).execute(formId);
-    }
-
-    @Test
-    void 원서를_미도착으로_변경할_때_원서가_없으면_에러가_발생한다() throws Exception {
-        Long formId = 1L;
-        User user = UserFixture.createAdminUser();
-        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
-        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
-        doThrow(new FormNotFoundException()).when(notArriveFormUseCase).execute(formId);
-
-        mockMvc.perform(patch("/forms/{form-id}/not-arrive", formId)
-                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON))
-
-                .andExpect(status().isNotFound())
-
-                .andDo(restDocs.document());
-
-        verify(notArriveFormUseCase, times(1)).execute(formId);
-    }
-
-    @Test
-    void 전형료를_납부한다() throws Exception {
-        Long formId = 1L;
-        User user = UserFixture.createAdminUser();
-
-        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
-        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
-
-        mockMvc.perform(patch("/forms/{form-id}/pay", formId)
-                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON))
-
-                .andExpect(status().isNoContent())
-
-                .andDo(restDocs.document(
-                        requestHeaders(
-                                headerWithName(HttpHeaders.AUTHORIZATION).description("Bearer JWT")
-                        ),
-                        pathParameters(
-                                parameterWithName("form-id").description("원서 ID")
-                        )
-                ));
-
-        verify(payFormFeeUseCase, times(1)).execute(formId);
-    }
-
-    @Test
-    void 전형료_납부를_취소한다() throws Exception {
-        Long formId = 1L;
-        User user = UserFixture.createAdminUser();
-
-        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
-        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
-
-        mockMvc.perform(patch("/forms/{form-id}/cancel-payment", formId)
-                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON))
-
-                .andExpect(status().isNoContent())
-
-                .andDo(restDocs.document(
-                        requestHeaders(
-                                headerWithName(HttpHeaders.AUTHORIZATION).description("Bearer JWT")
-                        ),
-                        pathParameters(
-                                parameterWithName("form-id").description("원서 ID")
-                        )
-                ));
-
-        verify(cancelFormPaymentUseCase, times(1)).execute(formId);
-    }
-
-    @Test
-    void 전형료를_납부할_때_원서가_없으면_에러가_발생한다() throws Exception {
-        Long formId = 1L;
-        User user = UserFixture.createAdminUser();
-
-        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
-        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
-        doThrow(new FormNotFoundException()).when(payFormFeeUseCase).execute(formId);
-
-        mockMvc.perform(patch("/forms/{form-id}/pay", formId)
-                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON))
-
-                .andExpect(status().isNotFound())
-
-                .andDo(restDocs.document());
-
-        verify(payFormFeeUseCase, times(1)).execute(formId);
-    }
-
-    @Test
-    void 전형료_납부를_취소할_때_원서가_없으면_에러가_발생한다() throws Exception {
-        Long formId = 1L;
-        User user = UserFixture.createAdminUser();
-
-        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
-        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
-        doThrow(new FormNotFoundException()).when(cancelFormPaymentUseCase).execute(formId);
-
-        mockMvc.perform(patch("/forms/{form-id}/cancel-payment", formId)
-                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON))
-
-                .andExpect(status().isNotFound())
-
-                .andDo(restDocs.document());
-
-        verify(cancelFormPaymentUseCase, times(1)).execute(formId);
     }
 }
