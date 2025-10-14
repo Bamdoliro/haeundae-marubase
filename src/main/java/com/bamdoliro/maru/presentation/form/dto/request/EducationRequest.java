@@ -47,7 +47,7 @@ public class EducationRequest {
 
     @Nullable
     @Size(max = 11, message = "11자 이하여야 합니다.")
-    private String schoolPhoneNumber;
+    private String teacherPhoneNumber;
 
     @Nullable
     @Size(max = 11, message = "11자 이하여야 합니다.")
@@ -65,7 +65,7 @@ public class EducationRequest {
                 ),
                 new Teacher(
                         teacherName,
-                        new PhoneNumber(schoolPhoneNumber),
+                        new PhoneNumber(teacherPhoneNumber),
                         new PhoneNumber(teacherMobilePhoneNumber)
                 )
         );

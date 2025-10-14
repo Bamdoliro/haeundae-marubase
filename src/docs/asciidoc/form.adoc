@@ -137,27 +137,49 @@ include::{snippets}/form-controller-test/원서를_반려한다/http-response.ad
 ===== 해당하는 원서가 없는 경우
 include::{snippets}/form-controller-test/원서를_반려할_때_원서가_없으면_에러가_발생한다/http-response.adoc[]
 
-=== 서류 도착 여부 일괄 변경
-어드민은 여러 원서의 서류 도착 여부를 일괄로 변경할 수 있습니다.
+=== 원서 도착 상태 변경
+어드민은 원서를 도착 상태로 변경할 수 있습니다.
 
 ==== 요청 형식
 
 ===== Request Header
-include::{snippets}/form-controller-test/서류_도착_여부를_일괄로_변경한다/request-headers.adoc[]
+include::{snippets}/form-controller-test/원서를_도착으로_변경한다/request-headers.adoc[]
 
-===== Request Body
-include::{snippets}/form-controller-test/서류_도착_여부를_일괄로_변경한다/request-fields.adoc[]
+===== Path Parameter
+include::{snippets}/form-controller-test/원서를_도착으로_변경한다/path-parameters.adoc[]
 
 ==== 요청
-include::{snippets}/form-controller-test/서류_도착_여부를_일괄로_변경한다/http-request.adoc[]
+include::{snippets}/form-controller-test/원서를_도착으로_변경한다/http-request.adoc[]
 
 ==== 응답
 
 ===== 정상 응답
-include::{snippets}/form-controller-test/서류_도착_여부를_일괄로_변경한다/http-response.adoc[]
+include::{snippets}/form-controller-test/원서를_도착으로_변경한다/http-response.adoc[]
 
 ===== 해당하는 원서가 없는 경우
-include::{snippets}/form-controller-test/서류_도착_여부를_일괄로_변경할_때_원서가_없으면_에러가_발생한다/http-response.adoc[]
+include::{snippets}/form-controller-test/원서를_도착으로_변경할_때_원서가_없으면_에러가_발생한다/http-response.adoc[]
+
+=== 원서 미도착 상태 변경
+어드민은 원서를 미도착 상태로 변경할 수 있습니다.
+
+==== 요청 형식
+
+===== Request Header
+include::{snippets}/form-controller-test/원서를_미도착으로_변경한다/request-headers.adoc[]
+
+===== Path Parameter
+include::{snippets}/form-controller-test/원서를_미도착으로_변경한다/path-parameters.adoc[]
+
+==== 요청
+include::{snippets}/form-controller-test/원서를_미도착으로_변경한다/http-request.adoc[]
+
+==== 응답
+
+===== 정상 응답
+include::{snippets}/form-controller-test/원서를_미도착으로_변경한다/http-response.adoc[]
+
+===== 해당하는 원서가 없는 경우
+include::{snippets}/form-controller-test/원서를_미도착으로_변경할_때_원서가_없으면_에러가_발생한다/http-response.adoc[]
 
 === 원서 입학등록
 최종합격한 유저는 입학등록원을 제출한 후 원서를 입학등록상태로 변경할 수 있습니다.
@@ -780,24 +802,46 @@ include::{snippets}/form-controller-test/모든_자기소개서를_pdf로_다운
 ===== 정상 응답
 include::{snippets}/form-controller-test/모든_자기소개서를_pdf로_다운받는다/http-response.adoc[]
 
-=== 진행료 납부 여부 일괄 변경
-어드민은 여러 원서의 진행료 납부 여부를 일괄로 변경할 수 있습니다.
+=== 전형료 납부
+어드민은 원서의 전형료 납부 상태를 변경할 수 있습니다.
 
 ==== 요청 형식
 
 ===== Request Header
-include::{snippets}/form-controller-test/전형료_납부_여부를_일괄로_변경한다/request-headers.adoc[]
+include::{snippets}/form-controller-test/전형료를_납부한다/request-headers.adoc[]
 
-===== Request Body
-include::{snippets}/form-controller-test/전형료_납부_여부를_일괄로_변경한다/request-fields.adoc[]
+===== Path Parameter
+include::{snippets}/form-controller-test/전형료를_납부한다/path-parameters.adoc[]
 
 ==== 요청
-include::{snippets}/form-controller-test/전형료_납부_여부를_일괄로_변경한다/http-request.adoc[]
+include::{snippets}/form-controller-test/전형료를_납부한다/http-request.adoc[]
 
 ==== 응답
 
 ===== 정상 응답
-include::{snippets}/form-controller-test/전형료_납부_여부를_일괄로_변경한다/http-response.adoc[]
+include::{snippets}/form-controller-test/전형료를_납부한다/http-response.adoc[]
+
+===== 원서가 없는 경우
+include::{snippets}/form-controller-test/전형료를_납부할_때_원서가_없으면_에러가_발생한다/http-response.adoc[]
+
+=== 전형료 납부 취소
+어드민은 원서의 전형료 납부를 취소할 수 있습니다.
+
+==== 요청 형식
+
+===== Request Header
+include::{snippets}/form-controller-test/전형료_납부를_취소한다/request-headers.adoc[]
+
+===== Path Parameter
+include::{snippets}/form-controller-test/전형료_납부를_취소한다/path-parameters.adoc[]
+
+==== 요청
+include::{snippets}/form-controller-test/전형료_납부를_취소한다/http-request.adoc[]
+
+==== 응답
+
+===== 정상 응답
+include::{snippets}/form-controller-test/전형료_납부를_취소한다/http-response.adoc[]
 
 ===== 원서가 없는 경우
 include::{snippets}/form-controller-test/전형료_납부를_취소할_때_원서가_없으면_에러가_발생한다/http-response.adoc[]
@@ -826,6 +870,3 @@ include::{snippets}/form-controller-test/수험번호를_수정한다/http-respo
 
 ===== 원서가 없는 경우
 include::{snippets}/form-controller-test/수험번호를_수정할_때_원서가_없으면_에러가_발생한다/http-response.adoc[]
-=======
-===== 해당하는 원서가 없는 경우
-include::{snippets}/form-controller-test/전형료_납부_여부를_일괄로_변경할_때_원서가_없으면_에러가_발생한다/http-response.adoc[]

@@ -26,7 +26,7 @@ public class AnalysisFixture {
     public static List<GradeDistributionResponse> createGradeDistributionResponseList() {
         List<GradeDistributionResponse> responseList = new ArrayList<>();
         for (FormType formType : FormType.values()) {
-            responseList.add(new GradeDistributionResponse(formType, randomDouble(0.0, 240.0), randomDouble(0.0, 240.0), randomDouble(0.0, 240.0), randomDouble(0.0, 240.0), randomDouble(0.0, 240.0), randomDouble(0.0, 240.0), randomDouble(0.0, 240.0), randomDouble(0.0, 240.0)));
+            responseList.add(new GradeDistributionResponse(formType, randomDouble(0.0, 240.0), randomDouble(0.0, 240.0), randomDouble(0.0, 240.0), randomDouble(0.0, 240.0), randomDouble(0.0, 240.0), randomDouble(0.0, 240.0)));
         }
         return responseList;
     }

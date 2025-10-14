@@ -17,8 +17,6 @@ public class GradeDistributionResponse {
     private Double totalMax;
     private Double totalMin;
     private Double totalAvg;
-    private Double firstRoundSeventyPercentile;
-    private Double totalSeventyPercentile;
 
     public GradeDistributionResponse(GradeVo vo) {
         this.type = vo.getType();
@@ -28,12 +26,5 @@ public class GradeDistributionResponse {
         this.totalMax = vo.getTotalMax();
         this.totalMin = vo.getTotalMin();
         this.totalAvg = vo.getTotalAvg();
-        this.firstRoundSeventyPercentile = 0.0; // UseCase에서 설정
-        this.totalSeventyPercentile = 0.0; // UseCase에서 설정
-    }
-
-    public void setPercentiles(Double firstRoundSeventyPercentile, Double totalSeventyPercentile) {
-        this.firstRoundSeventyPercentile = firstRoundSeventyPercentile;
-        this.totalSeventyPercentile = totalSeventyPercentile;
     }
 }
