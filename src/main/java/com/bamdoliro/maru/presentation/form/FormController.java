@@ -40,6 +40,7 @@ public class FormController {
     private final QueryFormUseCase queryFormUseCase;
     private final QueryFormStatusUseCase queryFormStatusUseCase;
     private final UpdateFormUseCase updateFormUseCase;
+    private final UpdateExaminationNumberUseCase updateExaminationNumberUseCase;
     private final UploadIdentificationPictureUseCase uploadIdentificationPictureUseCase;
     private final UploadFormUseCase uploadFormUseCase;
     private final ExportFormUseCase exportFormUseCase;
@@ -387,5 +388,16 @@ public class FormController {
             @RequestBody @Valid AdmissionFeePaymentStatusListRequest request
     ) {
         updateAdmissionFeePaymentStatusUseCase.execute(request);
+    }
+
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PatchMapping("/{form-id}/examination-number")
+    public void updateExaminationNumber(
+            @AuthenticationPrincipal(authority = Authority.ADMIN) User user,
+            @PathVariable(name = "form-id") Long formId,
+            @RequestBody @Valid UpdateExaminationNumberRequest request
+    ) {
+        updateExaminationNumberUseCase.execute(formId, request.getExaminationNumber());
     }
 }
