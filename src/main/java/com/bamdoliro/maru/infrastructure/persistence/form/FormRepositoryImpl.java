@@ -337,4 +337,78 @@ public class FormRepositoryImpl implements FormRepositoryCustom {
                 .from(form)
                 .fetch();
     }
+
+    @Override
+    public Double findFirstRoundScoreAtPercentile(FormType.Category category, double percentile, List<FormStatus> statusList) {
+        List<FormType> matchingFormTypes = getFormTypesByCategory(category);
+
+        // 전체 개수 조회
+        long totalCount = queryFactory
+                .selectFrom(form)
+                .where(form.type.in(matchingFormTypes)
+                        .and(form.status.in(statusList))
+                        .and(form.score.firstRoundScore.isNotNull()))
+                .fetchCount();
+
+        if (totalCount == 0) {
+            return 0.0;
+        }
+
+        // 70% 지점 계산
+        long targetPosition = Math.round(totalCount * percentile);
+        if (targetPosition == 0) {
+            targetPosition = 1;
+        }
+
+        // OFFSET + LIMIT으로 해당 순위의 점수만 조회
+        Double score = queryFactory
+                .select(form.score.firstRoundScore)
+                .from(form)
+                .where(form.type.in(matchingFormTypes)
+                        .and(form.status.in(statusList))
+                        .and(form.score.firstRoundScore.isNotNull()))
+                .orderBy(form.score.firstRoundScore.desc())
+                .offset(targetPosition - 1)
+                .limit(1)
+                .fetchOne();
+
+        return score != null ? score : 0.0;
+    }
+
+    @Override
+    public Double findTotalScoreAtPercentile(FormType.Category category, double percentile, List<FormStatus> statusList) {
+        List<FormType> matchingFormTypes = getFormTypesByCategory(category);
+
+        // 전체 개수 조회
+        long totalCount = queryFactory
+                .selectFrom(form)
+                .where(form.type.in(matchingFormTypes)
+                        .and(form.status.in(statusList))
+                        .and(form.score.totalScore.isNotNull()))
+                .fetchCount();
+
+        if (totalCount == 0) {
+            return 0.0;
+        }
+
+        // 70% 지점 계산
+        long targetPosition = Math.round(totalCount * percentile);
+        if (targetPosition == 0) {
+            targetPosition = 1;
+        }
+
+        // OFFSET + LIMIT으로 해당 순위의 점수만 조회
+        Double score = queryFactory
+                .select(form.score.totalScore)
+                .from(form)
+                .where(form.type.in(matchingFormTypes)
+                        .and(form.status.in(statusList))
+                        .and(form.score.totalScore.isNotNull()))
+                .orderBy(form.score.totalScore.desc())
+                .offset(targetPosition - 1)
+                .limit(1)
+                .fetchOne();
+
+        return score != null ? score : 0.0;
+    }
 }

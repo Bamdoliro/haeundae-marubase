@@ -6,10 +6,7 @@ import com.bamdoliro.maru.domain.form.domain.type.FormType;
 import com.bamdoliro.maru.domain.user.domain.User;
 import com.bamdoliro.maru.infrastructure.s3.dto.request.FileMetadata;
 import com.bamdoliro.maru.infrastructure.s3.dto.response.UrlResponse;
-import com.bamdoliro.maru.presentation.form.dto.request.PassOrFailFormListRequest;
-import com.bamdoliro.maru.presentation.form.dto.request.SubmitFormRequest;
-import com.bamdoliro.maru.presentation.form.dto.request.UpdateExaminationNumberRequest;
-import com.bamdoliro.maru.presentation.form.dto.request.UpdateFormRequest;
+import com.bamdoliro.maru.presentation.form.dto.request.*;
 import com.bamdoliro.maru.presentation.form.dto.response.*;
 import com.bamdoliro.maru.shared.auth.AuthenticationPrincipal;
 import com.bamdoliro.maru.shared.auth.Authority;
@@ -36,8 +33,6 @@ public class FormController {
     private final SubmitFormUseCase submitFormUseCase;
     private final SubmitFinalFormUseCase submitFinalFormUseCase;
     private final ApproveFormUseCase approveFormUseCase;
-    private final ArriveFormUseCase arriveFormUseCase;
-    private final NotArriveFormUseCase notArriveFormUseCase;
     private final RejectFormUseCase rejectFormUseCase;
     private final ReceiveFormUseCase receiveFormUseCase;
     private final EnterFormUseCase enterFormUseCase;
@@ -63,6 +58,8 @@ public class FormController {
     private final ExportResultUseCase exportResultUseCase;
     private final PassOrFailFormUseCase passOrFailFormUseCase;
     private final QueryFormUrlUseCase queryFormUrlUseCase;
+    private final UpdateDocumentArrivalStatusUseCase updateDocumentArrivalStatusUseCase;
+    private final UpdateAdmissionFeePaymentStatusUseCase updateAdmissionFeePaymentStatusUseCase;
     private final SelectSecondPassUseCase selectSecondPassUseCase;
     private final GenerateAllAdmissionTicketUseCase generateAllAdmissionTicketUseCase;
     private final QueryAdmissionAndPledgeUseCase queryAdmissionAndPledgeUseCase;
@@ -88,22 +85,14 @@ public class FormController {
         submitFinalFormUseCase.execute(user);
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PatchMapping("/{form-id}/arrive")
-    public void arriveForm(
-            @AuthenticationPrincipal(authority = Authority.ADMIN) User user,
-            @PathVariable(name = "form-id") Long formId
-    ) {
-        arriveFormUseCase.execute(formId);
-    }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PatchMapping("/{form-id}/not-arrive")
-    public void notArriveForm(
+    @PatchMapping("/documents/arrival-status")
+    public void updateDocumentArrivalStatus(
             @AuthenticationPrincipal(authority = Authority.ADMIN) User user,
-            @PathVariable(name = "form-id") Long formId
+            @RequestBody @Valid DocumentArrivalStatusListRequest request
     ) {
-        notArriveFormUseCase.execute(formId);
+        updateDocumentArrivalStatusUseCase.execute(request);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -393,22 +382,14 @@ public class FormController {
         selectSecondPassUseCase.execute();
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PatchMapping("/{form-id}/pay")
-    public void payFormFee(
-            @AuthenticationPrincipal(authority = Authority.ADMIN) User user,
-            @PathVariable(name = "form-id") Long formId
-    ) {
-        payFormFeeUseCase.execute(formId);
-    }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PatchMapping("/{form-id}/cancel-payment")
-    public void cancelFormPayment(
+    @PatchMapping("/admission-fees/payment-status")
+    public void updateAdmissionFeePaymentStatus(
             @AuthenticationPrincipal(authority = Authority.ADMIN) User user,
-            @PathVariable(name = "form-id") Long formId
+            @RequestBody @Valid AdmissionFeePaymentStatusListRequest request
     ) {
-        cancelFormPaymentUseCase.execute(formId);
+        updateAdmissionFeePaymentStatusUseCase.execute(request);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

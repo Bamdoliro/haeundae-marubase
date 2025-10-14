@@ -71,6 +71,9 @@ public abstract class ControllerTest {
     protected DeleteUserUseCase deleteUserUseCase;
 
     @MockBean
+    protected QueryAllUsersUseCase queryAllUsersUseCase;
+
+    @MockBean
     protected RefreshTokenUseCase refreshTokenUseCase;
 
     @MockBean
@@ -269,16 +272,13 @@ public abstract class ControllerTest {
     protected QueryAdmissionAndPledgeUseCase queryAdmissionAndPledgeUseCase;
 
     @MockBean
-    protected ArriveFormUseCase arriveFormUseCase;
+    protected UpdateDocumentArrivalStatusUseCase updateDocumentArrivalStatusUseCase;
 
     @MockBean
-    protected NotArriveFormUseCase notArriveFormUseCase;
+    protected UpdateAdmissionFeePaymentStatusUseCase updateAdmissionFeePaymentStatusUseCase;
 
-    @MockBean
-    protected PayFormFeeUseCase payFormFeeUseCase;
 
-    @MockBean
-    protected CancelFormPaymentUseCase cancelFormPaymentUseCase;
+
 
     protected String toJson(Object object) throws JsonProcessingException {
         return objectMapper.writeValueAsString(object);

@@ -3,9 +3,9 @@ package com.bamdoliro.maru.infrastructure.persistence.form;
 import com.bamdoliro.maru.domain.form.domain.Form;
 import com.bamdoliro.maru.domain.form.domain.type.FormStatus;
 import com.bamdoliro.maru.domain.form.domain.type.FormType;
-import com.bamdoliro.maru.infrastructure.persistence.form.vo.NumberOfApplicantsVo;
 import com.bamdoliro.maru.infrastructure.persistence.form.vo.FormUrlVo;
 import com.bamdoliro.maru.infrastructure.persistence.form.vo.GradeVo;
+import com.bamdoliro.maru.infrastructure.persistence.form.vo.NumberOfApplicantsVo;
 import com.bamdoliro.maru.infrastructure.persistence.form.vo.SchoolStatusVo;
 
 import java.util.List;
@@ -35,4 +35,6 @@ public interface FormRepositoryCustom {
     List<SchoolStatusVo> findSchoolByAddress(List<FormStatus> round, String keyword);
     List<SchoolStatusVo> findNotBusanSchool(List<FormStatus> round);
     List<Long> findAllExaminationNumber();
+    Double findFirstRoundScoreAtPercentile(FormType.Category category, double percentile, List<FormStatus> statusList);
+    Double findTotalScoreAtPercentile(FormType.Category category, double percentile, List<FormStatus> statusList);
 }
