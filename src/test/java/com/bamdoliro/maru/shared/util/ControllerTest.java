@@ -266,16 +266,13 @@ public abstract class ControllerTest {
     protected QueryAdmissionAndPledgeUseCase queryAdmissionAndPledgeUseCase;
 
     @MockBean
-    protected ArriveFormUseCase arriveFormUseCase;
+    protected UpdateDocumentArrivalStatusUseCase updateDocumentArrivalStatusUseCase;
 
     @MockBean
-    protected NotArriveFormUseCase notArriveFormUseCase;
+    protected UpdateAdmissionFeePaymentStatusUseCase updateAdmissionFeePaymentStatusUseCase;
 
-    @MockBean
-    protected PayFormFeeUseCase payFormFeeUseCase;
 
-    @MockBean
-    protected CancelFormPaymentUseCase cancelFormPaymentUseCase;
+
 
     protected String toJson(Object object) throws JsonProcessingException {
         return objectMapper.writeValueAsString(object);
