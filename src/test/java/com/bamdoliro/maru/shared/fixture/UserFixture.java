@@ -5,6 +5,7 @@ import com.bamdoliro.maru.domain.user.domain.UpdatePasswordVerification;
 import com.bamdoliro.maru.domain.user.domain.User;
 import com.bamdoliro.maru.domain.user.domain.type.Authority;
 import com.bamdoliro.maru.shared.util.RandomCodeUtil;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -15,6 +16,12 @@ public class UserFixture {
 
     public static User createUser() {
         return new User(randomPhoneNumber(), "김밤돌", "비밀번호", Authority.USER);
+    }
+
+    public static User createUserWithId(Long id) {
+        User user = new User(randomPhoneNumber(), "김밤돌", "비밀번호", Authority.USER);
+        ReflectionTestUtils.setField(user, "id", id);
+        return user;
     }
 
     public static User createAdminUser() {
