@@ -122,6 +122,9 @@ public abstract class ControllerTest {
     protected UpdateFormUseCase updateFormUseCase;
 
     @MockBean
+    protected UpdateExaminationNumberUseCase updateExaminationNumberUseCase;
+
+    @MockBean
     protected UploadIdentificationPictureUseCase uploadIdentificationPictureUseCase;
 
     @MockBean

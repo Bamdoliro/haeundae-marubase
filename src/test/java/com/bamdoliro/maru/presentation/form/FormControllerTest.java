@@ -2570,4 +2570,60 @@ class FormControllerTest extends RestDocsTestSupport {
 
         verify(queryAdmissionAndPledgeUseCase, times(1)).execute(idList);
     }
+
+    @Test
+    void 수험번호를_수정한다() throws Exception {
+        Long formId = 1L;
+        UpdateExaminationNumberRequest request = new UpdateExaminationNumberRequest(123456L);
+        User user = UserFixture.createAdminUser();
+
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+
+        mockMvc.perform(patch("/forms/{form-id}/examination-number", formId)
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(request)))
+
+                .andExpect(status().isNoContent())
+
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("Bearer token")
+                        ),
+                        pathParameters(
+                                parameterWithName("form-id").description("원서 ID")
+                        ),
+                        requestFields(
+                                fieldWithPath("examinationNumber").type(JsonFieldType.NUMBER).description("수험번호")
+                        )
+                ));
+
+        verify(updateExaminationNumberUseCase, times(1)).execute(formId, request.getExaminationNumber());
+    }
+
+    @Test
+    void 수험번호를_수정할_때_원서가_없으면_에러가_발생한다() throws Exception {
+        Long formId = 1L;
+        UpdateExaminationNumberRequest request = new UpdateExaminationNumberRequest(123456L);
+        User user = UserFixture.createAdminUser();
+
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+        doThrow(new FormNotFoundException()).when(updateExaminationNumberUseCase)
+                .execute(formId, request.getExaminationNumber());
+
+        mockMvc.perform(patch("/forms/{form-id}/examination-number", formId)
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(request)))
+
+                .andExpect(status().isNotFound())
+
+                .andDo(restDocs.document());
+
+        verify(updateExaminationNumberUseCase, times(1)).execute(formId, request.getExaminationNumber());
+    }
 }
