@@ -1,10 +1,6 @@
 package com.bamdoliro.maru.domain.form.domain.value;
 
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,7 +20,7 @@ public class SubjectList {
     private List<Subject> value;
 
     public static SubjectList of(List<Subject> subjectList) {
-        return new SubjectList(subjectList);
+        return new SubjectList(subjectList == null ? List.of() : subjectList);
     }
 
     public SubjectMap getSubjectMap() {
