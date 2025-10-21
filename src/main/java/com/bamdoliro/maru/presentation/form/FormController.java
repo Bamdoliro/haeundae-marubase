@@ -392,12 +392,11 @@ public class FormController {
 
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PatchMapping("/{form-id}/interview-number")
+    @PatchMapping("/interview-number")
     public void assignInterviewNumber(
             @AuthenticationPrincipal(authority = Authority.ADMIN) User user,
-            @PathVariable(name = "form-id") Long formId,
-            @RequestBody @Valid AssignInterviewNumberRequest request
+            @RequestBody @Valid AssignInterviewNumberListRequest request
     ) {
-        assignInterviewNumberUseCase.execute(formId, request.getInterviewNumber());
+        assignInterviewNumberUseCase.execute(request);
     }
 }

@@ -2572,15 +2572,18 @@ class FormControllerTest extends RestDocsTestSupport {
     }
 
     @Test
-    void 면접번호를_지정한다() throws Exception {
-        Long formId = 1L;
-        AssignInterviewNumberRequest request = new AssignInterviewNumberRequest(123456L);
+    void 면접번호를_일괄_지정한다() throws Exception {
+        List<AssignInterviewNumberRequest> requestList = List.of(
+                new AssignInterviewNumberRequest(1L, 1001L),
+                new AssignInterviewNumberRequest(2L, 1002L)
+        );
+        AssignInterviewNumberListRequest request = new AssignInterviewNumberListRequest(requestList);
         User user = UserFixture.createAdminUser();
 
         given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
         given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
 
-        mockMvc.perform(patch("/forms/{form-id}/interview-number", formId)
+        mockMvc.perform(patch("/forms/interview-number")
                         .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -2592,29 +2595,31 @@ class FormControllerTest extends RestDocsTestSupport {
                         requestHeaders(
                                 headerWithName(HttpHeaders.AUTHORIZATION).description("Bearer token")
                         ),
-                        pathParameters(
-                                parameterWithName("form-id").description("원서 ID")
-                        ),
                         requestFields(
-                                fieldWithPath("interviewNumber").type(JsonFieldType.NUMBER).description("면접번호")
+                                fieldWithPath("formList").type(JsonFieldType.ARRAY).description("면접번호 지정 목록"),
+                                fieldWithPath("formList[].formId").type(JsonFieldType.NUMBER).description("원서 ID"),
+                                fieldWithPath("formList[].interviewNumber").type(JsonFieldType.NUMBER).description("면접번호")
                         )
                 ));
 
-        verify(assignInterviewNumberUseCase, times(1)).execute(formId, request.getInterviewNumber());
+        verify(assignInterviewNumberUseCase, times(1)).execute(any(AssignInterviewNumberListRequest.class));
     }
 
     @Test
     void 면접번호를_지정할_때_원서가_없으면_에러가_발생한다() throws Exception {
-        Long formId = 1L;
-        AssignInterviewNumberRequest request = new AssignInterviewNumberRequest(123456L);
+        List<AssignInterviewNumberRequest> requestList = List.of(
+                new AssignInterviewNumberRequest(1L, 1001L),
+                new AssignInterviewNumberRequest(999L, 1002L) // 존재하지 않는 원서 ID
+        );
+        AssignInterviewNumberListRequest request = new AssignInterviewNumberListRequest(requestList);
         User user = UserFixture.createAdminUser();
 
         given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
         given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
         doThrow(new FormNotFoundException()).when(assignInterviewNumberUseCase)
-                .execute(formId, request.getInterviewNumber());
+                .execute(any(AssignInterviewNumberListRequest.class));
 
-        mockMvc.perform(patch("/forms/{form-id}/interview-number", formId)
+        mockMvc.perform(patch("/forms/interview-number")
                         .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -2624,6 +2629,6 @@ class FormControllerTest extends RestDocsTestSupport {
 
                 .andDo(restDocs.document());
 
-        verify(assignInterviewNumberUseCase, times(1)).execute(formId, request.getInterviewNumber());
+        verify(assignInterviewNumberUseCase, times(1)).execute(any(AssignInterviewNumberListRequest.class));
     }
 }

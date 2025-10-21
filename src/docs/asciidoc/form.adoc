@@ -808,21 +808,18 @@ include::{snippets}/form-controller-test/전형료_납부_여부를_일괄로_�
 ==== 요청 형식
 
 ===== Request Header
-include::{snippets}/form-controller-test/면접번호를_지정한다/request-headers.adoc[]
-
-===== Path Parameter
-include::{snippets}/form-controller-test/면접번호를_지정한다/path-parameters.adoc[]
+include::{snippets}/form-controller-test/면접번호를_일괄_지정한다/request-headers.adoc[]
 
 ===== Request Body
-include::{snippets}/form-controller-test/면접번호를_지정한다/request-fields.adoc[]
+include::{snippets}/form-controller-test/면접번호를_일괄_지정한다/request-fields.adoc[]
 
 ==== 요청
-include::{snippets}/form-controller-test/면접번호를_지정한다/http-request.adoc[]
+include::{snippets}/form-controller-test/면접번호를_일괄_지정한다/http-request.adoc[]
 
 ==== 응답
 
 ===== 정상 응답
-include::{snippets}/form-controller-test/면접번호를_지정한다/http-response.adoc[]
+include::{snippets}/form-controller-test/면접번호를_일괄_지정한다/http-response.adoc[]
 
 ===== 원서가 없는 경우
 include::{snippets}/form-controller-test/면접번호를_지정할_때_원서가_없으면_에러가_발생한다/http-response.adoc[]
