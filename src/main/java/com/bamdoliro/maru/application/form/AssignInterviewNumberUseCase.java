@@ -8,13 +8,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @UseCase
-public class UpdateExaminationNumberUseCase {
+public class AssignInterviewNumberUseCase {
 
     private final FormFacade formFacade;
 
     @Transactional
-    public void execute(Long formId, Long examinationNumber) {
+    public void execute(Long formId, Long interviewNumber) {
         Form form = formFacade.getForm(formId);
-        form.assignExaminationNumber(examinationNumber);
+        form.assignInterviewNumber(interviewNumber);
     }
 }
