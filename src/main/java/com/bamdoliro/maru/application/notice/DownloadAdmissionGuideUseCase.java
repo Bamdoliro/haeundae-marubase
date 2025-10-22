@@ -12,7 +12,7 @@ public class DownloadAdmissionGuideUseCase {
 
     private final FileService fileService;
 
-    private static final String ADMISSION_GUIDE_FILENAME = "2026학년도 해운대고등학교 입학전형요강.pdf";
+    private static final String ADMISSION_GUIDE_FILENAME = "2026-admission-guide.pdf";
 
     public UrlResponse execute() {
         String downloadUrl = fileService.getDownloadPresignedUrl(FolderConstant.ADMISSION_GUIDE, ADMISSION_GUIDE_FILENAME);
