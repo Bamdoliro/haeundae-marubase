@@ -19,7 +19,7 @@ public class SchoolStatusRequest {
     @NotNull(message = "필수값입니다.")
     private List<FormStatus> statusList;
 
-    @NotNull(message = "필수값입니다.")
+    @Nullable
     private Boolean isBusan;
 
     @Nullable
