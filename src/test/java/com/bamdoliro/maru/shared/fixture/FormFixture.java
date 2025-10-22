@@ -300,7 +300,7 @@ public class FormFixture {
                 ),
                 new Education(
                         GraduationType.QUALIFICATION_EXAMINATION,
-                        "2021",
+                        "2021-03-25",
                         new School(null, null, null, null),
                         new Teacher(null, null, null)
                 ),
@@ -398,7 +398,7 @@ public class FormFixture {
                 createParentRequest(),
                 new EducationRequest(
                         GraduationType.EXPECTED,
-                        "2021",
+                        "2021-09-10",
                         "비전중학교",
                         "경기도",
                         "경기도 비전시 비전구 비전로 1",
@@ -430,7 +430,7 @@ public class FormFixture {
                 createParentRequest(),
                 new EducationRequest(
                         GraduationType.QUALIFICATION_EXAMINATION,
-                        "2021",
+                        "2021-03-25",
                         null,
                         null,
                         null,
@@ -463,7 +463,7 @@ public class FormFixture {
                 createParentRequest(),
                 new EducationRequest(
                         GraduationType.EXPECTED,
-                        "2021",
+                        "2021-03-25",
                         "비전중학교",
                         "경기도",
                         "경기도 비전시 비전구 비전로 1",

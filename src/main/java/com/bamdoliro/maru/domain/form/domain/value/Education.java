@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -21,8 +22,8 @@ public class Education {
     @Column(nullable = false, length = 25)
     private GraduationType graduationType;
 
-    @Column(nullable = false, length = 4)
-    private String graduationYear;
+    @Column(nullable = false, length = 10)
+    private String graduationDate;
 
     @Embedded
     private School school;
@@ -43,6 +44,6 @@ public class Education {
     }
 
     public String getGraduationTypeToString() {
-        return graduationYear + "년 " + graduationType.getDescription();
+        return graduationDate + "년 " + graduationType.getDescription();
     }
 }
