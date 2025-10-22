@@ -161,9 +161,9 @@
         <th scope="row" class="ba" colspan="3">휴대전화</th>
         <td class="ba" colspan="5" th:text="${form.applicant.phoneNumber.toString()}"></td>
         <th scope="row" class="ba" colspan="2">구 분</th>
-        <td class="ba" colspan="7" th:if="${form.education.isExpected()}" th:text='${form.education.graduationYear + "년 졸업예정"}'></td>
-        <td class="ba" colspan="7" th:if="${form.education.isGraduated()}" th:text='${form.education.graduationYear + "년 졸업"}'></td>
-        <td class="ba" colspan="7" th:if="${form.education.isQualificationExamination()}" th:text='${form.education.graduationYear + "년 검정고시"}'></td>
+        <td class="ba" colspan="7" th:if="${form.education.isExpected()}" th:text='${form.education.graduationDate + " 졸업예정"}'></td>
+        <td class="ba" colspan="7" th:if="${form.education.isGraduated()}" th:text='${form.education.graduationDate + " 졸업"}'></td>
+        <td class="ba" colspan="7" th:if="${form.education.isQualificationExamination()}" th:text='${form.education.graduationDate + " 검정고시"}'></td>
     </tr>
     <tr>
         <th scope="rowgroup" class="ba" rowspan="2">보호자</th>
