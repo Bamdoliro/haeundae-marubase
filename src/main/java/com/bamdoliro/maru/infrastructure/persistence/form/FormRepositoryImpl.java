@@ -411,4 +411,17 @@ public class FormRepositoryImpl implements FormRepositoryCustom {
 
         return score != null ? score : 0.0;
     }
+
+    @Override
+    public List<SchoolStatusVo> findAllForms(List<FormStatus> round) {
+        return queryFactory
+                .select(new QSchoolStatusVo(
+                        form.applicant.name,
+                        form.education.school.name,
+                        form.education.school.address
+                ))
+                .from(form)
+                .where(form.status.in(round))
+                .fetch();
+    }
 }

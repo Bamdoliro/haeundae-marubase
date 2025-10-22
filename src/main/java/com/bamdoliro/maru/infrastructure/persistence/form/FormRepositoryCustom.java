@@ -34,6 +34,7 @@ public interface FormRepositoryCustom {
     List<GradeVo> findGradeGroupByTypeAndStatus(List<FormStatus> round);
     List<SchoolStatusVo> findSchoolByAddress(List<FormStatus> round, String keyword);
     List<SchoolStatusVo> findNotBusanSchool(List<FormStatus> round);
+    List<SchoolStatusVo> findAllForms(List<FormStatus> round);
     List<Long> findAllExaminationNumber();
     Double findFirstRoundScoreAtPercentile(FormType.Category category, double percentile, List<FormStatus> statusList);
     Double findTotalScoreAtPercentile(FormType.Category category, double percentile, List<FormStatus> statusList);
