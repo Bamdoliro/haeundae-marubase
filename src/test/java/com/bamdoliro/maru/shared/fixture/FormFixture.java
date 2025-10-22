@@ -398,7 +398,7 @@ public class FormFixture {
                 createParentRequest(),
                 new EducationRequest(
                         GraduationType.EXPECTED,
-                        "2021",
+                        "2021-09-10",
                         "비전중학교",
                         "경기도",
                         "경기도 비전시 비전구 비전로 1",
