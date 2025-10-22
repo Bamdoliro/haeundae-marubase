@@ -128,5 +128,3 @@ include::{snippets}/notice-controller-test/입학전형요강을_다운로드한
 ===== 정상 응답
 include::{snippets}/notice-controller-test/입학전형요강을_다운로드한다/http-response.adoc[]
 
-===== Response Body
-include::{snippets}/notice-controller-test/입학전형요강을_다운로드한다/response-fields.adoc[]
