@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,7 +23,7 @@ public class EducationRequest {
     private GraduationType graduationType;
 
     @NotBlank(message = "필수값입니다.")
-    @Size(min = 4, max = 4, message = "4자여야 합니다.")
+    @Size(min = 10, max = 10, message = "10자여야 합니다.")
     private String graduationYear;
 
     @Nullable
