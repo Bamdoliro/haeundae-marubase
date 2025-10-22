@@ -10,7 +10,7 @@ import lombok.Getter;
 public class EducationResponse {
 
     private GraduationType graduationType;
-    private String graduationYear;
+    private String graduationDate;
     private String schoolName;
     private String schoolLocation;
     private String schoolCode;
@@ -21,7 +21,7 @@ public class EducationResponse {
 
     public EducationResponse(Education education) {
         this.graduationType = education.getGraduationType();
-        this.graduationYear = education.getGraduationYear();
+        this.graduationDate = education.getGraduationDate();
         this.schoolName = education.getSchool().getName();
         this.schoolLocation = education.getSchool().getLocation();
         this.schoolAddress = education.getSchool().getAddress();
