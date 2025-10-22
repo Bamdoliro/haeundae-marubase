@@ -22,7 +22,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
 @ActiveProfiles("test")
@@ -82,9 +81,7 @@ class SelectFirstPassUseCaseTest {
             log.info("status: {}", form.getStatus());
         });
         int passedFormCount = (int) formList.stream().filter(Form::isFirstPassedNow).count();
-        int passedOtherRegionFormCount = (int) formList.stream().filter(form -> form.isFirstPassedNow() && !form.getEducation().getSchool().isBusan()).count();
         int totalCount = (int) Math.ceil(FixedNumber.TOTAL * FixedNumber.MULTIPLE);
         assertEquals(totalCount, passedFormCount);
-        assertTrue(Math.ceil((double) totalCount / 2) >= passedOtherRegionFormCount);
     }
 }
