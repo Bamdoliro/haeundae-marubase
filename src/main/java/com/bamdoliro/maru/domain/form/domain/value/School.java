@@ -25,7 +25,4 @@ public class School {
     @Column(name = "school_code", nullable = true, length = 10)
     private String code;
 
-    public boolean isBusan() {
-        return location.equals("부산광역시");
-    }
 }
