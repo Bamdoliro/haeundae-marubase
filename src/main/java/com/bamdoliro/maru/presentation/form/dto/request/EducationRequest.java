@@ -24,7 +24,7 @@ public class EducationRequest {
 
     @NotBlank(message = "필수값입니다.")
     @Size(min = 10, max = 10, message = "10자여야 합니다.")
-    private String graduationYear;
+    private String graduationDate;
 
     @Nullable
     @Size(max = 20, message = "20자 이하여야 합니다.")
@@ -57,7 +57,7 @@ public class EducationRequest {
     public Education toValue() {
         return new Education(
                 graduationType,
-                graduationYear,
+                graduationDate,
                 new School(
                         schoolName,
                         schoolLocation,
