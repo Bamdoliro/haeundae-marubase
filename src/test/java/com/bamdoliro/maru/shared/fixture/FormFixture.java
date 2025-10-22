@@ -300,7 +300,7 @@ public class FormFixture {
                 ),
                 new Education(
                         GraduationType.QUALIFICATION_EXAMINATION,
-                        "2021",
+                        "2021-03-25",
                         new School(null, null, null, null),
                         new Teacher(null, null, null)
                 ),
