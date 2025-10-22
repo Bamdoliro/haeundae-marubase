@@ -3,6 +3,7 @@ package com.bamdoliro.maru.presentation.notice;
 import com.bamdoliro.maru.domain.notice.exception.NoticeNotFoundException;
 import com.bamdoliro.maru.domain.user.domain.User;
 import com.bamdoliro.maru.infrastructure.s3.dto.request.FileMetadata;
+import com.bamdoliro.maru.infrastructure.s3.dto.response.UrlResponse;
 import com.bamdoliro.maru.infrastructure.s3.exception.FileCountLimitExceededException;
 import com.bamdoliro.maru.presentation.notice.dto.request.NoticeRequest;
 import com.bamdoliro.maru.presentation.notice.dto.response.DownloadFileResponse;
@@ -30,7 +31,8 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.requestHe
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class NoticeControllerTest extends RestDocsTestSupport {
@@ -298,5 +300,20 @@ class NoticeControllerTest extends RestDocsTestSupport {
                 .andDo(restDocs.document());
 
         verify(uploadFileUseCase, times(1)).execute(anyList());
+    }
+
+    @Test
+    void 입학전형요강을_다운로드한다() throws Exception {
+        given(downloadAdmissionGuideUseCase.execute()).willReturn(
+                new UrlResponse(null, "https://maru.bamdoliro.com/admission-guide.pdf")
+        );
+
+        mockMvc.perform(get("/notices/admission-guide")
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andDo(restDocs.document());
+
+        verify(downloadAdmissionGuideUseCase, times(1)).execute();
     }
 }

@@ -140,6 +140,9 @@ public abstract class ControllerTest {
     protected QueryAllFormUseCase queryAllFormUseCase;
 
     @MockBean
+    protected DownloadAdmissionGuideUseCase downloadAdmissionGuideUseCase;
+
+    @MockBean
     protected QueryNoticeUseCase queryNoticeUseCase;
 
     @MockBean
