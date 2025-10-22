@@ -430,7 +430,7 @@ public class FormFixture {
                 createParentRequest(),
                 new EducationRequest(
                         GraduationType.QUALIFICATION_EXAMINATION,
-                        "2021",
+                        "2021-03-25",
                         null,
                         null,
                         null,
