@@ -2,6 +2,7 @@ package com.bamdoliro.maru.application.form;
 
 import com.bamdoliro.maru.domain.form.domain.Form;
 import com.bamdoliro.maru.domain.form.exception.CannotUpdateNotRejectedFormException;
+import com.bamdoliro.maru.domain.form.service.CalculateFormScoreService;
 import com.bamdoliro.maru.domain.form.service.FormFacade;
 import com.bamdoliro.maru.domain.user.domain.User;
 import com.bamdoliro.maru.presentation.form.dto.request.UpdateFormRequest;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UpdateFormUseCase {
 
     private final FormFacade formFacade;
+    private final CalculateFormScoreService calculateFormScoreService;
 
     @ValidateApplicationFormPeriod
     @Transactional
@@ -31,6 +33,9 @@ public class UpdateFormUseCase {
                 request.getDocument().toValue(),
                 request.getType()
         );
+
+        calculateFormScoreService.execute(form);
+
     }
 
     private void validateFormStatus(Form form) {
