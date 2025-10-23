@@ -5,6 +5,7 @@ import com.bamdoliro.maru.domain.form.domain.Form;
 import com.bamdoliro.maru.domain.form.domain.type.FormType;
 import com.bamdoliro.maru.domain.form.exception.CannotUpdateNotRejectedFormException;
 import com.bamdoliro.maru.domain.form.exception.FormNotFoundException;
+import com.bamdoliro.maru.domain.form.service.CalculateFormScoreService;
 import com.bamdoliro.maru.domain.form.service.FormFacade;
 import com.bamdoliro.maru.domain.user.domain.User;
 import com.bamdoliro.maru.shared.fixture.FormFixture;
@@ -31,6 +32,8 @@ class UpdateFormUseCaseTest {
     @Mock
     private FormFacade formFacade;
 
+    @Mock
+    private CalculateFormScoreService calculateFormScoreService;
 
     @Test
     void 원서를_수정한다() {
