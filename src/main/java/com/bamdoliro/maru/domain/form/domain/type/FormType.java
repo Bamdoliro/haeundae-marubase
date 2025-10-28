@@ -110,6 +110,6 @@ public enum FormType implements EnumProperty {
     }
 
     public FormType.Category getCategory() {
-        return subCategory;
+        return mainCategory;
     }
 }
