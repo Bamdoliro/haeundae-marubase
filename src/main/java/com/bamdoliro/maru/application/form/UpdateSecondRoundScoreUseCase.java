@@ -42,7 +42,7 @@ public class UpdateSecondRoundScoreUseCase {
         errorCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
         List<Form> formList = formRepository.findByStatus(FormStatus.FIRST_PASSED);
-        formList.sort(Comparator.comparing(Form::getExaminationNumber));
+        formList.sort(Comparator.comparing(Form::getInterviewNumber));
         List<SecondScoreVo> secondScoreVoList = getSecondScoreVoList(sheet);
         if (secondScoreVoList == null) {
             return xlsxService.convertToByteArrayResource(workbook);
@@ -71,7 +71,7 @@ public class UpdateSecondRoundScoreUseCase {
             return null;
         }
 
-        voList.sort(Comparator.comparingLong(SecondScoreVo::getExaminationNumber));
+        voList.sort(Comparator.comparingLong(SecondScoreVo::getInterviewNumber));
 
         return voList;
     }
@@ -97,10 +97,10 @@ public class UpdateSecondRoundScoreUseCase {
     }
 
     private List<Cell> validateCellType(Row row) {
-        // 수험번호 | 이름 | 전형 구분 | 심층면접 | NCS | 코딩테스트 | 응시 여부
+        // 면접번호 | 이름 | 전형 구분 | 심층면접 | NCS | 코딩테스트 | 응시 여부
         List<Cell> cellList = new ArrayList<>();
 
-        Cell examinationNumberCell = row.getCell(0);
+        Cell interviewNumberCell = row.getCell(0);
         Cell nameCell = row.getCell(1);
         Cell typeCell = row.getCell(2);
         Cell selfDirectedScoreCell = row.getCell(3);
@@ -108,9 +108,9 @@ public class UpdateSecondRoundScoreUseCase {
         Cell isShowCell = row.getCell(5);
         boolean isShow = false;
 
-        if (examinationNumberCell.getCellType() != CellType.NUMERIC) {
-            setErrorCell(examinationNumberCell, "타입 불일치");
-            cellList.add(examinationNumberCell);
+        if (interviewNumberCell.getCellType() != CellType.NUMERIC) {
+            setErrorCell(interviewNumberCell, "타입 불일치");
+            cellList.add(interviewNumberCell);
         }
         if (nameCell.getCellType() != CellType.STRING) {
             setErrorCell(nameCell, "타입 불일치");
@@ -142,7 +142,7 @@ public class UpdateSecondRoundScoreUseCase {
     }
 
     private boolean validateScore(Row row, List<Cell> invalidCellTypeList) {
-        // 수험번호 | 이름 | 전형 구분 | 심층면접 | NCS | 코딩테스트 | 응시 여부
+        // 면접번호 | 이름 | 전형 구분 | 심층면접 | NCS | 코딩테스트 | 응시 여부
         boolean isValid = true;
 
         Cell typeCell = row.getCell(2);
@@ -183,8 +183,8 @@ public class UpdateSecondRoundScoreUseCase {
     }
 
     private void validate(Form form, SecondScoreVo secondScoreVo) {
-        if (!form.getExaminationNumber().equals(secondScoreVo.getExaminationNumber())) {
-            throw new InvalidFileException("수험번호가 올바르지 않습니다.");
+        if (!form.getInterviewNumber().equals(secondScoreVo.getInterviewNumber())) {
+            throw new InvalidFileException("면접번호가 올바르지 않습니다.");
         }
     }
 
@@ -212,7 +212,7 @@ public class UpdateSecondRoundScoreUseCase {
 @Getter
 @AllArgsConstructor
 class SecondScoreVo {
-    private Long examinationNumber;
+    private Long interviewNumber;
     private FormType.Category type;
     private Double selfDirectedScore;
     private Double personalityScore;
