@@ -25,7 +25,7 @@ public class FormFixture {
                         "김밤돌",
                         new PhoneNumber("01012345678"),
                         LocalDate.of(2005, 4, 15),
-                        "070605-3111111", // 주민등록번호 추가
+                        "070605-3111111",
                         Gender.FEMALE
                 ),
                 new Parent(
