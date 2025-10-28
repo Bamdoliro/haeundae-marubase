@@ -26,7 +26,7 @@ public class AssignExaminationNumberService {
     }
 
     private Long getStartNumber(FormType type) {
-        return switch (type.getCategory()) {
+        return switch (type.getSubCategory()) {
             case REGULAR -> 111000L;
             case EQUAL_OPPORTUNITY -> 212000L;
             case SOCIETY_DIVERSITY -> 213000L;
