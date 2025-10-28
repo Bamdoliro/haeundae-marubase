@@ -53,6 +53,7 @@ class SelectFirstPassUseCaseTest {
         formList.addAll(FormFixture.generateOtherRegionFormList(userList.subList(userList.size() / 2, userList.size())));
         formList.forEach(form -> {
             assignExaminationNumberService.execute(form);
+            form.assignInterviewNumber(form.getExaminationNumber());
             form.receive();
             calculateFormScoreService.execute(form);
             formRepository.save(form);
