@@ -168,7 +168,7 @@ public class FormFixture {
                 ),
                 new Education(
                         GraduationType.EXPECTED,
-                        "2021",
+                        "2021-04-09",
                         new School("부산중학교", "부산광역시", "부산광역시 동구 초량로40번길 29", "7631003"),
                         new Teacher("나교사", new PhoneNumber("0519701234"), new PhoneNumber("01012344321"))
                 ),
