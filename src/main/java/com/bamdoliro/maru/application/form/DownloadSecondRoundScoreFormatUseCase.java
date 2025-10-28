@@ -6,11 +6,7 @@ import com.bamdoliro.maru.domain.form.service.FormFacade;
 import com.bamdoliro.maru.infrastructure.xlsx.XlsxService;
 import com.bamdoliro.maru.shared.annotation.UseCase;
 import lombok.RequiredArgsConstructor;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
@@ -31,15 +27,16 @@ public class DownloadSecondRoundScoreFormatUseCase {
         Workbook workbook = xlsxService.openTemplate("2차전형점수양식");
         Sheet sheet = workbook.getSheetAt(0);
         CellStyle cellStyle = xlsxService.createDefaultCellStyle(workbook);
+        sheet.setColumnHidden(6, true);
 
         for (int index = 0; index < formList.size(); index++) {
             Form form = formList.get(index);
             Row row = sheet.createRow(index + FIRST_ROW_INDEX_WITH_NO_TITLE);
             int xlsxIndex = index + FIRST_ROW_INDEX_WITH_NO_TITLE + 1;
 
-            Cell examinationNumberCell = row.createCell(0);
-            examinationNumberCell.setCellValue(form.getExaminationNumber());
-            examinationNumberCell.setCellStyle(cellStyle);
+            Cell interviewNumberCell = row.createCell(0);
+            interviewNumberCell.setCellValue(form.getInterviewNumber());
+            interviewNumberCell.setCellStyle(cellStyle);
 
             Cell nameCell = row.createCell(1);
             nameCell.setCellValue(form.getApplicant().getName());
