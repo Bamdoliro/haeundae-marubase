@@ -9,7 +9,7 @@ import java.util.Objects;
 @Getter
 @RequiredArgsConstructor
 public enum FormType implements EnumProperty {
-    REGULAR("일반전형", Category.REGULAR, null),
+    REGULAR("일반전형", Category.REGULAR, Category.REGULAR),
 
     NATIONAL_VETERANS("국가보훈대상자", Category.SPECIAL, Category.EQUAL_OPPORTUNITY),
     NATIONAL_BASIC_LIVING("국민기초생활수급권자", Category.SPECIAL, Category.EQUAL_OPPORTUNITY),
@@ -110,6 +110,6 @@ public enum FormType implements EnumProperty {
     }
 
     public FormType.Category getCategory() {
-        return mainCategory;
+        return subCategory;
     }
 }
