@@ -1,11 +1,7 @@
 package com.bamdoliro.maru.domain.form.domain.value;
 
 import com.bamdoliro.maru.domain.form.domain.type.GraduationType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -44,6 +40,7 @@ public class Education {
     }
 
     public String getGraduationTypeToString() {
-        return graduationDate + "년 " + graduationType.getDescription();
+        String[] dateParts = graduationDate.split("-");
+        return String.format("%s년 %s월 %s일 %s", dateParts[0], dateParts[1], dateParts[2], graduationType.getDescription());
     }
 }
