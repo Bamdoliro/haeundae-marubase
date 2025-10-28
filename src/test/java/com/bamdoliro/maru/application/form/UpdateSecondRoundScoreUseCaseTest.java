@@ -59,12 +59,13 @@ class UpdateSecondRoundScoreUseCaseTest {
         List<Form> formList = FormFixture.generateBusanFormList(userList);
         formList.forEach(form -> {
             assignExaminationNumberService.execute(form);
+            form.assignInterviewNumber(form.getExaminationNumber());
             form.receive();
             calculateFormScoreService.execute(form);
-            if (form.getExaminationNumber() == 1001 ||
-                    form.getExaminationNumber() == 1002 ||
-                    form.getExaminationNumber() == 2001 ||
-                    form.getExaminationNumber() == 2002
+            if (form.getInterviewNumber() == 111001L ||
+                    form.getInterviewNumber() == 111002L ||
+                    form.getInterviewNumber() == 212001L ||
+                    form.getInterviewNumber() == 212002L
             ) {
                 formRepository.save(form);
             }
@@ -83,7 +84,7 @@ class UpdateSecondRoundScoreUseCaseTest {
 
         // then
         List<Form> formList = formRepository.findByStatus(FormStatus.FIRST_PASSED).stream()
-                .sorted(Comparator.comparing(Form::getExaminationNumber))
+                .sorted(Comparator.comparing(Form::getInterviewNumber))
                 .toList();
         assertEquals(3, formList.size());
         assertEquals(40, formList.get(0).getScore().getSelfDirectedScore());
