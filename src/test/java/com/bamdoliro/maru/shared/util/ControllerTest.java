@@ -280,8 +280,11 @@ public abstract class ControllerTest {
     @MockBean
     protected UpdateAdmissionFeePaymentStatusUseCase updateAdmissionFeePaymentStatusUseCase;
 
+    @MockBean
+    protected UpdateAdmissionFairUseCase updateAdmissionFairUseCase;
 
-
+    @MockBean
+    protected DeleteAdmissionFairUseCase deleteAdmissionFairUseCase;
 
     protected String toJson(Object object) throws JsonProcessingException {
         return objectMapper.writeValueAsString(object);
