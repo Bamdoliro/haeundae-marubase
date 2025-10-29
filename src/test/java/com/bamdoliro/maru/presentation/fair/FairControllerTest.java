@@ -158,6 +158,35 @@ class FairControllerTest extends RestDocsTestSupport {
     }
 
     @Test
+    void 입학설명회를_삭제한다() throws Exception {
+        Long fairId = 1L;
+        willDoNothing().given(deleteAdmissionFairUseCase).execute(fairId);
+
+        User user = UserFixture.createAdminUser();
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+
+        mockMvc.perform(delete("/fairs/{fair-id}", fairId)
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .accept(MediaType.APPLICATION_JSON))
+
+                .andExpect(status().isNoContent())
+
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION)
+                                        .description("Bearer token")
+                        ),
+                        pathParameters(
+                                parameterWithName("fair-id")
+                                        .description("입학섦여회 id")
+                        )
+                ));
+
+        verify(deleteAdmissionFairUseCase, times(1)).execute(fairId);
+    }
+
+    @Test
     void 입학설명회에_참가_신청을_한다() throws Exception {
         Long fairId = 1L;
         AttendAdmissionFairRequest request = FairFixture.createAttendAdmissionFairRequest();
