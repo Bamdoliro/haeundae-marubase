@@ -39,12 +39,12 @@ public class FairFixture {
 
     public static UpdateFairRequest updateFairRequest() {
         return new UpdateFairRequest(
-                LocalDateTime.now().plusWeeks(3),
-                120,
-                "해운대고등학교 5층 대동관",
-                FairType.STUDENT_AND_PARENT,
-                LocalDate.now(),
-                LocalDate.now().plusWeeks(2)
+                LocalDateTime.now().plusWeeks(2),
+                110,
+                "해운대고등학교 4층 대동관",
+                FairType.TEACHER,
+                LocalDate.now().plusDays(1),
+                LocalDate.now().plusWeeks(3)
         );
     }
 
