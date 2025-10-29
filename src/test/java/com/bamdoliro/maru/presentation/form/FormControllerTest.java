@@ -103,6 +103,9 @@ class FormControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("parent.detailAddress")
                                         .type(JsonFieldType.STRING)
                                         .description("보호자 상세주소"),
+                                fieldWithPath("parent.account")
+                                        .type(JsonFieldType.STRING)
+                                        .description("환불계좌"),
                                 fieldWithPath("education.graduationType")
                                         .type(JsonFieldType.STRING)
                                         .description("<<graduation-type,졸업 유형>>"),
@@ -744,6 +747,9 @@ class FormControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("parent.detailAddress")
                                         .type(JsonFieldType.STRING)
                                         .description("보호자 상세주소"),
+                                fieldWithPath("parent.account")
+                                        .type(JsonFieldType.STRING)
+                                        .description("환불계좌"),
                                 fieldWithPath("education.graduationType")
                                         .type(JsonFieldType.STRING)
                                         .description("<<graduation-type,졸업 유형>>"),
@@ -2574,8 +2580,8 @@ class FormControllerTest extends RestDocsTestSupport {
     @Test
     void 면접번호를_일괄_지정한다() throws Exception {
         List<AssignInterviewNumberRequest> requestList = List.of(
-                new AssignInterviewNumberRequest(1L, 1001L),
-                new AssignInterviewNumberRequest(2L, 1002L)
+                new AssignInterviewNumberRequest(1L, 10001L),
+                new AssignInterviewNumberRequest(2L, 10002L)
         );
         AssignInterviewNumberListRequest request = new AssignInterviewNumberListRequest(requestList);
         User user = UserFixture.createAdminUser();
@@ -2608,8 +2614,8 @@ class FormControllerTest extends RestDocsTestSupport {
     @Test
     void 면접번호를_지정할_때_원서가_없으면_에러가_발생한다() throws Exception {
         List<AssignInterviewNumberRequest> requestList = List.of(
-                new AssignInterviewNumberRequest(1L, 1001L),
-                new AssignInterviewNumberRequest(999L, 1002L) // 존재하지 않는 원서 ID
+                new AssignInterviewNumberRequest(1L, 10001L),
+                new AssignInterviewNumberRequest(999L, 10002L) // 존재하지 않는 원서 ID
         );
         AssignInterviewNumberListRequest request = new AssignInterviewNumberListRequest(requestList);
         User user = UserFixture.createAdminUser();

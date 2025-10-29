@@ -38,6 +38,10 @@ public class ParentRequest {
     @Size(max = 100, message = "100자 이하여야 합니다.")
     private String detailAddress;
 
+    @NotBlank(message = "필수값입니다.")
+    @Size(max = 20, message = "20자 이내여야 합니다.")
+    private String account;
+
     public Parent toValue() {
         return new Parent(
                 name,
@@ -47,7 +51,8 @@ public class ParentRequest {
                         zoneCode,
                         address,
                         detailAddress
-                )
+                ),
+                account
         );
     }
 }

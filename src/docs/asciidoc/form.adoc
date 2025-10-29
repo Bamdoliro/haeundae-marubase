@@ -16,7 +16,7 @@ include::{snippets}/form-controller-test/원서를_제출한다/request-fields.a
 include::{snippets}/form-controller-test/원서를_제출한다/http-request.adoc[]
 
 ===== 중졸 검정고시 합격자 예시
-include::{snippets}/form-controller-test/중졸_껌정고시_합격자가_원서를_제출한다/http-request.adoc[]
+include::{snippets}/form-controller-test/중졸_검정고시_합격자가_원서를_제출한다/http-request.adoc[]
 
 ==== 응답
 
