@@ -15,8 +15,8 @@ public class ScoreResponse {
     private Double totalScore;
 
     public ScoreResponse(Score score) {
-        this.firstRoundScore = score.getFirstRoundScore();
-        this.totalScore = score.getTotalScore();
+        this.firstRoundScore = round(score.getFirstRoundScore());
+        this.totalScore = round(score.getTotalScore());
     }
 
     public Double round(Double score) {
@@ -24,7 +24,7 @@ public class ScoreResponse {
             return null;
         }
         return BigDecimal.valueOf(score)
-                .setScale(3, RoundingMode.HALF_UP)
+                .setScale(2, RoundingMode.HALF_UP)
                 .doubleValue();
     }
 }
