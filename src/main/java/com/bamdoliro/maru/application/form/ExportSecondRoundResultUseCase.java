@@ -33,6 +33,7 @@ public class ExportSecondRoundResultUseCase {
         List<Function<Form, Object>> columnList = List.of(
                 Form::getId,
                 Form::getExaminationNumber,
+                Form::getInterviewNumber,
                 form -> form.getOriginalType().getDescription(),
                 form -> form.getType().getDescription(),
                 form -> form.getStatus().getDescription(),
@@ -51,6 +52,7 @@ public class ExportSecondRoundResultUseCase {
         );
 
         List<String> styleList = List.of(
+                "default",
                 "default",
                 "default",
                 "default",

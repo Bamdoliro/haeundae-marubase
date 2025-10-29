@@ -82,6 +82,12 @@ class SelectFirstPassUseCaseTest {
         });
         int passedFormCount = (int) formList.stream().filter(Form::isFirstPassedNow).count();
         int totalCount = (int) Math.ceil(FixedNumber.TOTAL * FixedNumber.MULTIPLE);
+
+        System.out.println("=== 1차 합격자 수 디버그 ===");
+        System.out.println("총 원서 개수: " + formRepository.findAll().size());
+        System.out.println("예상 합격자 수: " + totalCount);
+        System.out.println("실제 합격자 수: " + passedFormCount);
+
         assertEquals(totalCount, passedFormCount);
     }
 }

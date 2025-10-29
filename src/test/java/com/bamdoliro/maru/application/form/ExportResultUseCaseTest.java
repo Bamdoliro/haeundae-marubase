@@ -50,6 +50,7 @@ class ExportResultUseCaseTest {
         List<Form> formList = FormFixture.generateBusanFormList(userList);
         formList.forEach(form -> {
             assignExaminationNumberService.execute(form);
+            form.assignInterviewNumber(form.getExaminationNumber());
 
             switch (randomFormStatus()) {
                 case FINAL_SUBMITTED -> form.submit();

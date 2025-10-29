@@ -12,7 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -29,13 +29,13 @@ class AssignExaminationNumberServiceTest {
     void 수험번호를_부여한다() {
         // given
         Form form = FormFixture.createForm(FormType.REGULAR);
-        given(formRepository.findAllExaminationNumber()).willReturn(List.of(1001L, 1002L, 1003L, 1004L, 1005L));
+        given(formRepository.findAllExaminationNumber()).willReturn(List.of(111001L, 111002L, 111003L, 111004L, 111005L));
 
         // when
         assignExaminationNumberService.execute(form);
 
         // then
-        assertEquals(1006L, form.getExaminationNumber());
+        assertEquals(111006L, form.getExaminationNumber());
         verify(formRepository).findAllExaminationNumber();
     }
 
@@ -49,7 +49,7 @@ class AssignExaminationNumberServiceTest {
         assignExaminationNumberService.execute(form);
 
         // then
-        assertEquals(2001L, form.getExaminationNumber());
+        assertEquals(213001L, form.getExaminationNumber());
         verify(formRepository).findAllExaminationNumber();
     }
 }

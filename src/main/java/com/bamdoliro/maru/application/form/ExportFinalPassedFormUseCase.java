@@ -27,6 +27,7 @@ public class ExportFinalPassedFormUseCase {
         List<Function<Form, Object>> columnList = List.of(
                 Form::getId,
                 Form::getExaminationNumber,
+                Form::getInterviewNumber,
                 form -> form.getOriginalType().getDescription(),
                 form -> form.getType().getDescription(),
                 form -> form.getStatus().getDescription(),
@@ -50,6 +51,7 @@ public class ExportFinalPassedFormUseCase {
         );
 
         List<String> styleList = List.of(
+                "default",
                 "default",
                 "default",
                 "default",

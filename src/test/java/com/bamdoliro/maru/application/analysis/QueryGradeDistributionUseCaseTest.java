@@ -244,11 +244,9 @@ class QueryGradeDistributionUseCaseTest {
             .findFirst()
             .orElseThrow();
 
-        // REGULAR 카테고리는 REGULAR만 포함
         assertThat(regularResponse.getFirstRoundSeventyPercentile()).isEqualTo(280.0);
         assertThat(regularResponse.getTotalSeventyPercentile()).isEqualTo(520.0);
 
-        // SPECIAL 카테고리는 MEISTER_TALENT, SOCIAL_INTEGRATION 등을 포함
         assertThat(meisterTalentResponse.getFirstRoundSeventyPercentile()).isEqualTo(270.0);
         assertThat(meisterTalentResponse.getTotalSeventyPercentile()).isEqualTo(510.0);
         assertThat(socialIntegrationResponse.getFirstRoundSeventyPercentile()).isEqualTo(270.0);
