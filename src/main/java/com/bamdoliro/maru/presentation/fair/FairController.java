@@ -1,14 +1,11 @@
 package com.bamdoliro.maru.presentation.fair;
 
-import com.bamdoliro.maru.application.fair.AttendAdmissionFairUseCase;
-import com.bamdoliro.maru.application.fair.CreateAdmissionFairUseCase;
-import com.bamdoliro.maru.application.fair.ExportAttendeeListUseCase;
-import com.bamdoliro.maru.application.fair.QueryFairDetailUseCase;
-import com.bamdoliro.maru.application.fair.QueryFairListUseCase;
+import com.bamdoliro.maru.application.fair.*;
 import com.bamdoliro.maru.domain.fair.domain.type.FairType;
 import com.bamdoliro.maru.domain.user.domain.User;
 import com.bamdoliro.maru.presentation.fair.dto.request.AttendAdmissionFairRequest;
 import com.bamdoliro.maru.presentation.fair.dto.request.CreateFairRequest;
+import com.bamdoliro.maru.presentation.fair.dto.request.UpdateFairRequest;
 import com.bamdoliro.maru.presentation.fair.dto.response.FairDetailResponse;
 import com.bamdoliro.maru.presentation.fair.dto.response.FairResponse;
 import com.bamdoliro.maru.shared.auth.AuthenticationPrincipal;
@@ -22,14 +19,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -39,6 +29,8 @@ import java.io.IOException;
 public class FairController {
 
     private final CreateAdmissionFairUseCase createAdmissionFairUseCase;
+    private final UpdateAdmissionFairUseCase updateAdmissionFairUseCase;
+    private final DeleteAdmissionFairUseCase deleteAdmissionFairUseCase;
     private final AttendAdmissionFairUseCase attendAdmissionFairUseCase;
     private final QueryFairListUseCase queryFairListUseCase;
     private final QueryFairDetailUseCase queryFairDetailUseCase;
@@ -51,6 +43,25 @@ public class FairController {
             @RequestBody @Valid CreateFairRequest request
     ) {
         createAdmissionFairUseCase.execute(request);
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/{fair-id}")
+    public void updateAdmissionFair(
+            @PathVariable(name = "fair-id") Long fairId,
+            @AuthenticationPrincipal(authority = Authority.ADMIN) User user,
+            @RequestBody @Valid UpdateFairRequest request
+    ){
+        updateAdmissionFairUseCase.execute(fairId, request);
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{fair-id}")
+    public void deleteAdmissionFair(
+            @PathVariable(name = "fair-id") Long fairId,
+            @AuthenticationPrincipal(authority = Authority.ADMIN) User user
+    ){
+        deleteAdmissionFairUseCase.execute(fairId);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
