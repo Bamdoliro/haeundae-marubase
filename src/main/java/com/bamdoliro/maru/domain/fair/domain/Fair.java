@@ -90,4 +90,13 @@ public class Fair extends BaseTimeEntity {
 
         return FairStatus.APPLICATION_IN_PROGRESS;
     }
+
+    public void update(LocalDateTime start, Integer capacity, String place, FairType type, LocalDate applicationStartDate, LocalDate applicationEndDate) {
+        this.start = start;
+        this.capacity = capacity;
+        this.place = place;
+        this.type = type;
+        this.applicationStartDate = applicationStartDate;
+        this.applicationEndDate = applicationEndDate;
+    }
 }

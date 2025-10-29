@@ -7,6 +7,7 @@ import com.bamdoliro.maru.domain.fair.exception.NotApplicationPeriodException;
 import com.bamdoliro.maru.domain.user.domain.User;
 import com.bamdoliro.maru.presentation.fair.dto.request.AttendAdmissionFairRequest;
 import com.bamdoliro.maru.presentation.fair.dto.request.CreateFairRequest;
+import com.bamdoliro.maru.presentation.fair.dto.request.UpdateFairRequest;
 import com.bamdoliro.maru.shared.fixture.AuthFixture;
 import com.bamdoliro.maru.shared.fixture.FairFixture;
 import com.bamdoliro.maru.shared.fixture.UserFixture;
@@ -23,8 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
@@ -80,6 +80,114 @@ class FairControllerTest extends RestDocsTestSupport {
                 ));
 
         verify(createAdmissionFairUseCase, times(1)).execute(any(CreateFairRequest.class));
+    }
+
+    @Test
+    void 입학설명회의_정보를_수정한다() throws Exception {
+        Long fairId = 1L;
+        User user = UserFixture.createAdminUser();
+        UpdateFairRequest request = FairFixture.updateFairRequest();
+
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+        willDoNothing().given(updateAdmissionFairUseCase).execute(fairId ,request);
+
+        mockMvc.perform(put("/fairs/{fair-id}", fairId)
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(request))
+                )
+
+                .andExpect(status().isNoContent())
+
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION)
+                                        .description("Bearer token")
+                        ),
+                        pathParameters(
+                                parameterWithName("fair-id")
+                                        .description("입학설명회 id")
+                        ),
+                        requestFields(
+                                fieldWithPath("start")
+                                        .type(JsonFieldType.STRING)
+                                        .description("입학설명회 일시 (yyyy-MM-ddThh:mm:ss)"),
+                                fieldWithPath("capacity")
+                                        .type(JsonFieldType.NUMBER)
+                                        .description("입학설명회 정원"),
+                                fieldWithPath("place")
+                                        .type(JsonFieldType.STRING)
+                                        .description("입학설명회 장소"),
+                                fieldWithPath("type")
+                                        .type(JsonFieldType.STRING)
+                                        .description("<<fair-type,입학설명회 유형>>"),
+                                fieldWithPath("applicationStartDate")
+                                        .type(JsonFieldType.STRING)
+                                        .optional()
+                                        .description("입학설명회 신청 시작일 (yyyy-MM-dd)"),
+                                fieldWithPath("applicationEndDate")
+                                        .type(JsonFieldType.STRING)
+                                        .optional()
+                                        .description("입학설명회 신청 종료일 (yyyy-MM-dd)")
+                        )
+                ));
+
+        verify(updateAdmissionFairUseCase, times(1)).execute(eq(fairId), any(UpdateFairRequest.class));
+    }
+
+    @Test
+    void 입학설명회의_정보를_수정할_때_입학설명회가_없다면_오류가_발생한다()throws Exception {
+        Long fairId = 2L;
+        User user = UserFixture.createAdminUser();
+        UpdateFairRequest request = FairFixture.updateFairRequest();
+        doThrow(new FairNotFoundException()).when(updateAdmissionFairUseCase).execute(any(Long.class), any(UpdateFairRequest.class));
+
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+        willDoNothing().given(updateAdmissionFairUseCase).execute(fairId, request);
+
+        mockMvc.perform(put("/fairs/{fair-id}", fairId)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(request))
+                )
+
+                .andExpect(status().isNotFound())
+
+                .andDo(restDocs.document());
+
+        verify(updateAdmissionFairUseCase, times(1)).execute(eq(fairId), any(UpdateFairRequest.class));
+    }
+
+    @Test
+    void 입학설명회를_삭제한다() throws Exception {
+        Long fairId = 1L;
+        willDoNothing().given(deleteAdmissionFairUseCase).execute(fairId);
+
+        User user = UserFixture.createAdminUser();
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+
+        mockMvc.perform(delete("/fairs/{fair-id}", fairId)
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .accept(MediaType.APPLICATION_JSON))
+
+                .andExpect(status().isNoContent())
+
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION)
+                                        .description("Bearer token")
+                        ),
+                        pathParameters(
+                                parameterWithName("fair-id")
+                                        .description("입학섦여회 id")
+                        )
+                ));
+
+        verify(deleteAdmissionFairUseCase, times(1)).execute(fairId);
     }
 
     @Test

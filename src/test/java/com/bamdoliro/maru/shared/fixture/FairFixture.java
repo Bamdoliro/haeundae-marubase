@@ -5,6 +5,7 @@ import com.bamdoliro.maru.domain.fair.domain.Fair;
 import com.bamdoliro.maru.domain.fair.domain.type.FairType;
 import com.bamdoliro.maru.presentation.fair.dto.request.AttendAdmissionFairRequest;
 import com.bamdoliro.maru.presentation.fair.dto.request.CreateFairRequest;
+import com.bamdoliro.maru.presentation.fair.dto.request.UpdateFairRequest;
 import com.bamdoliro.maru.presentation.fair.dto.response.FairDetailResponse;
 import com.bamdoliro.maru.presentation.fair.dto.response.FairResponse;
 import com.bamdoliro.maru.shared.util.RandomCodeUtil;
@@ -33,6 +34,17 @@ public class FairFixture {
                 FairType.STUDENT_AND_PARENT,
                 LocalDate.now(),
                 LocalDate.now().plusWeeks(2)
+        );
+    }
+
+    public static UpdateFairRequest updateFairRequest() {
+        return new UpdateFairRequest(
+                LocalDateTime.now().plusWeeks(2),
+                110,
+                "해운대고등학교 4층 대동관",
+                FairType.TEACHER,
+                LocalDate.now().plusDays(1),
+                LocalDate.now().plusWeeks(3)
         );
     }
 
