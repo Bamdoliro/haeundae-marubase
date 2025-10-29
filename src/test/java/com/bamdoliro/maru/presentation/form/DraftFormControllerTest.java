@@ -16,9 +16,7 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -102,6 +100,10 @@ class DraftFormControllerTest extends RestDocsTestSupport {
                                         .type(JsonFieldType.STRING)
                                         .optional()
                                         .description("보호자 상세주소"),
+                                fieldWithPath("parent.account")
+                                        .type(JsonFieldType.STRING)
+                                        .optional()
+                                        .description("환불계좌"),
                                 fieldWithPath("education.graduationType")
                                         .type(JsonFieldType.STRING)
                                         .optional()

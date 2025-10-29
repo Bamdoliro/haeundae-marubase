@@ -36,7 +36,8 @@ public class FormFixture {
                                 "18071",
                                 "부산광역시 가락대로1393",
                                 "부산소프트웨어마이스터고"
-                        )
+                        ),
+                        "123-456-789"
                 ),
                 new Education(
                         GraduationType.EXPECTED,
@@ -101,7 +102,8 @@ public class FormFixture {
                                 "18071",
                                 "부산광역시 가락대로1393",
                                 "부산소프트웨어마이스터고"
-                        )
+                        ),
+                        "123-456-789"
                 ),
                 new Education(
                         GraduationType.EXPECTED,
@@ -164,7 +166,8 @@ public class FormFixture {
                                 "18071",
                                 "부산광역시 가락대로1393",
                                 "부산소프트웨어마이스터고"
-                        )
+                        ),
+                        "123-456-789"
                 ),
                 new Education(
                         GraduationType.EXPECTED,
@@ -230,7 +233,8 @@ public class FormFixture {
                                 "18071",
                                 "부산광역시 가락대로1393",
                                 "부산소프트웨어마이스터고"
-                        )
+                        ),
+                        "123-456-789"
                 ),
                 new Education(
                         GraduationType.EXPECTED,
@@ -296,7 +300,8 @@ public class FormFixture {
                                 "18071",
                                 "부산광역시 가락대로1393",
                                 "부산소프트웨어마이스터고"
-                        )
+                        ),
+                        "123-456-789"
                 ),
                 new Education(
                         GraduationType.QUALIFICATION_EXAMINATION,
@@ -361,7 +366,8 @@ public class FormFixture {
                                 "18071",
                                 "부산광역시 가락대로1393",
                                 "부산소프트웨어마이스터고"
-                        )
+                        ),
+                        "123-456-789"
                 ),
                 new Education(
                         GraduationType.QUALIFICATION_EXAMINATION,
@@ -514,7 +520,8 @@ public class FormFixture {
                         "엄마",
                         "18071",
                         "부산광역시 가락대로1393",
-                        "부산소프트웨어마이스터고"
+                        "부산소프트웨어마이스터고",
+                        "123-456-789"
                 ),
                 new EducationResponse(
                         GraduationType.EXPECTED,
@@ -588,7 +595,8 @@ public class FormFixture {
                 "엄마",
                 "18071",
                 "부산광역시 가락대로1393",
-                "부산소프트웨어마이스터고"
+                "부산소프트웨어마이스터고",
+                "123-456-789"
         );
     }
 
