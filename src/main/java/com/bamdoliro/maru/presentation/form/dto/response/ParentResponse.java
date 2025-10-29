@@ -14,6 +14,7 @@ public class ParentResponse {
     private String zoneCode;
     private String address;
     private String detailAddress;
+    private String account;
 
     public ParentResponse(Parent parent) {
         this.name = parent.getName();
@@ -22,5 +23,6 @@ public class ParentResponse {
         this.zoneCode = parent.getAddress().getZoneCode();
         this.address = parent.getAddress().getAddress();
         this.detailAddress = parent.getAddress().getDetailAddress();
+        this.account = parent.getAccount();
     }
 }
