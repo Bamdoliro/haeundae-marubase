@@ -106,6 +106,10 @@ class FairControllerTest extends RestDocsTestSupport {
                                 headerWithName(HttpHeaders.AUTHORIZATION)
                                         .description("Bearer token")
                         ),
+                        pathParameters(
+                                parameterWithName("fair-id")
+                                        .description("입학설명회 id")
+                        ),
                         requestFields(
                                 fieldWithPath("start")
                                         .type(JsonFieldType.STRING)
