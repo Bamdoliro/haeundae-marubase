@@ -18,4 +18,5 @@ public class Templates {
     public static final String REGISTRATION = "registration";
     public static final String INFORMATION = "information";
     public static final String QUALIFICATION_FORM = "qualification-form";
+    public static final String COVER = "cover";
 }
