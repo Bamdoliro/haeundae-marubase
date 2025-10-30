@@ -115,6 +115,7 @@ public class ExportFormUseCase {
         if (form.getType().equals(FormType.PRINCIPAL_RECOMMENDATION)) {
             return List.of(
                     form.getEducation().isQualificationExamination() ? Templates.QUALIFICATION_FORM : Templates.FORM,
+                    Templates.COVER,
                     Templates.GRADE_TABLE,
                     Templates.DOCUMENT,
                     Templates.RECOMMENDATION,
@@ -123,6 +124,7 @@ public class ExportFormUseCase {
         } else if (form.getType().isSpecialAdmission()) {
             return List.of(
                     form.getEducation().isQualificationExamination() ? Templates.QUALIFICATION_FORM : Templates.FORM,
+                    Templates.COVER,
                     Templates.GRADE_TABLE,
                     Templates.DOCUMENT,
                     Templates.SPECIAL_ADMISSION,
@@ -133,6 +135,7 @@ public class ExportFormUseCase {
 
         return List.of(
                 form.getEducation().isQualificationExamination() ? Templates.QUALIFICATION_FORM : Templates.FORM,
+                Templates.COVER,
                 Templates.GRADE_TABLE,
                 Templates.DOCUMENT,
                 Templates.INFORMATION
