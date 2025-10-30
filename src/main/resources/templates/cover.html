@@ -16,15 +16,20 @@
         }
 
         body {
+            height: 100%;
+            width: 100%;
             padding: 20px;
         }
 
         .cover-wrapper {
             border: 2px solid #000;
             padding: 10px;
+            min-height: 1000px;
             max-width: 100%;
             margin: 0 auto;
+            height: 100%;
         }
+
         .header-section {
             display: flex;
             align-items: center;
@@ -32,20 +37,6 @@
             margin-bottom: 30px;
             padding-bottom: 20px;
             border-bottom: 1px solid #ccc;
-        }
-
-        .logo {
-            width: 50px;
-            height: 50px;
-            background-color: #4472C4;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 24px;
-            flex-shrink: 0;
         }
 
         .school-info {
@@ -71,6 +62,7 @@
             font-size: 10px;
             color: #666;
         }
+
         .title-section {
             text-align: center;
             margin-bottom: 30px;
@@ -89,41 +81,50 @@
             margin: 8px 0;
             letter-spacing: 1px;
         }
+
         .admission-box {
+            height: 40px;
             display: flex;
-            margin-bottom: 30px;
             gap: 0;
+            margin-bottom: 30px;
             margin-left: auto;
             margin-right: 20px;
             width: 200px;
         }
+
         .input-label{
             min-width: 80px;
+            font-size: 16px;
         }
+
         .admission-label {
             background-color: #e8e8e8;
             padding: 8px 12px;
             border: 1px solid #000;
             font-weight: bold;
             text-align: center;
-            width: 75px;
-            font-size: 13px;
+            width: 85px;
+            height: 40px;
+            font-size: 16px;
         }
 
         .admission-input {
             flex: 1;
             background-color: #e8e8e8;
             border: 1px solid #000;
-            width: 100px;
+            width: 110px;
+            height: 40px;
         }
+
         .ba {
-        font-weight: bold;
+            font-weight: bold;
             text-align: center;
             width: 70px;
-            font-size: 11px;
-                   background-color: #f5f5f5;
-      border: #000000 1px solid;
-    }
+            vertical-align: middle;
+            font-size: 16px;
+            background-color: #f5f5f5;
+            border: #000000 1px solid;
+        }
 
         .main-table {
             width: 100%;
@@ -151,27 +152,23 @@
             background-color: #f5f5f5;
             font-weight: bold;
             width: 70px;
-            font-size: 11px;
+            font-size: 16px;
         }
 
-        .main-table .content {
-            text-align: left;
-            font-size: 11px;
-            line-height: 1.6;
-        }
         .notice-text {
-            font-size: 11px;
+            font-size: 18px;
             margin: 20px 0;
             text-align: center;
             font-weight: bold;
         }
+
         .documents-section {
             margin-bottom: 20px;
         }
 
         .documents-title {
             font-weight: bold;
-            font-size: 13px;
+            font-size: 18px;
             margin-bottom: 10px;
             display: flex;
             align-items: center;
@@ -203,10 +200,12 @@
 
         .doc-content {
             text-align: left;
-            line-height: 1.7;
+            font-size: 16px;
+            line-height: 1.6;
         }
+
         .footer-notice {
-            font-size: 10px;
+            font-size: 16px;
             line-height: 1.6;
             margin-top: 20px;
             padding: 10px;
@@ -234,13 +233,23 @@
             vertical-align: text-top;
         }
 
+        .checkbox {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border: 1px solid #000;
+        background-color: white;
+        }
+
         .padding {
             padding: 10px;
         }
+
         .logo-wrapper {
-            width: 116px;
+            width: 120px;
             height: 30px;
         }
+
         .highlight {
             background-color: #FFE0CB;
             padding: 2px 4px;
@@ -250,43 +259,47 @@
 </head>
 <body>
 <div class="cover-wrapper">
-    <img src="../static/images/heaundea-highschool-logo.png" alt="School Logo" class="logo-wrapper"/>
+    <img th:src="@{classpath:/static/images/haeundae-highschool-logo.png}" alt="logo" class="logo-wrapper"/>
     <div class="title-section">
         <h1>2026학년도 신입생 전형</h1>
         <h2>제출 서류 봉투 표지</h2>
     </div>
+
     <div class="admission-box">
         <div class="admission-label">수험번호</div>
         <div class="admission-input"></div>
     </div>
+
     <table class="main-table">
         <tr>
             <td rowspan="3" class="ba">지원자<br>관련<br>사항</td>
             <td class="label">성명</td>
-            <td colspan="input-label"></td>
+            <td class="input-label"></td>
             <td rowspan="2" class="label">연락처</td>
             <td class="label">보호자</td>
             <td class="input-label"></td>
         </tr>
         <tr>
             <td class="label">출신<br>(졸업)<br>중학교</td>
-            <td colspan="input-label">시&nbsp;&nbsp;&nbsp;구(군)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;중학교</td>
+            <td class="input-label">시&nbsp;&nbsp;&nbsp;구(군)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;중학교</td>
             <td class="label">담당교사</td>
             <td class="input-label"></td>
         </tr>
         <tr>
             <td rowspan="2" class="label">전형<br>구분</td>
-            <td colspan="5" class="content" style="text-align: left; padding-left: 20px;">
-                일반전형 ☐<br>
-                사회통합전형 ( 기회균등전형☐ &nbsp;&nbsp; 사회다양성전형☐ )<br>
-                특례입학대상자전형 ☐<br>
-                국가보훈대상자 중 교육지원대상자전형 ☐
+            <td colspan="5" class="doc-content" style="text-align: left; padding-left: 20px;">
+                일반전형 <span class="checkbox"></span><br>
+                사회통합전형 ( 기회균등전형<span class="checkbox"></span> &nbsp;&nbsp; 사회다양성전형<span class="checkbox"></span> )<br>
+                특례입학대상자전형 <span class="checkbox"></span><br>
+                국가보훈대상자 중 교육지원대상자전형 <span class="checkbox"></span>
             </td>
         </tr>
     </table>
+
     <div class="notice-text">
         ※ 우편으로 접수하는 경우 <span class="highlight">2025.12.10.(수) 17:00까지</span> 도착하여야 합니다.
     </div>
+
     <div class="documents-section">
         <div class="documents-title">※ 제출서류</div>
 
@@ -294,10 +307,10 @@
             <tr>
                 <td class="ba">공통</td>
                 <td class="doc-content">
-                    1) 온라인에서 출력한 입학원서(본교 소정양식) 1부 ☐<br>
-                    2) 학교생활기록부(Ⅱ) 사본 2부 ☐<br>
-                    3) 자기소개서(본교 소정양식) 1부 ☐<br>
-                    4) 개인정보 수집·이용 및 활용 동의서 1부 ☐
+                    1) 온라인에서 출력한 입학원서(본교 소정양식) 1부 <span class="checkbox"></span><br>
+                    2) 학교생활기록부(II) 사본 2부 <span class="checkbox"></span><br>
+                    3) 자기소개서(본교 소정양식) 1부 <span class="checkbox"></span><br>
+                    4) 개인정보 수집·이용 및 활용 동의서 1부 <span class="checkbox"></span>
                 </td>
             </tr>
         </table>
@@ -311,10 +324,12 @@
             </tr>
         </table>
     </div>
-    <div class="footer-notice">
+
+    <div class="notice-text">
         ※ 개인정보 노출을 염려하시는 경우에는 표지를 부착하지 말고 봉투 안에 넣어 보내주십시오.
     </div>
 </div>
 
 </body>
 </html>
+

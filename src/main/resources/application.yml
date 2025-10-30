@@ -79,7 +79,10 @@ spring:
 
   web:
     resources:
-      add-mappings: false
+      static-locations: classpath:/static/
+      add-mappings: true
+  mvc:
+    static-path-pattern: /static/**
 ---
 spring:
   config:
@@ -122,3 +125,4 @@ spring:
 
 
 debug: false
+
