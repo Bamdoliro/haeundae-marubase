@@ -29,9 +29,16 @@ public class CalculateFormScoreService {
             ));
         } else {
             Double thirdGradeFirstSemesterSubjectGradeScore = calculateThirdGradeFirstSemesterScore(form);
+            Double thirdGradeSecondSemesterSubjectGradeScore = calculateThirdGradeSecondSemesterScore(form);
+            Double secondGradeSecondSemesterSubjectGradeScore = calculateSecondGradeSecondSemesterScore(form);
+            Double secondGradeFirstSemesterSubjectGradeScore = calculateSecondGradeFirstSemesterScore(form);
+
             form.updateScore(new Score(
                     subjectGradeScore,
                     thirdGradeFirstSemesterSubjectGradeScore,
+                    thirdGradeSecondSemesterSubjectGradeScore,
+                    secondGradeSecondSemesterSubjectGradeScore,
+                    secondGradeFirstSemesterSubjectGradeScore,
                     attendanceScore
             ));
         }
@@ -160,6 +167,24 @@ public class CalculateFormScoreService {
         SubjectMap originalSubjectMap = form.getGrade().getSubjectList().getSubjectMap();
         SubjectMap replacedSubjectMap = createReplacedSubjectMap(originalSubjectMap);
         return replacedSubjectMap.getScoreOf(3, 1);
+    }
+
+    private Double calculateThirdGradeSecondSemesterScore(Form form) {
+        SubjectMap originalSubjectMap = form.getGrade().getSubjectList().getSubjectMap();
+        SubjectMap replacedSubjectMap = createReplacedSubjectMap(originalSubjectMap);
+        return replacedSubjectMap.getScoreOf(3, 2);
+    }
+
+    private Double calculateSecondGradeSecondSemesterScore(Form form) {
+        SubjectMap originalSubjectMap = form.getGrade().getSubjectList().getSubjectMap();
+        SubjectMap replacedSubjectMap = createReplacedSubjectMap(originalSubjectMap);
+        return replacedSubjectMap.getScoreOf(2, 2);
+    }
+
+    private Double calculateSecondGradeFirstSemesterScore(Form form) {
+        SubjectMap originalSubjectMap = form.getGrade().getSubjectList().getSubjectMap();
+        SubjectMap replacedSubjectMap = createReplacedSubjectMap(originalSubjectMap);
+        return replacedSubjectMap.getScoreOf(2, 1);
     }
 
     private double getScore(List<Subject> subjectList, double rate) {

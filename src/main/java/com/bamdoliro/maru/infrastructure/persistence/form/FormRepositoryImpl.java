@@ -138,12 +138,14 @@ public class FormRepositoryImpl implements FormRepositoryCustom {
                                                 .and(form.type.eq(FormType.SPECIAL_ADMISSION).not())
                                 )
                 )
-                .orderBy(form.score.totalScore.desc(),
+                .orderBy(
+                        form.score.selfDirectedScore.add(form.score.personalityScore).desc(),
                         form.score.subjectGradeScore.desc(),
-                        form.score.selfDirectedScore.desc(),
-                        form.score.personalityScore.desc(),
+                        form.score.thirdGradeSecondSemesterSubjectGradeScore.desc().nullsLast(),
                         form.score.thirdGradeFirstSemesterSubjectGradeScore.desc().nullsLast(),
-                        form.score.attendanceScore.desc()
+                        form.score.secondGradeSecondSemesterSubjectGradeScore.desc().nullsLast(),
+                        form.score.secondGradeFirstSemesterSubjectGradeScore.desc().nullsLast(),
+                        form.applicant.birthday.asc()
                 )
                 .fetch();
     }
@@ -159,12 +161,14 @@ public class FormRepositoryImpl implements FormRepositoryCustom {
                                                 .or(form.changedToRegular.isTrue())
                                 )
                 )
-                .orderBy(form.score.totalScore.desc(),
+                .orderBy(
+                        form.score.selfDirectedScore.add(form.score.personalityScore).desc(),
                         form.score.subjectGradeScore.desc(),
-                        form.score.selfDirectedScore.desc(),
-                        form.score.personalityScore.desc(),
+                        form.score.thirdGradeSecondSemesterSubjectGradeScore.desc().nullsLast(),
                         form.score.thirdGradeFirstSemesterSubjectGradeScore.desc().nullsLast(),
-                        form.score.attendanceScore.desc()
+                        form.score.secondGradeSecondSemesterSubjectGradeScore.desc().nullsLast(),
+                        form.score.secondGradeFirstSemesterSubjectGradeScore.desc().nullsLast(),
+                        form.applicant.birthday.asc()
                 )
                 .fetch();
     }
@@ -180,12 +184,14 @@ public class FormRepositoryImpl implements FormRepositoryCustom {
                                                 .or(form.type.eq(FormType.NATIONAL_VETERANS_EDUCATION))
                                 )
                 )
-                .orderBy(form.score.totalScore.desc(),
+                .orderBy(
+                        form.score.selfDirectedScore.add(form.score.personalityScore).desc(),
                         form.score.subjectGradeScore.desc(),
-                        form.score.selfDirectedScore.desc(),
-                        form.score.personalityScore.desc(),
+                        form.score.thirdGradeSecondSemesterSubjectGradeScore.desc().nullsLast(),
                         form.score.thirdGradeFirstSemesterSubjectGradeScore.desc().nullsLast(),
-                        form.score.attendanceScore.desc()
+                        form.score.secondGradeSecondSemesterSubjectGradeScore.desc().nullsLast(),
+                        form.score.secondGradeFirstSemesterSubjectGradeScore.desc().nullsLast(),
+                        form.applicant.birthday.asc()
                 )
                 .fetch();
     }

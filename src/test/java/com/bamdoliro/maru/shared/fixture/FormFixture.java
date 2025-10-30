@@ -81,7 +81,7 @@ public class FormFixture {
                 type,
                 UserFixture.createUser()
         );
-        form.updateScore(new Score(1.0, 0.5, 2));
+        form.updateScore(new Score(1.0, 0.5,0.5,0.5,0.5, 2));
         return form;
     }
 
@@ -145,7 +145,7 @@ public class FormFixture {
                 type,
                 UserFixture.createUser()
         );
-        form.updateScore(new Score(1.0, 0.5, 2));
+        form.updateScore(new Score(1.0, 0.5,0.5,0.5,0.5, 2));
         return form;
     }
 
