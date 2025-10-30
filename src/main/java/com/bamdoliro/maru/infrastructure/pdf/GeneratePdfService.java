@@ -47,6 +47,13 @@ public class GeneratePdfService {
         });
 
         properties.setFontProvider(fontProvider);
+
+        try {
+            properties.setBaseUri(new ClassPathResource("/static").getURI().toString());
+        } catch (IOException e) {
+            throw new FailedToExportPdfException();
+        }
+
         return properties;
     }
 }
