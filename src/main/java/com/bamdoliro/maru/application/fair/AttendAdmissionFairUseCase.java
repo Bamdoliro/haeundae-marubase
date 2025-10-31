@@ -40,7 +40,7 @@ public class AttendAdmissionFairUseCase {
                         .build()
         );
 
-        sendMessage(fair, attendee);
+        // sendMessage(fair, attendee);
     }
 
     private void validateFairCapacity(Fair fair, Integer headcount) {
