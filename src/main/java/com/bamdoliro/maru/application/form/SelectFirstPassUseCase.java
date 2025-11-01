@@ -26,7 +26,10 @@ public class SelectFirstPassUseCase {
         int nationalVeteransEducationCount = FixedNumber.NATIONAL_VETERANS_EDUCATION;
         int specialAdmissionCount = FixedNumber.SPECIAL_ADMISSION;
 
-        List<Form> specialFormList = formRepository.findReceivedSpecialForm();
+        List<Form> specialFormList = formRepository.findReceivedSpecialForm()
+                .stream()
+                .filter(form -> form.getPayment())
+                .toList();
         List<Form> equalOpportunityFormList = classifyFormsByType(specialFormList, FormType::isEqualOpportunity);
         List<Form> societyDiversityFormList = classifyFormsByType(specialFormList, FormType::isSocietyDiversity);
 
@@ -47,12 +50,18 @@ public class SelectFirstPassUseCase {
         processForms(societyDiversityFormList, societyDiversityCount, this::changeToRegularAndCalculateGradeAgain);
 
         formRepository.flush();
-        List<Form> regularFormList = formRepository.findReceivedRegularForm();
+        List<Form> regularFormList = formRepository.findReceivedRegularForm()
+                .stream()
+                .filter(form -> form.getPayment())
+                .toList();
 
         processForms(regularFormList, regularCount, Form::firstFail);
 
         formRepository.flush();
-        List<Form> supernumeraryFormList = formRepository.findReceivedSupernumeraryForm();
+        List<Form> supernumeraryFormList = formRepository.findReceivedSupernumeraryForm()
+                .stream()
+                .filter(form -> form.getPayment())
+                .toList();
         List<Form> nationalVeteransFormList = classifyFormsByType(supernumeraryFormList, FormType::isNationalVeteransEducation);
         List<Form> specialAdmissionFormList = classifyFormsByType(supernumeraryFormList, FormType::isSpecialAdmission);
 
