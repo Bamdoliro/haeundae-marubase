@@ -82,6 +82,7 @@ public class FormFixture {
                 UserFixture.createUser()
         );
         form.updateScore(new Score(1.0, 0.5,0.5,0.5,0.5, 2));
+        form.payFee();
         return form;
     }
 
@@ -150,7 +151,7 @@ public class FormFixture {
     }
 
     public static Form createRandomBusanForm(User user) {
-        return new Form(
+        Form form =  new Form(
                 new Applicant(
                         "김밤돌",
                         new PhoneNumber("01085852525"),
@@ -214,10 +215,14 @@ public class FormFixture {
                 randomFormType(),
                 user
         );
+
+        form.payFee();
+
+        return form;
     }
 
     public static Form createRandomOtherRegionForm(User user) {
-        return new Form(
+        Form form = new Form(
                 new Applicant(
                         "김밤돌",
                         new PhoneNumber("01085852525"),
@@ -281,6 +286,10 @@ public class FormFixture {
                 randomFormType(),
                 user
         );
+
+        form.payFee();
+
+        return form;
     }
 
     public static Form createRandomQualificationExaminationForm(User user) {
