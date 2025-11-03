@@ -58,7 +58,7 @@ public class AttendAdmissionFairUseCase {
     private void sendMessage(Fair fair, Attendee attendee) {
         String message = String.format("""
                 안녕하세요, %s 님.
-                부산소프트웨어마이스터고 입학설명회 신청이 완료되었습니다.
+                해운대고등학교 입학설명회 신청이 완료되었습니다.
 
                 일시: %s
                 장소: %s

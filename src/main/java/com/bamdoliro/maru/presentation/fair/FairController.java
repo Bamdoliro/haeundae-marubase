@@ -35,6 +35,7 @@ public class FairController {
     private final QueryFairListUseCase queryFairListUseCase;
     private final QueryFairDetailUseCase queryFairDetailUseCase;
     private final ExportAttendeeListUseCase exportAttendeeListUseCase;
+    private final DeleteAttendeeUseCase deleteAttendeeUseCase;
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
@@ -100,5 +101,14 @@ public class FairController {
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
                 .body(exportAttendeeListUseCase.execute(fairId));
+    }
+
+    @DeleteMapping("/{fair-id}/attendees/{attendee-id}")
+    public void deleteAttendee(
+            @AuthenticationPrincipal(authority = Authority.ADMIN) User user,
+            @PathVariable(name = "fair-id") Long fairId,
+            @PathVariable(name = "attendee-id") Long attendeeId
+    ){
+        deleteAttendeeUseCase.execute(fairId, attendeeId);
     }
 }
