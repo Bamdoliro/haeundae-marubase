@@ -28,7 +28,7 @@ public class SelectFirstPassUseCase {
 
         List<Form> specialFormList = formRepository.findReceivedSpecialForm()
                 .stream()
-                .filter(form -> form.getPayment())
+                .filter(Form::isPaid)
                 .toList();
         List<Form> equalOpportunityFormList = classifyFormsByType(specialFormList, FormType::isEqualOpportunity);
         List<Form> societyDiversityFormList = classifyFormsByType(specialFormList, FormType::isSocietyDiversity);
@@ -52,7 +52,7 @@ public class SelectFirstPassUseCase {
         formRepository.flush();
         List<Form> regularFormList = formRepository.findReceivedRegularForm()
                 .stream()
-                .filter(form -> form.getPayment())
+                .filter(Form::isPaid)
                 .toList();
 
         processForms(regularFormList, regularCount, Form::firstFail);
@@ -60,7 +60,7 @@ public class SelectFirstPassUseCase {
         formRepository.flush();
         List<Form> supernumeraryFormList = formRepository.findReceivedSupernumeraryForm()
                 .stream()
-                .filter(form -> form.getPayment())
+                .filter(Form::isPaid)
                 .toList();
         List<Form> nationalVeteransFormList = classifyFormsByType(supernumeraryFormList, FormType::isNationalVeteransEducation);
         List<Form> specialAdmissionFormList = classifyFormsByType(supernumeraryFormList, FormType::isSpecialAdmission);
