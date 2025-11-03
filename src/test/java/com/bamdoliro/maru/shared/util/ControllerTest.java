@@ -188,6 +188,9 @@ public abstract class ControllerTest {
     protected CreateAdmissionFairUseCase createAdmissionFairUseCase;
 
     @MockBean
+    protected DeleteAttendeeUseCase deleteAttendeeUseCase;
+
+    @MockBean
     protected AttendAdmissionFairUseCase attendAdmissionFairUseCase;
 
     @MockBean
