@@ -1,306 +1,403 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-  <meta charset="UTF-8"/>
-  <style>
-    @page {
-      size: A4;
-      margin: 70px;
-    }
+    <meta charset="UTF-8"/>
+    <style>
+        @page {
+            size: A4 landscape;
+            margin: 20px;
+        }
 
-    * {
-      font-family: SUIT, sans-serif;
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+        * {
+            font-family: SUIT, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    table {
-      border: none;
-      border-collapse: collapse;
-      width: 100%;
-      font-size: 12px;
-      text-align: center;
-    }
+        body {
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+        }
 
-    tr {
-      vertical-align: middle;
-    }
+        .container {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            align-items: flex-start;
+            width: 100%;
+            height: 100%;
+        }
 
-    caption {
-      font-weight: bold;
-      font-size: 24px;
-      line-height: 48px;
-      text-align: center;
-    }
-    .format {
-      font-size: 13px;
-      font-weight: bold;
-    }
-    .school {
-      font-weight: bold;
-      font-size: 18px;
-    }
+        .main-table {
+            flex: 3;
+            width: 70%;
+            height: 100%;
+        }
 
-    th {
-      background-color: #ECF2FA;
-      font-weight: 500;
-      padding: 8px 0;
-    }
+        .side-tables {
+            flex: 1;
+            position: relative;
+            height: 100%;
+            width: 100%;
+            gap: 20px;
+        }
 
-    .ba {
-      border: #000000 1px solid;
-    }
+        table {
+            border: none;
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 12px;
+            text-align: center;
+        }
 
-    .left {
-      text-align: left;
-    }
+        tr {
+            vertical-align: middle;
+        }
 
-    .right {
-      text-align: right;
-    }
+        td {
+            padding: 2px 0;
+        }
 
-    .text-box {
-      padding: 4px 8px;
-    }
+        th {
+            background-color: #CAD6EC;
+            font-weight: 500;
+            padding: 6px 0;
+            font-size: 12px;
+        }
 
-    .small {
-      font-size: 11px;
-    }
+        .ba {
+            border: #000000 1px solid;
+        }
 
-    .middle {
-      font-size: 14px;
-    }
+        .format {
+            font-size: 13px;
+            font-weight: bold;
+        }
 
-    .space {
-      height: 8px;
-    }
+        .school {
+            font-weight: bold;
+            font-size: 18px;
+        }
 
-    .space-right {
-      padding-right: 50px;
-    }
 
-    .guide {
-      font-size: 11px;
-      color: #BBBCC2;
-      font-weight: 300;
-    }
+        .left {
+            text-align: left;
+        }
 
-    .inline {
-      display: inline-block;
-    }
+        .middle {
+            font-size: 14px;
+        }
 
-    .disabled {
-      color: #f3f3f3;
-      background-color: #f3f3f3;
-    }
-  </style>
-  <title>원서</title>
+        .vertical-space {
+            height: 8px;
+        }
+
+        .horizontal-space {
+            width: 8px;
+        }
+
+        .inline {
+            display: inline-block;
+        }
+
+        .text-box {
+            padding: 4px 8px;
+        }
+
+        .principal-stamp {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(25%);
+            z-index: 10;
+            border: 1px solid black;
+            text-align: center;
+            background-color: #f3f3f3;
+            padding: 5px;
+            font-size: 8px;
+        }
+
+        .underline {
+            border-bottom: 1px solid black;
+        }
+
+        .teacher-section {
+            text-align: center;
+            font-size: 12px;
+            vertical-align: top;
+        }
+
+        .teacher-text {
+            padding: 10px;
+            border: none;
+            border-bottom: 1px solid #000;
+        }
+
+        .teacher-stamp {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            border: none;
+            height: 80px;
+            background-color: #f3f3f3;
+        }
+
+        .side-tables table {
+            width: 100%;
+        }
+
+        .id-photo {
+            width: 100px;
+            height: 130px;
+            border: 1px solid black;
+            margin: 10px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 5px;
+        }
+
+        .td {
+            font-size: 10px;
+        }
+
+        .dotted-line {
+            border-top: 1px dotted #000;
+            margin: 4px 0;
+        }
+
+        .disabled {
+            color: #f3f3f3;
+            background-color: #f3f3f3;
+        }
+
+        .guide {
+            font-size: 11px;
+            color: #BBBCC2;
+            font-weight: 300;
+        }
+        
+    </style>
+    <title>원서</title>
 </head>
 <body>
-<table>
-  <p class="format">[서식1]</p>
-  <caption th:text='${year+"학년도 해운대고등학교 입학원서"}'></caption>
-  <colgroup>
-    <col style="width:6.39%"/>
-    <col style="width:1.46%"/>
-    <col style="width:5.5%"/>
-    <col style="width:1.31%"/>
-    <col style="width:1.37%"/>
-    <col style="width:3.62%"/>
-    <col style="width:4.99%"/>
-    <col style="width:0.44%"/>
-    <col style="width:4.12%"/>
-    <col style="width:4.56%"/>
-    <col style="width:3.75%"/>
-    <col style="width:0.81%"/>
-    <col style="width:4.73%"/>
-    <col style="width:4.22%"/>
-    <col style="width:0.44%"/>
-    <col style="width:4.99%"/>
-    <col style="width:4.56%"/>
-    <col style="width:0.87%"/>
-    <col style="width:4.14%"/>
-    <col style="width:5.87%"/>
-    <col style="width:6.27%"/>
-  </colgroup>
-  <tr>
-    <th scope="row" class="ba" colspan="2">접수번호</th>
-    <td class="ba" colspan="6" th:text="${form.id}"></td>
-    <td colspan="6"></td>
-    <th scope="row" class="ba" colspan="4">수험번호</th>
-    <td class="ba" colspan="3" th:text="${form.examinationNumber}"></td>
-  </tr>
-  <tr>
-    <th scope="rowgroup" class="ba" rowspan="4">지원자</th>
-    <th scope="row" class="ba" colspan="3">성명</th>
-    <td class="ba" colspan="5" th:text="${form.applicant.name}"></td>
-    <th scope="row" class="ba" colspan="2">출신지역</th>
-    <td class="ba" colspan="7" th:text="${form.education.school.location}"></td>
-    <td class="ba" rowspan="5" colspan="3">
-      <img
-              th:src="${identificationPictureUri}"
-              alt="증명사진"/>
-    </td>
-  </tr>
-  <tr>
-    <th scope="row" class="ba" colspan="3">주민등록번호</th>
-    <td class="ba" colspan="5" th:text="${form.applicant.registrationNumber}"></td>
-    <th scope="row" class="ba" colspan="2">출신학교</th>
-    <td class="ba" colspan="7" th:text="${form.education.school.name}"></td>
-  </tr>
-  <tr>
-    <th scope="row" class="ba" colspan="3">성별</th>
-    <td class="ba" colspan="5">
-      <span th:text="${form.applicant.gender.getDescription()}"></span>
-    </td>
-    <th scope="row" class="ba" colspan="2">학교번호</th>
-    <td class="ba" colspan="7" th:text="${form.education.school.code}"></td>
-  </tr>
-  <tr>
-    <th scope="row" class="ba" colspan="3">휴대전화</th>
-    <td class="ba" colspan="5" th:text="${form.applicant.phoneNumber.toString()}"></td>
-    <th scope="row" class="ba" colspan="2">구 분</th>
-    <td class="ba" colspan="7" th:text='${form.education.graduationDate + " 검정고시"}'></td>
-  </tr>
-  <tr>
-    <th scope="rowgroup" class="ba" rowspan="2">보호자</th>
-    <th scope="row" class="ba" colspan="3">성명</th>
-    <td class="ba" colspan="5" th:text="${form.parent.name}"></td>
-    <th scope="row" class="ba" colspan="2">휴대전화</th>
-    <td class="ba" colspan="7" th:text="${form.parent.phoneNumber.toString()}"></td>
-  </tr>
-  <tr>
-    <th scope="row" class="ba" colspan="3">주소</th>
-    <td class="ba" colspan="17" th:text="${form.parent.address.toString()}"></td>
-  </tr>
-  <tr>
-    <td style="height: 14px"></td>
-  </tr>
-  <tr>
-    <th scope="row" class="ba" colspan="2">전형 구분</th>
-    <td class="ba" colspan="5" th:if="${form.type.isRegular()}">일반전형</td>
-    <td class="ba" colspan="5" th:if="${form.type.isSpecial()}">특별전형</td>
-    <td class="ba" colspan="5" th:if="${form.type.isSupernumerary()}">정원 외 전형</td>
-    <th scope="row" class="ba" colspan="3">대상 구분</th>
-    <td class="ba" colspan="5" th:unless="${form.type.isNationalVeteransEducation()}" th:text="${form.type.getDescription()}"></td>
-    <td class="ba disabled" colspan="5" th:if="${form.type.isNationalVeteransEducation()}" th:text="${form.type.getDescription()}">-</td>
-    <th scope="row" class="ba" colspan="4">국가보훈대상자 중<br/>교육지원대상자</th>
-    <td th:if="${form.type.isNationalVeteransEducation()}" class="ba"  colspan="2"><input type="checkbox" checked/></td>
-    <td th:unless="${form.type.isNationalVeteransEducation()}" class="ba"  colspan="2"><input type="checkbox"/></td>
-  </tr>
-  <tr>
-    <td style="height: 14px"></td>
-  </tr>
-  <tr>
-    <th scope="rowgroup" class="ba" rowspan="2">학년</th>
-    <th scope="colgroup" class="ba" colspan="8">교과성적</th>
-    <th scope="colgroup" class="ba" colspan="8">출결상황</th>
-    <th scope="col" class="ba" rowspan="2" colspan="4">총점</th>
-  </tr>
-  <tr>
-    <th scope="col" class="ba" colspan="2">학기</th>
-    <th scope="col" class="ba" colspan="3">과목수</th>
-    <th scope="col" class="ba">환산<br/>점수합</th>
-    <th scope="col" class="ba" colspan="2">점수</th>
-    <th scope="col" class="ba">미인정<br/>결석</th>
-    <th scope="col" class="ba" colspan="2">미인정<br/>지각</th>
-    <th scope="col" class="ba">미인정<br/>조퇴</th>
-    <th scope="col" class="ba" colspan="2">미인정<br/>결과</th>
-    <th scope="col" class="ba" colspan="2">점수</th>
-  </tr>
-  <tr>
-    <th scope="row" class="ba" rowspan="2">1</th>
-    <td class="ba disabled" colspan="2">-</td>
-    <td class="ba disabled" colspan="3"></td>
-    <td class="ba disabled" colspan="1"></td>
-    <td class="ba" rowspan="7" colspan="2"
-        th:text="${form.score.subjectGradeScore}"></td>
-    <td class="ba disabled" rowspan="2" colspan="1"></td>
-    <td class="ba disabled" rowspan="2" colspan="2"></td>
-    <td class="ba disabled" rowspan="2" colspan="1"></td>
-    <td class="ba disabled" rowspan="2" colspan="2"></td>
-    <td class="ba" rowspan="7" colspan="2"
-        th:text="${form.score.attendanceScore}"></td>
-    <td class="ba" rowspan="7" colspan="4"
-        th:text="${form.score.getFirstRoundScore()}"></td>
-  </tr>
-  <tr>
-    <td class="ba disabled" colspan="2">-</td>
-    <td class="ba disabled" colspan="3"></td>
-    <td class="ba disabled" colspan="1"></td>
-  </tr>
-  <tr>
-    <th scope="row" class="ba" rowspan="2">2</th>
-    <td class="ba disabled" colspan="2">-</td>
-    <td class="ba disabled" colspan="3"></td>
-    <td class="ba disabled" colspan="1"></td>
-    <td class="ba disabled" rowspan="2" colspan="1"></td>
-    <td class="ba disabled" rowspan="2" colspan="2"></td>
-    <td class="ba disabled" rowspan="2" colspan="1"></td>
-    <td class="ba disabled" rowspan="2" colspan="2"></td>
-  </tr>
-  <tr>
-    <td class="ba disabled" colspan="2">-</td>
-    <td class="ba disabled" colspan="3"></td>
-    <td class="ba disabled" colspan="1"></td>
-  </tr>
-  <tr>
-    <th scope="row" class="ba" rowspan="2">3</th>
-    <td class="ba disabled" colspan="2">-</td>
-    <td class="ba disabled" colspan="3"></td>
-    <td class="ba disabled" colspan="1"></td>
-    <td class="ba disabled" colspan="1" rowspan="2"></td>
-    <td class="ba disabled" colspan="2" rowspan="2"></td>
-    <td class="ba disabled" colspan="1" rowspan="2"></td>
-    <td class="ba disabled" colspan="2" rowspan="2"></td>
-  </tr>
-  <tr>
-    <td class="ba disabled" colspan="2">-</td>
-    <td class="ba disabled" colspan="3"></td>
-    <td class="ba disabled" colspan="1"></td>
-  </tr>
-  <tr>
-    <th scope="row" class="ba">계</th>
-    <td class="ba disabled" colspan="2"></td>
-    <td class="ba disabled" colspan="3"></td>
-    <td class="ba disabled" colspan="1"></td>
-    <td class="ba disabled" colspan="1"></td>
-    <td class="ba disabled" colspan="2"></td>
-    <td class="ba disabled" colspan="1"></td>
-    <td class="ba disabled" colspan="2"></td>
-  </tr>
-  <tr>
-    <td style="height: 14px"></td>
-  </tr>
-  <tr>
-    <td class="ba text-box" colspan="21">
-      <p class="middle">본인은 귀교에 입학하고자 소정의 서류를 갖추어 지원합니다.</p>
-      <div class="space"></div>
-      <p class="middle" th:text="${#dates.format(#dates.createNow(),'yyyy년 MM월 dd일')}"></p>
-      <div class="space"></div>
-      <div class="right">
-        <div class="left middle inline">
-          <p>
-            지원자&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <span th:text="${form.applicant.name}"></span>&nbsp;&nbsp;&nbsp;
-            <span class="guide">(인)</span>
-          </p>
-          <p>
-            보호자&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <span th:text="${form.parent.name}"></span>&nbsp;&nbsp;&nbsp;
-            <span class="guide">(인)</span>&nbsp;&nbsp;&nbsp;&nbsp;
-            관계:&nbsp;&nbsp;<span th:text="${form.parent.relation}"></span>&nbsp;&nbsp;
-          </p>
+<p class="format">[서식1]</p>
+<h4 th:text='${year+"학년도 해운대고등학교 입학원서"}'></h4>
+<div class="container">
+    <div class="main-table">
+        <table>
+            <tr>
+                <th scope="row" class="ba" colspan="5">
+                    <h1>2026학년도 입학원서</h1>
+                </th>
+                <th scope="row" class="ba" colspan="1" rowspan="2">수험<br/>번호</th>
+                <td class="ba" rowspan="2" colspan="7" th:text="${'&#8251;'+form.examinationNumber}"></td>
+            </tr>
+
+            <tr>
+                <th scope="row" class="ba" colspan="1">지원 구분</th>
+                <td class="ba" colspan="4" style="font-size:10px;">일반&emsp;.&emsp;기회균등&emsp;.&emsp;사회다양성&emsp;.&emsp;특례입학대상자&emsp;.&emsp;국가보훈대상자 중 교육지원대상자</td>
+            </tr>
+
+            <tr>
+                <th scope="rowgroup" class="ba" rowspan="5">인<br/>적<br/>사<br/>항</th>
+                <th scope="row" class="ba">지원자 성명</th>
+                <td class="ba" colspan="3" th:text="${form.applicant.name}"></td>
+                <th scope="row" class="ba" rowspan="2" colspan="1">주민등록<br/>번호</th>
+                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 0, 1)}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 1, 2)}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 2, 3)}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 3, 4)}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 4, 5)}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 5, 6)}"></td>
+                <td class="ba" style="width: 20px;">-</td>
+            </tr>
+
+            <tr>
+                <th scope="row" class="ba">보호자 성명</th>
+                <td class="ba" th:text="${form.parent.name}"></td>
+                <th scope="row" class="ba">관계</th>
+                <td class="ba" th:text="${'학생의(' + form.parent.relation +')'}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 7, 8)}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 8, 9)}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 9, 10)}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 10, 11)}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 11, 12)}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 12, 13)}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 13, 14)}"></td>
+            </tr>
+
+            <tr>
+                <th scope="row" class="ba" rowspan="3">주&emsp;소</th>
+                <td class="ba" colspan="2" rowspan="2" th:text="${'우편번호 (' + form.parent.address.zoneCode} + ')'"></td>
+                <th scope="row" class="ba" rowspan="2">연락처</th>
+                <td class="ba left" colspan="8" rowspan="2">
+                    <p>자택 (&emsp;&emsp;) -</p>
+                    <p>휴대폰 <span th:text="${form.applicant.phoneNumber}"></span></p>
+                </td>
+            </tr>
+
+            <tr>
+            </tr>
+
+            <tr>
+                <td class="ba" colspan="2" th:text="${form.parent.address.address}"></td>
+                <th scope="row" class="ba">E-mail</th>
+                <td class="ba" colspan="8"></td>
+            </tr>
+
+            <tr>
+                <th scope="rowgroup" class="ba" rowspan="1">학<br/><br/>력</th>
+                <td class="ba" colspan="6" rowspan="1" style="height: 160px; border: none; padding: 10px;">
+                    <p class="middle" th:text="${'위 지원자는 ' + #dates.format(#dates.createNow(),'yyyy년 MM월 dd일') + ' 중학교 졸업자격검정고시 (합격자) 임을 증명함.'}"></p>
+                    <div class="vertical-space"></div>
+                    <p class="middle" th:text="${#dates.format(#dates.createNow(),'yyyy년 MM월 dd일')}"></p>
+                    <div class="vertical-space"></div>
+                    <div class="principal-stamp" style="position: absolute; transform: translate(735%, -50%);">
+                        출신학교장<br/>직인
+                    </div>
+                    <div class="vertical-space"></div>
+                </td>
+                <td class="ba" colspan="6" style="border-left: none;">
+                    <div class="id-photo">
+                        사진 3cm×4cm
+                        <div class="principal-stamp">
+                            출신학교장<br/>직인
+                        </div>
+                    </div>
+                </td>
+            </tr>
+
+            <tr>
+                <th scope="colgroup" class="ba" colspan="5">중학교 학업성취도</th>
+                <th scope="colgroup" class="ba" rowspan="2" colspan="9">미인정 결석<br/>일&emsp;수</th>
+            </tr>
+
+            <tr>
+                <th class="ba">과목</th>
+                <th class="ba" colspan="4">득점</th>
+            </tr>
+            <tr th:each="subject, iterStat : ${subjectList}">
+                <td class="ba" th:text="${subject.subjectName}"></td>
+                <td class="ba" colspan="4" th:text="${subject.score}"></td>
+                <td class="ba" th:if="${iterStat.first}" th:rowspan="${subjectList.size()}" th:text="${form.grade.getTotalAbsenceCount() + '일'}" colspan="9"></td>
+            </tr>
+
+
+
+            <tr>
+                <td class="ba text-box" colspan="13" style="padding: 20px 0;">
+                    <p class="middle">본인은 귀교에 입학하고자 소정의 서류를 갖추어 지원합니다.</p>
+                    <div class="vertical-space"></div>
+                    <p class="middle" th:text="${#dates.format(#dates.createNow(),'yyyy년 MM월 dd일')}"></p>
+                    <div class="vertical-space"></div>
+                    <p class="middle">
+                        <span class="underline" th:utext="${'지원자&emsp;'+form.applicant.name+'&emsp;'}"></span><span class="guide">(인)</span>
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                        <span class="underline" th:utext="${'보호자:&emsp;'+form.parent.name+'&emsp;'}"></span><span class="guide">(인)</span>
+                    </p>
+                    <div class="vertical-space"></div>
+                    <div class="vertical-space"></div>
+                    <p class="school">해운대고등학교장 귀하</p>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="horizontal-space">
+    </div>
+
+    <div class="side-tables">
+        <div>
+            <table>
+                <tr>
+                    <th class="ba" colspan="2">
+                        <h2>수험표</h2>
+                    </th>
+                </tr>
+                <tr>
+                    <th scope="row" class="ba">수험<br/>번호</th>
+                    <td class="ba" th:text="${'&#8251;'+form.examinationNumber}"></td>
+                </tr>
+                <tr>
+                    <th scope="row" class="ba">성명</th>
+                    <td class="ba" th:text="${form.applicant.name}"></td>
+                </tr>
+                <tr>
+                    <th scope="row" class="ba">출신교</th>
+                    <td class="ba">검정고시</td>
+                </tr>
+                <tr>
+                    <td class="ba" colspan="2" style="height:160px;">
+                        <div class="id-photo">
+                            사진 3cm×4cm
+                            <div class="principal-stamp">
+                                출신학교장<br/>직인
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="ba" colspan="2" style="text-align: center; font-weight: bold; padding: 10px;">
+                        해운대고등학교
+                    </td>
+                </tr>
+            </table>
         </div>
-      </div>
-      <p class="school">해운대고등학교장 귀하</p>
-    </td>
-  </tr>
-  <tr>
-    <th scope="row" class="ba" colspan="4">원서작성자</th>
-    <td class="ba" colspan="17" th:text="${form.applicant.phoneNumber.toString()}"></td>
-  </tr>
-</table>
+
+        <div class="vertical-space"></div>
+        <div class="dotted-line"></div>
+        <div class="vertical-space"></div>
+
+        <div>
+            <table>
+                <tr>
+                    <th class="ba" colspan="2">
+                        <h2>접수증</h2>
+                    </th>
+                </tr>
+                <tr>
+                    <th scope="row" class="ba">접수<br/>번호</th>
+                    <td class="ba" th:text="${'&#8251;'+form.examinationNumber}"></td>
+                </tr>
+                <tr>
+                    <th scope="row" class="ba">성명</th>
+                    <td class="ba" th:text="${form.applicant.name}"></td>
+                </tr>
+                <tr>
+                    <th scope="row" class="ba">출신교</th>
+                    <td class="ba">검정고시</td>
+                </tr>
+                <tr>
+                    <td class="ba" colspan="2" style="padding: 15px; text-align: center; font-size: 11px;">
+                        <div class="vertical-space"></div>
+                        <p>위와 같이 접수함</p>
+                        <div class="vertical-space"></div>
+                        <p th:text="${#dates.format(#dates.createNow(),'yyyy. MM. dd. ')}"></p>
+                        <div class="vertical-space"></div>
+                        <span class="underline" th:utext="${'접수자&emsp;'+form.applicant.name+'&emsp;'}"></span><span class="guide">(인)</span>
+                        <div class="vertical-space"></div>
+                        <strong>해운대고등학교</strong>
+                        <div class="vertical-space"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="ba" colspan="2" style="padding: 10px;">
+                        ※ 면접 및 합격자 소집 시에 수험표를 지참할 것
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
 </body>
 </html>

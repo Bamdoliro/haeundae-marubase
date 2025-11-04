@@ -257,16 +257,14 @@
             <tr>
                 <th scope="rowgroup" class="ba" rowspan="1">학<br/><br/>력</th>
                 <td class="ba" colspan="6" rowspan="1" style="height: 160px; border: none; padding: 10px;">
-                    <p class="middle" th:text="${'위 지원자는 ' + form.education.school.name + '(졸업예정자 . 졸업자)임을 증명함.'}"></p>
+                    <p class="middle" th:text="${'위 지원자는 #dates.format(#dates.createNow(),'yyyy년 MM월 dd일') 중학교졸업자격검정고시 (합격자) 임을 증명함.'}"></p>
                     <div style="margin-top: 10px;"></div>
                     <p class="middle" th:text="${#dates.format(#dates.createNow(),'yyyy년 MM월 dd일')}"></p>
                     <div style="margin-top: 10px;"></div>
-                    <p class="middle" th:text="${form.education.school.name + '장'}"></p>
                     <div class="principal-stamp" style="position: absolute; transform: translate(735%, -50%);">
                         출신학교장<br/>직인
                     </div>
                     <div style="margin-top: 10px;"></div>
-                    <p class="middle" th:text="${'학교 전화번호 ' + form.education.teacher.phoneNumber}"></p>
                 </td>
                 <td class="ba" colspan="6" style="border-left: none;">
                     <div class="id-photo">
@@ -310,7 +308,7 @@
 
 
             <tr>
-                <td class="ba text-box" colspan="7">
+                <td class="ba text-box" colspan="13">
                     <p class="middle">본인은 귀교에 입학하고자 소정의 서류를 갖추어 지원합니다.</p>
                     <div class="vertical-space"></div>
                     <p class="middle" th:text="${#dates.format(#dates.createNow(),'yyyy년 MM월 dd일')}"></p>
@@ -322,21 +320,6 @@
                     </p>
                     <div style="margin-top: 20px;"></div>
                     <p class="school">해운대고등학교장 귀하</p>
-                </td>
-                <td class="ba teacher-section" colspan="6">
-                    <table style="width: 100%; height: 100%; border: none;">
-                        <tr>
-                            <td class="teacher-text">작성교사명</td>
-                        </tr>
-                        <tr>
-                            <td class="teacher-text">
-                                <p th:text="${form.education.teacher.name}">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="teacher-stamp">(인)</td>
-                        </tr>
-                    </table>
                 </td>
             </tr>
         </table>
