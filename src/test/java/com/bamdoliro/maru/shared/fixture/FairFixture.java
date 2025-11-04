@@ -26,6 +26,18 @@ public class FairFixture {
                 LocalDate.now().plusWeeks(2)
         );
     }
+
+    public static Fair createAnotherFair() {
+        return new Fair(
+                LocalDateTime.now().plusWeeks(2),
+                130,
+                "해운대고등학교 5층 대동관",
+                FairType.STUDENT_AND_PARENT,
+                LocalDate.now(),
+                LocalDate.now().plusWeeks(1)
+        );
+    }
+
     public static CreateFairRequest createFairRequest() {
         return new CreateFairRequest(
                 LocalDateTime.now().plusWeeks(3),

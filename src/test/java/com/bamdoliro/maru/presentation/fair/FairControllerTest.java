@@ -1,6 +1,7 @@
 package com.bamdoliro.maru.presentation.fair;
 
 import com.bamdoliro.maru.domain.fair.domain.type.FairType;
+import com.bamdoliro.maru.domain.fair.exception.AttendeeNotFoundException;
 import com.bamdoliro.maru.domain.fair.exception.FairNotFoundException;
 import com.bamdoliro.maru.domain.fair.exception.HeadcountExceededException;
 import com.bamdoliro.maru.domain.fair.exception.NotApplicationPeriodException;
@@ -417,5 +418,58 @@ class FairControllerTest extends RestDocsTestSupport {
                 .andDo(restDocs.document());
 
         verify(exportAttendeeListUseCase, times(1)).execute(fairId);
+    }
+
+    @Test
+    void 입학설명회_신청자를_삭제한다() throws Exception {
+        Long fairId = 1L;
+        Long attendeeId = 1L;
+        User user = UserFixture.createAdminUser();
+
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+        willDoNothing().given(deleteAttendeeUseCase).execute(fairId, attendeeId);
+
+        mockMvc.perform(delete("/fairs/{fair-id}/attendees/{attendee-id}", fairId, attendeeId)
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .accept(MediaType.APPLICATION_JSON))
+
+                .andExpect(status().isOk())
+
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION)
+                                        .description("Bearer token")
+                        ),
+                        pathParameters(
+                                parameterWithName("fair-id")
+                                        .description("입학설명회 id"),
+                                parameterWithName("attendee-id")
+                                        .description("신청자 id")
+                        )
+                ));
+
+        verify(deleteAttendeeUseCase, times(1)).execute(fairId, attendeeId);
+    }
+
+    @Test
+    void 입학설명회_신청자를_삭제할_때_신청자가_없으면_에러가_발생한다() throws Exception {
+        Long fairId = 1L;
+        Long attendeeId = -1L;
+        User user = UserFixture.createAdminUser();
+
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+        willThrow(new AttendeeNotFoundException()).given(deleteAttendeeUseCase).execute(fairId, attendeeId);
+
+        mockMvc.perform(delete("/fairs/{fair-id}/attendees/{attendee-id}", fairId, attendeeId)
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .accept(MediaType.APPLICATION_JSON))
+
+                .andExpect(status().isNotFound())
+
+                .andDo(restDocs.document());
+
+        verify(deleteAttendeeUseCase, times(1)).execute(fairId, attendeeId);
     }
 }
