@@ -31,7 +31,7 @@
         }
 
         .main-table {
-            flex: 2;
+            flex: 3;
             width: 70%;
             height: 100%;
         }
@@ -172,6 +172,7 @@
 
         .dotted-line {
             border-top: 1px dotted #000;
+            margin: 4px 0;
         }
 
         .disabled {
@@ -240,7 +241,7 @@
                 <th scope="row" class="ba" rowspan="2">연락처</th>
                 <td class="ba left" colspan="8" rowspan="2">
                     <p>자택 (&emsp;&emsp;) -</p>
-                    <p>휴대폰 <span th:text="${' - ' + form.applicant.phoneNumber}"></span></p>
+                    <p>휴대폰 <span th:text="${form.applicant.phoneNumber}"></span></p>
                 </td>
             </tr>
 
@@ -256,12 +257,12 @@
             <tr>
                 <th scope="rowgroup" class="ba" rowspan="1">학<br/><br/>력</th>
                 <td class="ba" colspan="6" rowspan="1" style="height: 160px; border: none; padding: 10px;">
-                    <p class="middle" th:text="${'위 지원자는' + form.education.school.name + '(졸업예정자 . 졸업자)임을 증명함.'}"></p>
+                    <p class="middle" th:text="${'위 지원자는 ' + form.education.school.name + '(졸업예정자 . 졸업자)임을 증명함.'}"></p>
                     <div style="margin-top: 10px;"></div>
                     <p class="middle" th:text="${#dates.format(#dates.createNow(),'yyyy년 MM월 dd일')}"></p>
                     <div style="margin-top: 10px;"></div>
                     <p class="middle" th:text="${form.education.school.name + '장'}"></p>
-                    <div class="principal-stamp" style="position: absolute; transform: translate(590%, -50%);">
+                    <div class="principal-stamp" style="position: absolute; transform: translate(735%, -50%);">
                         출신학교장<br/>직인
                     </div>
                     <div style="margin-top: 10px;"></div>
@@ -408,6 +409,7 @@
                 <tr>
                     <td class="ba" colspan="2" style="padding: 15px; text-align: center; font-size: 11px;">
                         <p>위와 같이 접수함</p>
+                        <div style="margin-top: 10px;"></div>
                         <p th:text="${#dates.format(#dates.createNow(),'yyyy. MM. dd. ')}"></p>
                         <div style="margin-top: 10px;"></div>
                         <span class="underline" th:utext="${'접수자&emsp;'+form.applicant.name+'&emsp;'}"></span><span class="guide">(인)</span>
