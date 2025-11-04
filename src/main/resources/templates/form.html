@@ -45,89 +45,86 @@
         }
 
         table {
-          border: none;
-          border-collapse: collapse;
-          width: 100%;
-          font-size: 12px;
-          text-align: center;
+            border: none;
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 12px;
+            text-align: center;
         }
 
         tr {
-          vertical-align: middle;
+            vertical-align: middle;
         }
 
-        .format {
-          font-size: 13px;
-          font-weight: bold;
-        }
-
-        .school {
-          font-weight: bold;
-          font-size: 18px;
+        td {
+            padding: 2px 0;
         }
 
         th {
-          background-color: #CAD6EC;
-          font-weight: 500;
-          padding: 6px 0;
-          font-size: 12px;
+            background-color: #CAD6EC;
+            font-weight: 500;
+            padding: 6px 0;
+            font-size: 12px;
         }
 
         .ba {
-          border: #000000 1px solid;
+            border: #000000 1px solid;
         }
 
+        .format {
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .school {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+
         .left {
-          text-align: left;
+            text-align: left;
         }
 
         .middle {
-          font-size: 14px;
+            font-size: 14px;
         }
 
         .vertical-space {
-          height: 8px;
+            height: 8px;
         }
 
         .horizontal-space {
-          width: 8px;
-        }
-
-        .guide {
-          font-size: 11px;
-          color: #BBBCC2;
-          font-weight: 300;
+            width: 8px;
         }
 
         .inline {
-          display: inline-block;
+            display: inline-block;
         }
 
         .text-box {
-          padding: 4px 8px;
+            padding: 4px 8px;
         }
 
-        .principal-stamp{
+        .principal-stamp {
             width: 60px;
             height: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
             position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(25%);
             z-index: 10;
             border: 1px solid black;
             text-align: center;
             background-color: #f3f3f3;
-            font-size: 10px;
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(25%);
             padding: 5px;
             font-size: 8px;
         }
 
-        .underline{
+        .underline {
             border-bottom: 1px solid black;
         }
 
@@ -154,7 +151,7 @@
         }
 
         .side-tables table {
-        width: 100%;
+            width: 100%;
         }
 
         .id-photo {
@@ -166,15 +163,20 @@
             align-items: center;
             justify-content: center;
             position: relative;
-            padding:5px;
+            padding: 5px;
         }
 
         .td {
-            font-size:10px;
+            font-size: 10px;
         }
 
         .dotted-line {
             border-top: 1px dotted #000;
+        }
+
+        .disabled {
+            color: #f3f3f3;
+            background-color: #f3f3f3;
         }
 
         .guide {
@@ -188,7 +190,6 @@
 <body>
 <p class="format">[서식1]</p>
 <h2 th:text='${year+"학년도 해운대고등학교 입학원서"}'>2026학년도 해운대고등학교 입학원서</h2>
-
 <div class="container">
     <div class="main-table">
         <table>
@@ -197,7 +198,7 @@
                     <h1>2026학년도 입학원서</h1>
                 </th>
                 <th scope="row" class="ba" colspan="1" rowspan="2">수험<br/>번호</th>
-                <td class="ba" rowspan="2"  colspan="7" th:text="${'&#8251;'+form.examinationNumber}"></td>
+                <td class="ba" rowspan="2" colspan="7" th:text="${'&#8251;'+form.examinationNumber}"></td>
             </tr>
 
             <tr>
@@ -237,10 +238,9 @@
                 <th scope="row" class="ba" rowspan="3">주&emsp;소</th>
                 <td class="ba" colspan="2" rowspan="2" th:text="${'우편번호 (' + form.parent.address.zoneCode} + ')'"></td>
                 <th scope="row" class="ba" rowspan="2">연락처</th>
-                <td class="ba left" colspan="8" rowspan="2" >
-                    <p>자택 (&emsp;&emsp;) -
-                        <br/>
-                        휴대폰 <span th:text="${' - ' + form.applicant.phoneNumber}"></span> </p>
+                <td class="ba left" colspan="8" rowspan="2">
+                    <p>자택 (&emsp;&emsp;) -</p>
+                    <p>휴대폰 <span th:text="${' - ' + form.applicant.phoneNumber}"></span></p>
                 </td>
             </tr>
 
@@ -255,17 +255,16 @@
 
             <tr>
                 <th scope="rowgroup" class="ba" rowspan="1">학<br/><br/>력</th>
-                <td class="ba" colspan="6" rowspan="1" style=" height: 160px; border: none; padding: 10px;">
+                <td class="ba" colspan="6" rowspan="1" style="height: 160px; border: none; padding: 10px;">
                     <p class="middle" th:text="${'위 지원자는' + form.education.school.name + '(졸업예정자 . 졸업자)임을 증명함.'}"></p>
-                    <br/>
+                    <div style="margin-top: 10px;"></div>
                     <p class="middle" th:text="${#dates.format(#dates.createNow(),'yyyy년 MM월 dd일')}"></p>
-                    <br/>
+                    <div style="margin-top: 10px;"></div>
                     <p class="middle" th:text="${form.education.school.name + '장'}"></p>
-                    <br/>
-                    <div class="principal-stamp" style="position: absolute;  transform: translate(590%, -50%);">
+                    <div class="principal-stamp" style="position: absolute; transform: translate(590%, -50%);">
                         출신학교장<br/>직인
                     </div>
-                    <br/>
+                    <div style="margin-top: 10px;"></div>
                     <p class="middle" th:text="${'학교 전화번호 ' + form.education.teacher.phoneNumber}"></p>
                 </td>
                 <td class="ba" colspan="6" style="border-left: none;">
@@ -293,7 +292,7 @@
 
             <tr th:each="subject, iterStat : ${subjectList}">
                 <td class="ba" th:text="${subject.subjectName}"></td>
-                <td class="ba disabled" th:if="${subject.achievementLevel21 == null}" colspan="1" ></td>
+                <td class="ba disabled" th:if="${subject.achievementLevel21 == null}" colspan="1"></td>
                 <td class="ba" th:unless="${subject.achievementLevel21 == null}"
                     th:text="${subject.achievementLevel21.toString(subject.subjectName)}" colspan="1"></td>
                 <td class="ba disabled" th:if="${subject.achievementLevel22 == null}"></td>
@@ -320,8 +319,7 @@
                         &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
                         <span class="underline" th:utext="${'보호자:&emsp;'+form.parent.name+'&emsp;'}"></span><span class="guide">(인)</span>
                     </p>
-                    <br/>
-                    <br/>
+                    <div style="margin-top: 20px;"></div>
                     <p class="school">해운대고등학교장 귀하</p>
                 </td>
                 <td class="ba teacher-section" colspan="6">
@@ -376,7 +374,6 @@
                         </div>
                     </td>
                 </tr>
-                <div class="horizontal-space"></div>
                 <tr>
                     <td class="ba" colspan="2" style="text-align: center; font-weight: bold; padding: 10px;">
                         해운대고등학교
@@ -388,43 +385,42 @@
         <div class="vertical-space"></div>
         <div class="dotted-line"></div>
         <div class="vertical-space"></div>
+
         <div>
             <table>
-            <tr>
-                <th class="ba" colspan="2">
-                    <h2>접수증</h2>
-                </th>
-            </tr>
-            <tr>
-                <th scope="row" class="ba">접수<br/>번호</th>
-                <td class="ba" th:text="${'&#8251;'+form.examinationNumber}"></td>
-            </tr>
-            <tr>
-                <th scope="row" class="ba">성명</th>
-                <td class="ba" th:text="${form.applicant.name}"></td>
-            </tr>
-            <tr>
-                <th scope="row" class="ba">출신교</th>
-                <td class="ba">중학교</td>
-            </tr>
-            <tr>
-                <td class="ba" colspan="2" style="padding: 15px; text-align: center; font-size: 11px;">
-                    <p>위와 같이 접수함</p>
-                    <p th:text="${#dates.format(#dates.createNow(),'yyyy. MM. dd. ')}"></p>
-                    <br/>
-                    <span class="underline" th:utext="${'접수자&emsp;'+form.applicant.name+'&emsp;'}"></span><span class="guide">(인)</span>
-                    <br/>
-                    <br/>
-                    <br/>
-                    <strong>해운대고등학교</strong>
-                </td>
-            </tr>
-            <tr>
-                <td class="ba" colspan="2" style="padding: 10px;">
-                    ※ 면접 및 합격자 소집 시에 수험표를 지참할 것
-                </td>
-            </tr>
-        </table>
+                <tr>
+                    <th class="ba" colspan="2">
+                        <h2>접수증</h2>
+                    </th>
+                </tr>
+                <tr>
+                    <th scope="row" class="ba">접수<br/>번호</th>
+                    <td class="ba" th:text="${'&#8251;'+form.examinationNumber}"></td>
+                </tr>
+                <tr>
+                    <th scope="row" class="ba">성명</th>
+                    <td class="ba" th:text="${form.applicant.name}"></td>
+                </tr>
+                <tr>
+                    <th scope="row" class="ba">출신교</th>
+                    <td class="ba">중학교</td>
+                </tr>
+                <tr>
+                    <td class="ba" colspan="2" style="padding: 15px; text-align: center; font-size: 11px;">
+                        <p>위와 같이 접수함</p>
+                        <p th:text="${#dates.format(#dates.createNow(),'yyyy. MM. dd. ')}"></p>
+                        <div style="margin-top: 10px;"></div>
+                        <span class="underline" th:utext="${'접수자&emsp;'+form.applicant.name+'&emsp;'}"></span><span class="guide">(인)</span>
+                        <div style="margin-top: 30px;"></div>
+                        <strong>해운대고등학교</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="ba" colspan="2" style="padding: 10px;">
+                        ※ 면접 및 합격자 소집 시에 수험표를 지참할 것
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>
