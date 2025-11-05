@@ -297,16 +297,16 @@
                 <td class="ba" th:text="${subject.subjectName}"></td>
                 <td class="ba disabled" th:if="${subject.achievementLevel21 == null}" colspan="1"></td>
                 <td class="ba" th:unless="${subject.achievementLevel21 == null}"
-                    th:text="${subject.achievementLevel21.toString(subject.subjectName)}" colspan="1"></td>
+                    th:text="${subject.achievementLevel21.name()}" colspan="1"></td>
                 <td class="ba disabled" th:if="${subject.achievementLevel22 == null}"></td>
                 <td class="ba" th:unless="${subject.achievementLevel22 == null}"
-                    th:text="${subject.achievementLevel22.toString(subject.subjectName)}"></td>
+                    th:text="${subject.achievementLevel22.name()}"></td>
                 <td class="ba disabled" th:if="${subject.achievementLevel31 == null}" colspan="1"></td>
                 <td class="ba" th:unless="${subject.achievementLevel31 == null}"
-                    th:text="${subject.achievementLevel31.toString(subject.subjectName)}" colspan="1"></td>
+                    th:text="${subject.achievementLevel31.name()}" colspan="1"></td>
                 <td class="ba disabled" th:if="${subject.achievementLevel32 == null}"></td>
                 <td class="ba" th:unless="${subject.achievementLevel32 == null}"
-                    th:text="${subject.achievementLevel32.toString(subject.subjectName)}"></td>
+                    th:text="${subject.achievementLevel32.name()}"></td>
                 <td class="ba" th:if="${iterStat.first}" th:rowspan="${subjectList.size()}" th:text="${form.grade.getTotalAbsenceCount() + '일'}" colspan="8"></td>
             </tr>
 
