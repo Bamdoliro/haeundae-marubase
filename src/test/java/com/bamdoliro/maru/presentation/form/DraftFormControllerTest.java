@@ -104,6 +104,12 @@ class DraftFormControllerTest extends RestDocsTestSupport {
                                         .type(JsonFieldType.STRING)
                                         .optional()
                                         .description("환불계좌"),
+                                fieldWithPath("parent.owner")
+                                        .type(JsonFieldType.STRING)
+                                        .description("예금자명"),
+                                fieldWithPath("parent.bank")
+                                        .type(JsonFieldType.STRING)
+                                        .description("은행명"),
                                 fieldWithPath("education.graduationType")
                                         .type(JsonFieldType.STRING)
                                         .optional()
