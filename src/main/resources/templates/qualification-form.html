@@ -157,6 +157,9 @@
         .horizontal-space {
             height: 8px;
         }
+        .vertical-space {
+            width: 8px;
+        }
 
         .teacher-stamp {
             display: flex;
@@ -211,14 +214,12 @@
     <title>원서</title>
 </head>
 <body>
-<p class="format">[서식1]</p>
-<h4 th:text='${year+"학년도 해운대고등학교 입학원서"}'></h4>
 <div class="container">
     <div class="main-table">
         <table>
             <tr>
                 <th scope="row" class="ba" colspan="5">
-                    <h1>2026학년도 입학원서</h1>
+                    <h1 th:text='${year+"학년도 입학원서"}'></h1>
                 </th>
                 <th scope="row" class="ba" colspan="1" rowspan="2">수험<br/>번호</th>
                 <td class="ba" rowspan="2" colspan="7" th:text="${'&#8251;'+form.examinationNumber}"></td>
@@ -226,7 +227,13 @@
 
             <tr>
                 <th scope="row" class="ba" colspan="1">지원 구분</th>
-                <td class="ba" colspan="4" style="font-size:10px;">일반&emsp;.&emsp;기회균등&emsp;.&emsp;사회다양성&emsp;.&emsp;특례입학대상자&emsp;.&emsp;국가보훈대상자 중 교육지원대상자</td>
+                <td class="ba" colspan="4" style="font-size:10px;">
+                    일반&emsp;<span th:if="${form.type.regular}">V</span><span th:unless="${form.type.regular}">.</span>&emsp;
+                    기회균등&emsp;<span th:if="${form.type.equalOpportunity}">V</span><span th:unless="${form.type.equalOpportunity}">.</span>&emsp;
+                    사회다양성&emsp;<span th:if="${form.type.societyDiversity}" >V</span><span th:unless="${form.type.societyDiversity}">.</span>&emsp;
+                    특례입학대상자&emsp;<span th:if="${form.type.specialAdmission}">V</span><span th:unless="${form.type.specialAdmission}">.</span>&emsp;
+                    국가보훈대상자 중 교육지원대상자&emsp;<span th:if="${form.type.nationalVeteransEducation}" >V</span><span th:unless="${form.type.nationalVeteransEducation}">.</span>
+                </td>
             </tr>
 
             <tr>
@@ -262,7 +269,7 @@
                 <td class="ba" colspan="2" rowspan="2" th:text="${'우편번호 (' + form.parent.address.zoneCode} + ')'"></td>
                 <th scope="row" class="ba" rowspan="2">연락처</th>
                 <td class="ba left" colspan="8" rowspan="2">
-                    <p>자택 (&emsp;&emsp;) -</p>
+                    <p>자택&emsp;(&emsp;&emsp;) -</p>
                     <p>휴대폰 <span th:text="${form.applicant.phoneNumber}"></span></p>
                 </td>
             </tr>
@@ -280,13 +287,14 @@
                 <th scope="rowgroup" class="ba" rowspan="1">학<br/><br/>력</th>
                 <td class="ba" colspan="6" rowspan="1" style="height: 160px; border: none; padding: 10px;">
                     <p class="middle" th:text="${'위 지원자는 ' + #dates.format(#dates.createNow(),'yyyy년 MM월 dd일') + ' 중학교 졸업자격검정고시 (합격자) 임을 증명함.'}"></p>
-                    <div class="vertical-space"></div>
+                    <div class="horizontal-space"></div>
                     <p class="middle" th:text="${#dates.format(#dates.createNow(),'yyyy년 MM월 dd일')}"></p>
-                    <div class="vertical-space"></div>
+                    <div class="horizontal-space"></div>
+                    <div class="horizontal-space"></div>
                     <div class="principal-stamp" style="position: absolute; transform: translate(735%, -50%);">
                         출신학교장<br/>직인
                     </div>
-                    <div class="vertical-space"></div>
+                    <div class="horizontal-space"></div>
                 </td>
                 <td class="ba" colspan="6" style="border-left: none;">
                     <div class="id-photo">
@@ -316,25 +324,27 @@
 
 
             <tr>
-                <td class="ba text-box" colspan="13" style="padding: 20px 0;">
+                <td class="ba text-box" colspan="13" style="padding: 26.5px 0;">
                     <p class="middle">본인은 귀교에 입학하고자 소정의 서류를 갖추어 지원합니다.</p>
-                    <div class="vertical-space"></div>
+                    <div class="horizontal-space"></div>
                     <p class="middle" th:text="${#dates.format(#dates.createNow(),'yyyy년 MM월 dd일')}"></p>
-                    <div class="vertical-space"></div>
+                    <div class="horizontal-space"></div>
                     <p class="middle">
                         <span class="underline" th:utext="${'지원자&emsp;'+form.applicant.name+'&emsp;'}"></span><span class="guide">(인)</span>
                         &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
                         <span class="underline" th:utext="${'보호자:&emsp;'+form.parent.name+'&emsp;'}"></span><span class="guide">(인)</span>
                     </p>
-                    <div class="vertical-space"></div>
-                    <div class="vertical-space"></div>
+                    <div class="horizontal-space"></div>
+                    <div class="horizontal-space"></div>
                     <p class="school">해운대고등학교장 귀하</p>
                 </td>
             </tr>
         </table>
     </div>
 
+    <div class="vertical-space"></div>
     <div class="vertical-divider"></div>
+    <div class="vertical-space"></div>
 
     <div class="side-tables">
         <div>
@@ -357,7 +367,7 @@
                     <td class="ba">검정고시</td>
                 </tr>
                 <tr>
-                    <td class="ba" colspan="2" style="height:160px;">
+                    <td class="ba" colspan="2" style="height:170px;">
                         <div class="id-photo">
                             사진 3cm×4cm
                             <div class="principal-stamp">
@@ -387,7 +397,7 @@
                 </tr>
                 <tr>
                     <th scope="row" class="ba">접수<br/>번호</th>
-                    <td class="ba" th:text="${'&#8251;'+form.examinationNumber}"></td>
+                    <td class="ba"></td>
                 </tr>
                 <tr>
                     <th scope="row" class="ba">성명</th>
@@ -398,16 +408,15 @@
                     <td class="ba">검정고시</td>
                 </tr>
                 <tr>
-                    <td class="ba" colspan="2" style="padding: 15px; text-align: center; font-size: 11px;">
-                        <div class="vertical-space"></div>
+                    <td class="ba" colspan="2" style="padding: 25px 0; text-align: center; font-size: 11px;">
                         <p>위와 같이 접수함</p>
-                        <div class="vertical-space"></div>
+                        <div class="horizontal-space"></div>
                         <p th:text="${#dates.format(#dates.createNow(),'yyyy. MM. dd. ')}"></p>
-                        <div class="vertical-space"></div>
+                        <div class="horizontal-space"></div>
                         <span class="underline" th:utext="${'접수자&emsp;'+form.applicant.name+'&emsp;'}"></span><span class="guide">(인)</span>
-                        <div class="vertical-space"></div>
+                        <div class="horizontal-space"></div>
+                        <div class="horizontal-space"></div>
                         <strong>해운대고등학교</strong>
-                        <div class="vertical-space"></div>
                     </td>
                 </tr>
                 <tr>
