@@ -188,6 +188,10 @@ public class Form extends BaseTimeEntity {
         return status.equals(FormStatus.ENTERED);
     }
 
+    public boolean isPaid() {
+        return payment;
+    }
+
     public Boolean isFirstPassed() {
         if (isFirstPassedNow() || isPassed() != null || isNoShow()) {
             return true;
