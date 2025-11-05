@@ -29,6 +29,6 @@ public class Parent {
     @Embedded
     private Address address;
 
-    @Column(nullable = false)
-    private String account;
+    @Embedded
+    private Account account;
 }

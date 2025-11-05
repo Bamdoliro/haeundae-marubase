@@ -1,5 +1,6 @@
 package com.bamdoliro.maru.presentation.form.dto.request;
 
+import com.bamdoliro.maru.domain.form.domain.value.Account;
 import com.bamdoliro.maru.domain.form.domain.value.Address;
 import com.bamdoliro.maru.domain.form.domain.value.Parent;
 import com.bamdoliro.maru.domain.form.domain.value.PhoneNumber;
@@ -42,6 +43,12 @@ public class ParentRequest {
     @Size(max = 20, message = "20자 이내여야 합니다.")
     private String account;
 
+    @NotBlank(message = "필수값입니다.")
+    private String owner;
+
+    @NotBlank(message = "필수값입니다.")
+    private String bank;
+
     public Parent toValue() {
         return new Parent(
                 name,
@@ -52,7 +59,11 @@ public class ParentRequest {
                         address,
                         detailAddress
                 ),
-                account
+                new Account(
+                        account,
+                        owner,
+                        bank
+                )
         );
     }
 }
