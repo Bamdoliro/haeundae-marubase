@@ -37,7 +37,11 @@ public class FormFixture {
                                 "부산광역시 가락대로1393",
                                 "부산소프트웨어마이스터고"
                         ),
-                        "123-456-789"
+                        new Account(
+                                "7777-02-3681015",
+                                "황성민",
+                                "부산은행"
+                        )
                 ),
                 new Education(
                         GraduationType.EXPECTED,
@@ -104,7 +108,11 @@ public class FormFixture {
                                 "부산광역시 가락대로1393",
                                 "부산소프트웨어마이스터고"
                         ),
-                        "123-456-789"
+                        new Account(
+                                "7777-02-3681015",
+                                "황성민",
+                                "부산은행"
+                        )
                 ),
                 new Education(
                         GraduationType.EXPECTED,
@@ -168,7 +176,11 @@ public class FormFixture {
                                 "부산광역시 가락대로1393",
                                 "부산소프트웨어마이스터고"
                         ),
-                        "123-456-789"
+                        new Account(
+                                "7777-02-3681015",
+                                "황성민",
+                                "부산은행"
+                        )
                 ),
                 new Education(
                         GraduationType.EXPECTED,
@@ -239,7 +251,11 @@ public class FormFixture {
                                 "부산광역시 가락대로1393",
                                 "부산소프트웨어마이스터고"
                         ),
-                        "123-456-789"
+                        new Account(
+                                "7777-02-3681015",
+                                "황성민",
+                                "부산은행"
+                        )
                 ),
                 new Education(
                         GraduationType.EXPECTED,
@@ -310,7 +326,11 @@ public class FormFixture {
                                 "부산광역시 가락대로1393",
                                 "부산소프트웨어마이스터고"
                         ),
-                        "123-456-789"
+                        new Account(
+                                "7777-02-3681015",
+                                "황성민",
+                                "부산은행"
+                        )
                 ),
                 new Education(
                         GraduationType.QUALIFICATION_EXAMINATION,
@@ -376,7 +396,11 @@ public class FormFixture {
                                 "부산광역시 가락대로1393",
                                 "부산소프트웨어마이스터고"
                         ),
-                        "123-456-789"
+                        new Account(
+                                "7777-02-3681015",
+                                "황성민",
+                                "부산은행"
+                        )
                 ),
                 new Education(
                         GraduationType.QUALIFICATION_EXAMINATION,
@@ -530,7 +554,9 @@ public class FormFixture {
                         "18071",
                         "부산광역시 가락대로1393",
                         "부산소프트웨어마이스터고",
-                        "123-456-789"
+                        "123-456-789",
+                        "황성민",
+                        "부산은행"
                 ),
                 new EducationResponse(
                         GraduationType.EXPECTED,
@@ -605,7 +631,9 @@ public class FormFixture {
                 "18071",
                 "부산광역시 가락대로1393",
                 "부산소프트웨어마이스터고",
-                "123-456-789"
+                "123-456-789",
+                "황성민",
+                "부산은행"
         );
     }
 

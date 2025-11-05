@@ -106,6 +106,12 @@ class FormControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("parent.account")
                                         .type(JsonFieldType.STRING)
                                         .description("환불계좌"),
+                                fieldWithPath("parent.owner")
+                                        .type(JsonFieldType.STRING)
+                                        .description("예금자명"),
+                                fieldWithPath("parent.bank")
+                                        .type(JsonFieldType.STRING)
+                                        .description("은행명"),
                                 fieldWithPath("education.graduationType")
                                         .type(JsonFieldType.STRING)
                                         .description("<<graduation-type,졸업 유형>>"),
@@ -750,6 +756,12 @@ class FormControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("parent.account")
                                         .type(JsonFieldType.STRING)
                                         .description("환불계좌"),
+                                fieldWithPath("parent.owner")
+                                        .type(JsonFieldType.STRING)
+                                        .description("예금자명"),
+                                fieldWithPath("parent.bank")
+                                        .type(JsonFieldType.STRING)
+                                        .description("은행명"),
                                 fieldWithPath("education.graduationType")
                                         .type(JsonFieldType.STRING)
                                         .description("<<graduation-type,졸업 유형>>"),
