@@ -116,7 +116,6 @@ public class ExportFormUseCase {
             return List.of(
                     Templates.COVER,
                     form.getEducation().isQualificationExamination() ? Templates.QUALIFICATION_FORM : Templates.FORM,
-                    Templates.GRADE_TABLE,
                     Templates.DOCUMENT,
                     Templates.RECOMMENDATION,
                     Templates.INFORMATION
@@ -125,7 +124,6 @@ public class ExportFormUseCase {
             return List.of(
                     Templates.COVER,
                     form.getEducation().isQualificationExamination() ? Templates.QUALIFICATION_FORM : Templates.FORM,
-                    Templates.GRADE_TABLE,
                     Templates.DOCUMENT,
                     Templates.SPECIAL_ADMISSION,
                     Templates.CONFIRMATION,
@@ -136,7 +134,6 @@ public class ExportFormUseCase {
         return List.of(
                 Templates.COVER,
                 form.getEducation().isQualificationExamination() ? Templates.QUALIFICATION_FORM : Templates.FORM,
-                Templates.GRADE_TABLE,
                 Templates.DOCUMENT,
                 Templates.INFORMATION
         );
