@@ -113,7 +113,12 @@
             background-color: #e8e8e8;
             border: 1px solid #000;
             width: 110px;
+            text-align: center;
             height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
         }
 
         .ba {
@@ -241,6 +246,15 @@
         background-color: white;
         }
 
+        .checkbox.checked {
+            background-color: #000;
+            position: relative;
+            font-size: 8px;
+            font-weight: bold;
+            color: red;
+
+        }
+
         .h1{
             font-size: 32px;
             font-weight: bold;
@@ -272,31 +286,31 @@
 
     <div class="admission-box">
         <div class="admission-label">수험번호</div>
-        <div class="admission-input"></div>
+        <div class="admission-input" th:text="${form.examinationNumber}"></div>
     </div>
 
     <table class="main-table">
         <tr>
             <td rowspan="3" class="ba">지원자<br>관련<br>사항</td>
             <td class="label">성명</td>
-            <td class="input-label"></td>
+            <td class="input-label" th:text="${form.applicant.name}"></td>
             <td rowspan="2" class="label">연락처</td>
             <td class="label">보호자</td>
-            <td class="input-label"></td>
+            <td class="input-label" th:text="${form.parent.phoneNumber}"></td>
         </tr>
         <tr>
             <td class="label">출신<br>(졸업)<br>중학교</td>
-            <td class="input-label">시&nbsp;&nbsp;&nbsp;구(군)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;중학교</td>
+            <td class="input-label" th:text="${form.education.school.location + ' ' + form.education.school.name}"></td>
             <td class="label">담당 <br/> 교사</td>
-            <td class="input-label"></td>
+            <td class="input-label" th:text="${form.education.teacher.mobilePhoneNumber}"></td>
         </tr>
         <tr>
             <td rowspan="2" class="label">전형<br>구분</td>
             <td colspan="5" class="doc-content" style="text-align: left; padding-left: 20px;">
-                일반전형 <span class="checkbox"></span><br>
-                사회통합전형 ( 기회균등전형<span class="checkbox"></span> &nbsp;&nbsp; 사회다양성전형<span class="checkbox"></span> )<br>
-                특례입학대상자전형 <span class="checkbox"></span><br>
-                국가보훈대상자 중 교육지원대상자전형 <span class="checkbox"></span>
+                일반전형 <span class="checkbox" th:classappend="${form.type.regular} ? 'checked' : ''"></span><br>
+                사회통합전형 ( 기회균등전형<span class="checkbox" th:classappend="${form.type.equalOpportunity} ? 'checked' : ''"></span> &nbsp;&nbsp; 사회다양성전형<span class="checkbox" th:classappend="${form.type.societyDiversity} ? 'checked' : ''"></span> )<br>
+                특례입학대상자전형 <span class="checkbox" th:classappend="${form.type.specialAdmission} ? 'checked' : ''"></span><br>
+                국가보훈대상자 중 교육지원대상자전형 <span class="checkbox" th:classappend="${form.type.nationalVeteransEducation} ? 'checked' : ''"></span>
             </td>
         </tr>
     </table>
@@ -322,7 +336,7 @@
 
         <table class="documents-table">
             <tr>
-                <td class="ba">기타</td>
+                <td class="ba" style="height: 165px;">기타</td>
                 <td class="doc-content">
                     ※ 사회통합전형, 특례입학전형 등 해당 사항이 있는 경우 기록 바랍니다.
                 </td>
