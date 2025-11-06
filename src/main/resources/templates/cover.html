@@ -290,7 +290,6 @@
     </div>
 
     <table class="main-table">
-        <!-- 일반 졸업생 -->
         <tr th:if="${form.education.graduationType.toString() != 'QUALIFICATION_EXAMINATION'}">
             <td rowspan="2" class="ba">지원자<br>관련<br>사항</td>
             <td class="label">성명</td>
@@ -306,7 +305,6 @@
             <td class="input-label" th:text="${form.education.teacher.mobilePhoneNumber}"></td>
         </tr>
 
-        <!-- 검정고시 -->
         <tr th:if="${form.education.graduationType.toString() == 'QUALIFICATION_EXAMINATION'}">
             <td rowspan="2" class="ba">지원자<br>관련<br>사항</td>
             <td class="label">성명</td>
