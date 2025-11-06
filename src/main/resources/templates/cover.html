@@ -291,18 +291,23 @@
 
     <table class="main-table">
         <tr>
-            <td rowspan="3" class="ba">지원자<br>관련<br>사항</td>
+            <td th:rowspan="${form.education.graduationType.toString() == 'QUALIFICATION_EXAMINATION' ? '3' : '2'}" class="ba">지원자<br>관련<br>사항</td>
             <td class="label">성명</td>
             <td class="input-label" th:text="${form.applicant.name}"></td>
             <td rowspan="2" class="label">연락처</td>
-            <td class="label">보호자</td>
-            <td class="input-label" th:text="${form.parent.phoneNumber}"></td>
+            <td rowspan="2" class="label">보호자</td>
+            <td rowspan="2" class="input-label" th:text="${form.parent.phoneNumber}"></td>
         </tr>
         <tr>
             <td class="label">출신<br>(졸업)<br>중학교</td>
-            <td class="input-label" th:text="${form.education.school.location + ' ' + form.education.school.name}"></td>
+            <td class="input-label" th:text="${form.education.graduationType.toString() != 'QUALIFICATION_EXAMINATION' ? (form.education.school.location + ' ' + form.education.school.name) : '검정고시'}"></td>
+        </tr>
+        <tr th:if="${form.education.graduationType.toString() != 'QUALIFICATION_EXAMINATION'}">
             <td class="label">담당 <br/> 교사</td>
             <td class="input-label" th:text="${form.education.teacher.mobilePhoneNumber}"></td>
+            <td class="label"></td>
+            <td class="label"></td>
+            <td class="input-label"></td>
         </tr>
         <tr>
             <td rowspan="2" class="label">전형<br>구분</td>
