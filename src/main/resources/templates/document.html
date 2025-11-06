@@ -93,6 +93,7 @@
             display: flex;
             width: 60px;
             align-items: center;
+            justify-content: center;
             text-align: center;
             font-size: 10px;
         }
@@ -103,7 +104,7 @@
         }
 
         .info-title {
-            background-color: #ECF2FA;
+            background-color: #CAD6EC;
             padding: 8px;
             font-weight: bold;
             font-size: 14px;
@@ -146,8 +147,8 @@
 
         .checkboxes {
             display: flex;
-            gap: 15px;
-            font-size: 10px;
+            gap: 10px;
+            font-size: 9px;
             flex-wrap: wrap;
         }
 
@@ -190,7 +191,7 @@
         }
 
         .question-header {
-            background-color: #ECF2FA;
+            background-color: #CAD6EC;
             border-bottom: 1px solid #000;
             padding: 8px;
             font-size: 10px;
@@ -286,11 +287,11 @@
                 <div class="info-line">
                     <span class="label">지&nbsp;원&nbsp;구&nbsp;분</span>
                     <div class="checkboxes">
-                        <span>일반 ( <span th:if="${form.type.regular}">V</span><span th:unless="${form.type.regular}">&nbsp;</span> )</span>
-                        <span> 기회균등 ( <span th:if="${form.type.equalOpportunity}">V</span><span th:unless="${form.type.equalOpportunity}">&nbsp;</span> )</span>
-                        <span> 사회다양성 ( <span th:if="${form.type.societyDiversity}">V</span><span th:unless="${form.type.societyDiversity}">&nbsp;</span> )</span>
-                        <span> 특례입학대상자 ( <span th:if="${form.type.specialAdmission}">V</span><span th:unless="${form.type.specialAdmission}">&nbsp;</span> )</span>
-                        <span> 국가보훈대상자 중 교육지원대상자 ( <span th:if="${form.type.nationalVeteransEducation}">V</span><span th:unless="${form.type.nationalVeteransEducation}">&nbsp;</span> )</span>
+                        <span>일반 ( <span th:if="${form.type.regular}">V</span><span th:unless="${form.type.regular}">&nbsp;</span> ) </span>
+                        <span>기회균등 ( <span th:if="${form.type.equalOpportunity}">V</span><span th:unless="${form.type.equalOpportunity}">&nbsp;</span> ) </span>
+                        <span>사회다양성 ( <span th:if="${form.type.societyDiversity}">V</span><span th:unless="${form.type.societyDiversity}">&nbsp;</span> ) </span>
+                        <span>특례입학대상자 ( <span th:if="${form.type.specialAdmission}">V</span><span th:unless="${form.type.specialAdmission}">&nbsp;</span> ) </span>
+                        <span>국가보훈대상자 중 교육지원대상자 ( <span th:if="${form.type.nationalVeteransEducation}">V</span><span th:unless="${form.type.nationalVeteransEducation}">&nbsp;</span> ) </span>
                     </div>
                 </div>
             </div>
