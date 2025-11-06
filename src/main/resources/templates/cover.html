@@ -281,7 +281,7 @@
     <img th:src="@{classpath:/static/images/haeundae-highschool-logo.png}" alt="logo" class="logo-wrapper"/>
     <div class="title-section">
         <h1>2026학년도 신입생 전형<br/>
-        제출 서류 봉투 표지</h1>
+            제출 서류 봉투 표지</h1>
     </div>
 
     <div class="admission-box">
@@ -290,25 +290,36 @@
     </div>
 
     <table class="main-table">
-        <tr>
-            <td th:rowspan="${form.education.graduationType.toString() == 'QUALIFICATION_EXAMINATION' ? '3' : '2'}" class="ba">지원자<br>관련<br>사항</td>
+        <!-- 일반 졸업생 -->
+        <tr th:if="${form.education.graduationType.toString() != 'QUALIFICATION_EXAMINATION'}">
+            <td rowspan="2" class="ba">지원자<br>관련<br>사항</td>
             <td class="label">성명</td>
             <td class="input-label" th:text="${form.applicant.name}"></td>
             <td rowspan="2" class="label">연락처</td>
-            <td rowspan="2" class="label">보호자</td>
-            <td rowspan="2" class="input-label" th:text="${form.parent.phoneNumber}"></td>
-        </tr>
-        <tr>
-            <td class="label">출신<br>(졸업)<br>중학교</td>
-            <td class="input-label" th:text="${form.education.graduationType.toString() != 'QUALIFICATION_EXAMINATION' ? (form.education.school.location + ' ' + form.education.school.name) : '검정고시'}"></td>
+            <td class="label">보호자</td>
+            <td class="input-label" th:text="${form.parent.phoneNumber}"></td>
         </tr>
         <tr th:if="${form.education.graduationType.toString() != 'QUALIFICATION_EXAMINATION'}">
-            <td class="label">담당 <br/> 교사</td>
+            <td class="label">출신<br>(졸업)<br>중학교</td>
+            <td class="input-label" th:text="${form.education.school.location + ' ' + form.education.school.name}"></td>
+            <td class="label">담당<br>교사</td>
             <td class="input-label" th:text="${form.education.teacher.mobilePhoneNumber}"></td>
-            <td class="label"></td>
-            <td class="label"></td>
-            <td class="input-label"></td>
         </tr>
+
+        <!-- 검정고시 -->
+        <tr th:if="${form.education.graduationType.toString() == 'QUALIFICATION_EXAMINATION'}">
+            <td rowspan="2" class="ba">지원자<br>관련<br>사항</td>
+            <td class="label">성명</td>
+            <td class="input-label" th:text="${form.applicant.name}"></td>
+            <td rowspan="2" class="label">연락처</td>
+            <td class="label" rowspan="2">보호자</td>
+            <td rowspan="2" class="input-label" th:text="${form.parent.phoneNumber}"></td>
+        </tr>
+        <tr th:if="${form.education.graduationType.toString() == 'QUALIFICATION_EXAMINATION'}">
+            <td class="label">출신<br>(졸업)<br>중학교</td>
+            <td class="input-label">검정고시</td>
+        </tr>
+
         <tr>
             <td rowspan="2" class="label">전형<br>구분</td>
             <td colspan="5" class="doc-content" style="text-align: left; padding-left: 20px;">
@@ -356,4 +367,3 @@
 
 </body>
 </html>
-
