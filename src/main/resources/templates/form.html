@@ -248,12 +248,12 @@
                 <th scope="row" class="ba">지원자 성명</th>
                 <td class="ba" colspan="3" th:text="${form.applicant.name}"></td>
                 <th scope="row" class="ba" rowspan="2" colspan="1">주민등록<br/>번호</th>
-                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 0, 1)}"></td>
-                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 1, 2)}"></td>
-                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 2, 3)}"></td>
-                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 3, 4)}"></td>
-                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 4, 5)}"></td>
-                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 5, 6)}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.length(form.applicant.registrationNumber) > 0 ? #strings.substring(form.applicant.registrationNumber, 0, 1) : ''}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.length(form.applicant.registrationNumber) > 1 ? #strings.substring(form.applicant.registrationNumber, 1, 2) : ''}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.length(form.applicant.registrationNumber) > 2 ? #strings.substring(form.applicant.registrationNumber, 2, 3) : ''}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.length(form.applicant.registrationNumber) > 3 ? #strings.substring(form.applicant.registrationNumber, 3, 4) : ''}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.length(form.applicant.registrationNumber) > 4 ? #strings.substring(form.applicant.registrationNumber, 4, 5) : ''}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.length(form.applicant.registrationNumber) > 5 ? #strings.substring(form.applicant.registrationNumber, 5, 6) : ''}"></td>
                 <td class="ba" style="width: 20px;">-</td>
             </tr>
 
@@ -262,13 +262,13 @@
                 <td class="ba" th:text="${form.parent.name}"></td>
                 <th scope="row" class="ba">관계</th>
                 <td class="ba" th:text="${'학생의(' + form.parent.relation +')'}"></td>
-                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 7, 8)}"></td>
-                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 8, 9)}"></td>
-                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 9, 10)}"></td>
-                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 10, 11)}"></td>
-                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 11, 12)}"></td>
-                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 12, 13)}"></td>
-                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 13, 14)}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.length(form.applicant.registrationNumber) > 7 ? #strings.substring(form.applicant.registrationNumber, 7, 8) : ''}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.length(form.applicant.registrationNumber) > 8 ? #strings.substring(form.applicant.registrationNumber, 8, 9) : ''}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.length(form.applicant.registrationNumber) > 9 ? #strings.substring(form.applicant.registrationNumber, 9, 10) : ''}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.length(form.applicant.registrationNumber) > 10 ? #strings.substring(form.applicant.registrationNumber, 10, 11) : ''}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.length(form.applicant.registrationNumber) > 11 ? #strings.substring(form.applicant.registrationNumber, 11, 12) : ''}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.length(form.applicant.registrationNumber) > 12 ? #strings.substring(form.applicant.registrationNumber, 12, 13) : ''}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.length(form.applicant.registrationNumber) > 13 ? #strings.substring(form.applicant.registrationNumber, 13, 14) : ''}"></td>
             </tr>
 
             <tr>
