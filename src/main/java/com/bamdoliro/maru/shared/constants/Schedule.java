@@ -10,8 +10,8 @@ import java.util.Locale;
 public class Schedule {
 
     public static final LocalDateTime START = LocalDateTime.of(2025, 1, 20, 9, 0);
-    public static final LocalDateTime END = LocalDateTime.of(2025, 10, 23, 17, 0);
-    public static final LocalDateTime ANNOUNCEMENT_OF_FIRST_PASS = LocalDateTime.of(2025, 10, 27, 15, 0);
+    public static final LocalDateTime END = LocalDateTime.of(2025, 12, 10, 17, 0);
+    public static final LocalDateTime ANNOUNCEMENT_OF_FIRST_PASS = LocalDateTime.of(2025, 12, 12, 15, 0);
     public static final LocalDateTime ANNOUNCEMENT_OF_SECOND_PASS = LocalDateTime.of(2025, 11, 5, 15, 0);
     public static final LocalDateTime CODING_TEST = LocalDateTime.of(2025, 10, 31, 9, 30);
     public static final LocalDateTime NCS = LocalDateTime.of(2025, 10, 31, 11, 0);
