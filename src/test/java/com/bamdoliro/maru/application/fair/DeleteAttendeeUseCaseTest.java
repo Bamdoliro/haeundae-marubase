@@ -4,6 +4,8 @@ import com.bamdoliro.maru.domain.fair.domain.Attendee;
 import com.bamdoliro.maru.domain.fair.domain.Fair;
 import com.bamdoliro.maru.domain.fair.exception.AttendeeNotFoundException;
 import com.bamdoliro.maru.infrastructure.persistence.fair.AttendeeRepository;
+import com.bamdoliro.maru.presentation.fair.dto.request.DeleteAttendeeListRequest;
+import com.bamdoliro.maru.presentation.fair.dto.request.DeleteAttendeeRequest;
 import com.bamdoliro.maru.shared.fixture.FairFixture;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,7 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.Optional;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
@@ -39,21 +41,23 @@ public class DeleteAttendeeUseCaseTest {
         Long attendeeId = 1L;
 
         Fair fair = FairFixture.createFair();
-        ReflectionTestUtils.setField(fair, "id", fairId); // ID 설정 추가
+        ReflectionTestUtils.setField(fair, "id", fairId);
 
         Attendee attendee = FairFixture.createAttendee(fair);
+        ReflectionTestUtils.setField(attendee, "id", attendeeId);
 
-        given(fairFacade.getFair(fairId)).willReturn(fair);
-        given(attendeeRepository.findById(attendeeId)).willReturn(Optional.of(attendee));
-        willDoNothing().given(attendeeRepository).delete(attendee);
+        DeleteAttendeeRequest deleteAttendeeRequest = new DeleteAttendeeRequest(attendeeId);
+        DeleteAttendeeListRequest request = new DeleteAttendeeListRequest(List.of(deleteAttendeeRequest));
+
+        given(attendeeRepository.findByAttendeeIdList(List.of(attendeeId))).willReturn(List.of(attendee));
+        willDoNothing().given(attendeeRepository).deleteById(attendeeId);
 
         // when
-        deleteAttendeeUseCase.execute(fairId, attendeeId);
+        deleteAttendeeUseCase.execute(fairId, request);
 
         // then
-        verify(fairFacade, times(1)).getFair(fairId);
-        verify(attendeeRepository, times(1)).findById(attendeeId);
-        verify(attendeeRepository, times(1)).delete(attendee);
+        verify(attendeeRepository, times(1)).findByAttendeeIdList(List.of(attendeeId));
+        verify(attendeeRepository, times(1)).deleteById(attendeeId);
     }
 
     @Test
@@ -62,14 +66,14 @@ public class DeleteAttendeeUseCaseTest {
         Long fairId = 1L;
         Long attendeeId = 1L;
 
-        Fair fair = FairFixture.createFair();
+        DeleteAttendeeRequest deleteAttendeeRequest = new DeleteAttendeeRequest(attendeeId);
+        DeleteAttendeeListRequest request = new DeleteAttendeeListRequest(List.of(deleteAttendeeRequest));
 
-        given(fairFacade.getFair(fairId)).willReturn(fair);
-        given(attendeeRepository.findById(attendeeId)).willReturn(Optional.empty());
+        given(attendeeRepository.findByAttendeeIdList(List.of(attendeeId))).willReturn(List.of());
 
         // when & then
-        assertThrows(AttendeeNotFoundException.class, () -> {
-            deleteAttendeeUseCase.execute(fairId, attendeeId);
+        assertThrows(IndexOutOfBoundsException.class, () -> {
+            deleteAttendeeUseCase.execute(fairId, request);
         });
     }
 
@@ -83,16 +87,19 @@ public class DeleteAttendeeUseCaseTest {
         Fair anotherFair = FairFixture.createAnotherFair();
 
         ReflectionTestUtils.setField(fair, "id", fairId);
-        ReflectionTestUtils.setField(anotherFair, "id", 2L); // 다른 ID
+        ReflectionTestUtils.setField(anotherFair, "id", 2L);
 
         Attendee attendee = FairFixture.createAttendee(anotherFair);
+        ReflectionTestUtils.setField(attendee, "id", attendeeId);
 
-        given(fairFacade.getFair(fairId)).willReturn(fair);
-        given(attendeeRepository.findById(attendeeId)).willReturn(Optional.of(attendee));
+        DeleteAttendeeRequest deleteAttendeeRequest = new DeleteAttendeeRequest(attendeeId);
+        DeleteAttendeeListRequest request = new DeleteAttendeeListRequest(List.of(deleteAttendeeRequest));
+
+        given(attendeeRepository.findByAttendeeIdList(List.of(attendeeId))).willReturn(List.of(attendee));
 
         // when & then
         assertThrows(AttendeeNotFoundException.class, () -> {
-            deleteAttendeeUseCase.execute(fairId, attendeeId);
+            deleteAttendeeUseCase.execute(fairId, request);
         });
     }
 }
