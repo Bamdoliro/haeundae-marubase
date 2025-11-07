@@ -95,6 +95,7 @@ public class ExportFormUseCase {
             values.forEach(v -> {
                 if (Objects.nonNull(v.getOriginalScore())) {
                     subject.score = v.getOriginalScore();
+                    subject.achievementLevel = v.getAchievementLevel();
                 } else {
                     String fieldName = "achievementLevel" + v.getGrade() + v.getSemester();
                     try {
@@ -154,6 +155,8 @@ class SubjectVO {
     public AchievementLevel achievementLevel32;
 
     Integer score;
+
+    AchievementLevel achievementLevel;
 
     public SubjectVO(String subjectName) {
         this.subjectName = subjectName;
