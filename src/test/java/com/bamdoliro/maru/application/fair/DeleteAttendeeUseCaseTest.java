@@ -17,10 +17,10 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class DeleteAttendeeUseCaseTest {
@@ -61,7 +61,7 @@ public class DeleteAttendeeUseCaseTest {
     }
 
     @Test
-    void 존재하지_않는_신청자_삭제시_예외가_발생한다() throws Exception {
+    void 존재하지_않는_신청자_삭제시_아무_일도_일어나지_않는다() throws Exception {
         // given
         Long fairId = 1L;
         Long attendeeId = 1L;
@@ -72,9 +72,10 @@ public class DeleteAttendeeUseCaseTest {
         given(attendeeRepository.findByAttendeeIdList(List.of(attendeeId))).willReturn(List.of());
 
         // when & then
-        assertThrows(IndexOutOfBoundsException.class, () -> {
-            deleteAttendeeUseCase.execute(fairId, request);
-        });
+        deleteAttendeeUseCase.execute(fairId, request);
+
+        verify(attendeeRepository, times(1)).findByAttendeeIdList(List.of(attendeeId));
+        verify(attendeeRepository, never()).deleteById(any());
     }
 
     @Test
