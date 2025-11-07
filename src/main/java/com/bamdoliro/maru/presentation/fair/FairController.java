@@ -5,6 +5,7 @@ import com.bamdoliro.maru.domain.fair.domain.type.FairType;
 import com.bamdoliro.maru.domain.user.domain.User;
 import com.bamdoliro.maru.presentation.fair.dto.request.AttendAdmissionFairRequest;
 import com.bamdoliro.maru.presentation.fair.dto.request.CreateFairRequest;
+import com.bamdoliro.maru.presentation.fair.dto.request.DeleteAttendeeListRequest;
 import com.bamdoliro.maru.presentation.fair.dto.request.UpdateFairRequest;
 import com.bamdoliro.maru.presentation.fair.dto.response.FairDetailResponse;
 import com.bamdoliro.maru.presentation.fair.dto.response.FairResponse;
@@ -103,12 +104,13 @@ public class FairController {
                 .body(exportAttendeeListUseCase.execute(fairId));
     }
 
-    @DeleteMapping("/{fair-id}/attendees/{attendee-id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{fair-id}/attendees")
     public void deleteAttendee(
             @AuthenticationPrincipal(authority = Authority.ADMIN) User user,
             @PathVariable(name = "fair-id") Long fairId,
-            @PathVariable(name = "attendee-id") Long attendeeId
+            @RequestBody @Valid DeleteAttendeeListRequest request
     ){
-        deleteAttendeeUseCase.execute(fairId, attendeeId);
+        deleteAttendeeUseCase.execute(fairId, request);
     }
 }
