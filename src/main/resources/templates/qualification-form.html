@@ -317,7 +317,7 @@
             </tr>
             <tr th:each="subject, iterStat : ${subjectList}">
                 <td class="ba" th:text="${subject.subjectName}"></td>
-                <td class="ba" colspan="4" th:text="${subject.score + '/' + subject.achievementLevel.name()}"></td>
+                <td class="ba" colspan="4" th:text="${subject.score + '/' + (subject.score >= 99 ? 'A' : subject.score >= 97 ? 'B' : subject.score >= 93 ? 'C' : subject.score >= 89 ? 'D' : 'E')}"></td>
                 <td class="ba" th:if="${iterStat.first}" th:rowspan="${subjectList.size()}" th:text="${form.grade.getTotalAbsenceCount() + '일'}" colspan="9"></td>
             </tr>
 
