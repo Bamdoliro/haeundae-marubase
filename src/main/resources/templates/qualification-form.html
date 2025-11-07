@@ -270,7 +270,7 @@
                 <th scope="row" class="ba" rowspan="2">연락처</th>
                 <td class="ba left" colspan="8" rowspan="2">
                     <p>자택&emsp;(&emsp;&emsp;) -</p>
-                    <p th:text="${'휴대폰 ('+#strings.substring(form.applicant.phoneNumber,0,3)+')'+ #strings.substring(form.applicant.phoneNumber,3,13)}"></p>
+                    <p th:text="${form.applicant.phoneNumber != null and #strings.length(form.applicant.phoneNumber) >= 3 ? ('휴대폰 (' + #strings.substring(form.applicant.phoneNumber, 0, 3) + ')' + (#strings.length(form.applicant.phoneNumber) > 3 ? #strings.substring(form.applicant.phoneNumber, 3, #strings.length(form.applicant.phoneNumber)) : '')) : '휴대폰 ()'}"></p>
                 </td>
             </tr>
 
