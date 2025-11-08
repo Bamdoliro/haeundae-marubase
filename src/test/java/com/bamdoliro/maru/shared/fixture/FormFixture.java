@@ -26,7 +26,8 @@ public class FormFixture {
                         new PhoneNumber("01012345678"),
                         LocalDate.of(2005, 4, 15),
                         "070605-3111111",
-                        Gender.FEMALE
+                        Gender.FEMALE,
+                        "s.nananu049@gmail.com"
                 ),
                 new Parent(
                         "김이로",
@@ -97,7 +98,8 @@ public class FormFixture {
                         new PhoneNumber("01012345678"),
                         LocalDate.of(2005, 4, 15),
                         "070605-3111112",
-                        Gender.MALE
+                        Gender.MALE,
+                        "s.nananu049@gmail.com"
                 ),
                 new Parent(
                         "김이로",
@@ -165,7 +167,8 @@ public class FormFixture {
                         new PhoneNumber("01085852525"),
                         LocalDate.of(2005, 4, 15),
                         "070605-" + (3000000 + new Random().nextInt(9000000)),
-                        Gender.FEMALE
+                        Gender.FEMALE,
+                        "s.nananu049@gmail.com"
                 ),
                 new Parent(
                         "김이로",
@@ -240,7 +243,8 @@ public class FormFixture {
                         new PhoneNumber("01085852525"),
                         LocalDate.of(2005, 4, 15),
                         "070605-" + (3000000 + new Random().nextInt(9000000)),
-                        Gender.FEMALE
+                        Gender.FEMALE,
+                        "s.nananu049@gmail.com"
                 ),
                 new Parent(
                         "김이로",
@@ -315,7 +319,8 @@ public class FormFixture {
                         new PhoneNumber("01012345678"),
                         LocalDate.of(2005, 4, 15),
                         "070605-" + (3000000 + new Random().nextInt(9000000)),
-                        Gender.FEMALE
+                        Gender.FEMALE,
+                        "s.nananu049@gmail.com"
                 ),
                 new Parent(
                         "김이로",
@@ -385,7 +390,8 @@ public class FormFixture {
                         new PhoneNumber("01012345678"),
                         LocalDate.of(2005, 4, 15),
                         "070605-3111116",
-                        Gender.FEMALE
+                        Gender.FEMALE,
+                        "s.nananu049@gmail.com"
                 ),
                 new Parent(
                         "김이로",
@@ -545,7 +551,8 @@ public class FormFixture {
                         "김밤돌",
                         "01012345678",
                         "080409-3111117",
-                        Gender.FEMALE
+                        Gender.FEMALE,
+                        "s.nananu049@gmail.com"
                 ),
                 new ParentResponse(
                         "김이로",
@@ -619,7 +626,8 @@ public class FormFixture {
                 "01012345678",
                 LocalDate.of(2005, 4, 15),
                 "070605-3111118",
-                Gender.FEMALE
+                Gender.FEMALE,
+                "s.nananu049@gmail.com"
         );
     }
 
