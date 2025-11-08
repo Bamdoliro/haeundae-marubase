@@ -4,8 +4,8 @@
     <meta charset="UTF-8"/>
     <style>
         @page {
-            size: A4;
-            margin: 70px;
+            size: A4 landscape;
+            margin: 20px;
         }
 
         * {
@@ -15,101 +15,358 @@
             box-sizing: border-box;
         }
 
-        table {
-            border: none;
-            border-collapse: collapse;
+        body {
             width: 100%;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .page {
+            flex: 1;
+            border: 1px solid #000;
+            padding: 20px;
+            position: relative;
+        }
+
+        .logo-wrapper {
+            width: 120px;
+            height: auto;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        .header-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            width: 80%;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .header-title {
+            text-align: center;
+            flex: 1;
+        }
+
+        .header-title-main {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .header-title-sub {
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .admission-box {
+            display: flex;
+            border: 1px solid #000;
+            width: auto;
+            height: 30px;
+        }
+
+        .admission-label {
+            padding: 0;
+            border-right: 1px solid #000;
+            font-weight: bold;
+            text-align: center;
+            width: 60px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .admission-input {
+            flex: 1;
+            padding: 5px;
+            display: flex;
+            width: 60px;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 10px;
+        }
+
+        .info-section {
+            border: 1px solid #000;
+            margin 20px 0;
+        }
+
+        .info-title {
+            background-color: #CAD6EC;
+            padding: 8px;
+            font-weight: bold;
             font-size: 14px;
-            text-align: center;
-        }
-
-        tr {
-            vertical-align: middle;
-        }
-
-        td {
-            padding: 8px 0;
-        }
-
-        caption {
-            font-weight: bold;
-            font-size: 28px;
-            line-height: 48px;
-            text-align: center;
-        }
-
-        th {
-            background-color: #ECF2FA;
-            font-weight: 500;
-            padding: 8px 0;
-        }
-        .format {
-            font-size: 13px;
-            font-weight: bold;
-        }
-        .ba {
-            border: #000000 1px solid;
-        }
-
-        .left {
             text-align: left;
+            border-bottom: 1px solid #000;
         }
 
-        .text-box {
-            padding: 4px 8px;
-            vertical-align: text-top;
+        .info-content {
+            padding: 15px;
         }
 
-        .middle {
-            font-size: 16px;
+        .info-line {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 12px;
         }
+
+        .info-line:last-child {
+            margin-bottom: 0;
+        }
+
+        .label {
+            font-size: 10px;
+            min-width: 40px;
+            font-weight: bold;
+            margin-right: 20px;
+        }
+
+        .input-field {
+            flex: 1;
+            border-bottom: 1px solid #000;
+            font-size: 10px;
+            min-height: 20px;
+        }
+
+        .spacer {
+            width: 30px;
+        }
+
+        .checkboxes {
+            display: flex;
+            gap: 10px;
+            font-size: 9px;
+            flex-wrap: wrap;
+        }
+
+        .signature-area {
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .signature-area p {
+            margin: 8px 0;
+        }
+
+        .guidelines {
+            border: 1px solid #000;
+            padding: 15px;
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .guidelines p {
+            margin-bottom: 6px;
+        }
+
+        .guidelines-highlight {
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .section-header {
+            text-align: left;
+            font-weight: bold;
+            font-size: 14px;
+            margin: 20px 0;
+        }
+
+        .question-section {
+            border: 1px solid #000;
+            margin-bottom: 15px;
+        }
+
+        .question-header {
+            background-color: #CAD6EC;
+            border-bottom: 1px solid #000;
+            padding: 8px;
+            font-size: 10px;
+            font-weight: bold;
+            line-height: 1.5;
+        }
+
+        .answer-area {
+            padding: 10px;
+            font-size: 10px;
+        }
+
+        .caution {
+            color: #1B4292;
+            font-size: 8px;
+        }
+
+        .left-boxes{
+            width: 120px;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .horizontal-space {
+            height: 16px;
+        }
+
+        .vertical-space {
+            width: 20px;
+        }
+
+        .admission-sort {
+            display: block;
+            width: 120px;
+        }
+
+        .admission-sort .admission-box {
+            display: flex;
+        }
+
+        .admission-sort .admission-box:first-child {
+            border-bottom: none;
+        }
+
+        .admission-header{
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        p {
+            font-size: 10px;
+        }
+
     </style>
-    <title>원서</title>
+    <title>자기소개서</title>
 </head>
 <body>
-<table>
-    <p class="format">[서식2]</p>
-    <caption>자기소개서</caption>
-    <tr>
-        <th scope="row" class="ba" style="width:15%;">성명</th>
-        <td class="ba" style="width:35%;" th:text="${form.applicant.name}"></td>
-        <th scope="row" class="ba" style="width:15%;">수험번호</th>
-        <td class="ba" style="width:35%;" th:text="${form.getExaminationNumber()}"></td>
-    </tr>
-    <tr>
-        <th scope="row" class="ba">출신중학교</th>
-        <td class="ba" colspan="3" th:text="${form.education.school.name}"></td>
-    </tr>
-    <tr>
-        <td style="height: 24px;"></td>
-    </tr>
-    <tr>
-        <th scope="col" class="ba middle" colspan="4">1. 중학교 재학 중 자기주도적으로 수행한 활동 중 가장 큰 성취감을 느꼈던 <br>학습 경험에 대하여 기술하십시오. (띄어쓰기 제외 700자 이내)</th>
-    </tr>
-    <tr>
-        <td class="ba left text-box" style="height: 235px" colspan="4" th:text="${form.document.learningExperience}"></td>
-    </tr>
-    <tr>
-        <td style="height: 24px;"></td>
-    </tr>
-    <tr>
-        <th scope="col" class="ba middle" colspan="4">2. 본교 건학이념과 연계해 본교에 관심을 갖게 된 동기와 고등학교 입학 후 본인의 꿈과 끼를 <br>살리기 위
-            한 활동계획, 그리고 고등학교 졸업 후 <br>진로계획에 관하여 구체적으로 기술하십시오. (띄어쓰기 제외 300자 이내)</th>
-    </tr>
-    <tr>
-        <td class="ba left text-box" style="height: 170px" colspan="4"
-            th:text="${form.document.statementOfPurpose}"></td>
-    </tr>
-    <tr>
-        <td style="height: 24px;"></td>
-    </tr>
-    <tr>
-        <th scope="col" class="ba middle" colspan="4">3. 본인의 인성(배려, 나눔, 협력, 타인 존중, 규칙준수 등)을 나타낼 수 있는 개인적 경험 및 이를 통해 <br>배우고 느낀 점을 구체적으로 기술하십시오. (띄어쓰기 제외 500자 이내)</th>
-    </tr>
-    <tr>
-        <td class="ba left text-box" style="height: 170px" colspan="4"
-            th:text="${form.document.personality}"></td>
-    </tr>
-</table>
+<div class="container">
+    <div class="page">
+        <img th:src="@{classpath:/static/images/haeundae-highschool-logo.png}" alt="logo" class="logo-wrapper"/>
+        <div class="header-title">
+            <div class="header-title-sub">2026학년도 자기주도학습전형</div>
+            <div class="header-title-main">자기소개서</div>
+        </div>
+
+        <div class="left-boxes">
+            <div class="admission-box">
+                <div class="admission-label">*수험번호</div>
+                <div class="admission-input" th:text="${form.examinationNumber}"></div>
+            </div>
+        </div>
+
+        <div class="horizontal-space"></div>
+        <div class="horizontal-space"></div>
+
+        <div class="info-section">
+            <div class="info-title">지원자 기재 사항</div>
+            <div class="info-content">
+                <div class="info-line">
+                    <span class="label">성&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;명</span>
+                    <span class="input-field" th:text="${form.applicant.name}"></span>
+                    <span class="spacer"></span>
+                    <span class="label">주민등록번호</span>
+                    <span class="input-field" th:text="${form.applicant.registrationNumber}"></span>
+                </div>
+
+                <div class="info-line">
+                    <span class="label">연&nbsp;&nbsp;락&nbsp;&nbsp;처</span>
+                    <span class="label">전화번호</span>
+                    <span class="input-field" th:text="${form.applicant.phoneNumber}"></span>
+                    <span class="spacer"></span>
+                    <span class="label">휴대전화번호</span>
+                    <span class="input-field"></span>
+                </div>
+
+                <div class="info-line">
+                    <span class="label">지&nbsp;원&nbsp;구&nbsp;분</span>
+                    <div class="checkboxes">
+                        <span>일반 ( <span th:if="${form.type.regular}">V</span><span th:unless="${form.type.regular}">&nbsp;</span> ) </span>
+                        <span>기회균등 ( <span th:if="${form.type.equalOpportunity}">V</span><span th:unless="${form.type.equalOpportunity}">&nbsp;</span> ) </span>
+                        <span>사회다양성 ( <span th:if="${form.type.societyDiversity}">V</span><span th:unless="${form.type.societyDiversity}">&nbsp;</span> ) </span>
+                        <span>특례입학대상자 ( <span th:if="${form.type.specialAdmission}">V</span><span th:unless="${form.type.specialAdmission}">&nbsp;</span> ) </span>
+                        <span>국가보훈대상자 중 교육지원대상자 ( <span th:if="${form.type.nationalVeteransEducation}">V</span><span th:unless="${form.type.nationalVeteransEducation}">&nbsp;</span> ) </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="horizontal-space"></div>
+        <div class="signature-area">
+            <p th:text="${#dates.format(#dates.createNow(),'yyyy년 MM월 dd일')}">2025년 11월 05일</p>
+            <p th:text="${'지원자 ' + form.applicant.name + ' 자필 서명'}"></p>
+            <p>해운대 고등학교장 귀하</p>
+        </div>
+        <p class="guidelines-highlight">자기소개서 작성 시 유의사항</p>
+        <div class="guidelines">
+            <p>1. 자기소개서는 평가를 위한 중요한 자료이므로 반드시 본인이 작성하여야 하며, 사실에 입각하여 정직하게 자기주도학습과정, 건학이념과 연계한 지원동기, 꿈과 끼를 살리기 위한 활동계획 및 진로계획 그리고 생활기록부에 기록된 인성영역 활동 실적과 이를 통해 배우고 느낀 점 등을 기술하십시오.</p>
+
+            <p class="guidelines-highlight">※ 자기소개서의 대리작성, 허위작성 혹은 표절 시에는 사후에도 입학 취소 등 불이익 부과</p>
+
+            <p>2. 본문에는 자신의 경험이나 사례 등을 들어 구체적으로 작성하되, 영어 등 각종 인증시험 점수, 교과목의 점수·석차, 교내·외 각종 대회 입상실적, 자격증, 영재교육원 교육 및 수료 여부(우회적·간접적 기재 포함) 등은 기재 시 0점 처리되며, 부모의 사회·경제적 지위 암시 내용, 지원자 본인의 인적사항을 암시하는 내용 등은 기재 시 항목 배점의 10%이상 감점 처리되니 기재하지 마십시오.</p>
+
+            <p>3. 반드시 본 서식을 사용하여 작성하고, 띄어쓰기를 제외한 영역별 제한된 글자수 이내로 제시된 형식에 따라 작성하십시오.</p>
+
+            <p>4. 자기소개서를 입학원서와 함께 본교에 일괄 제출하십시오.</p>
+
+            <p>5. 표지와 본문이 분리되지 않도록 좌측 상단을 클립으로 묶어 주십시오.</p>
+
+            <p>6. 자기소개서는 입학전형 및 입학 후 학생 지도 자료로 활용되며, 비공개 문서로 관리될 것입니다.</p>
+        </div>
+    </div>
+
+    <div class="vertical-space"></div>
+
+    <div class="page">
+        <div class="admission-header">
+            <div class="admission-sort">
+                <div class="admission-box">
+                    <div class="admission-label">수험번호</div>
+                    <div class="admission-input" th:text="${form.examinationNumber}"></div>
+                </div>
+                <div class="admission-box">
+                    <div class="admission-label">면접번호</div>
+                    <div class="admission-input"></div>
+                </div>
+            </div>
+        </div>
+        <div class="section-header">나의 꿈과 끼, 인성 (1500자 이내)</div>
+
+        <div class="question-section">
+            <div class="question-header">
+                1. 중학교 재학 중 자기주도적으로 수행한 활동 중 가장 큰 성취감을 느꼈던
+                학습 경험에 대하여 기술하십시오. (띄어쓰기 제외 700자 이내)
+            </div>
+            <div class="answer-area" th:text="${form.document.learningExperience}"></div>
+        </div>
+
+        <div class="question-section">
+            <div class="question-header">
+                2. 본교 건학이념과 연계해 본교에 관심을 갖게 된 동기와 고등학교 입학 후 본인의 꿈과 끼를 살리기 위한 활동계획, 그리고 고등학교 졸업 후 진로계획에 관하여 구체적으로 기술하십시오. (띄어쓰기 제외 300자 이내)
+                <p class="caution">* 해운대고등학교 건학이념 : 국가와 인류사회의 번영에 공헌하는 창의융합형 글로벌 리더 육성</p>
+            </div>
+            <div class="answer-area" th:text="${form.document.statementOfPurpose}"></div>
+        </div>
+
+        <div class="question-section">
+            <div class="question-header">
+                3. 본인의 인성(배려, 나눔, 협력, 타인 존중, 규칙준수 등)을 나타낼 수 있는 개인적 경험 및 이를 통해
+                배우고 느낀 점을 구체적으로 기술하십시오. (띄어쓰기 제외 500자 이내)
+                <p class="caution">(반드시 생활기록부에 기재된 활동 중에서 선택하여 자세히 서술 하십시오.)</p>
+            </div>
+            <div class="answer-area" th:text="${form.document.personality}"></div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

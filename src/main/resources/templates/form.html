@@ -114,12 +114,12 @@
             justify-content: center;
             position: absolute;
             bottom: -10px;
-            left: 50%;
-            transform: translateX(25%);
+            left: 70%;
+            transform: translateX(30%);
             z-index: 10;
             border: 1px solid black;
             text-align: center;
-            background-color: #f3f3f3;
+            background-color: rgba(255, 255, 255, 0.5);
             padding: 5px;
             font-size: 8px;
         }
@@ -163,7 +163,18 @@
             align-items: center;
             justify-content: center;
             position: relative;
-            padding: 5px;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .id-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
         }
 
         .td {
@@ -193,6 +204,34 @@
             font-size: 11px;
             color: #BBBCC2;
             font-weight: 300;
+        }
+
+        .teacher-section {
+            text-align: center;
+            font-size: 12px;
+            vertical-align: top;
+        }
+
+        .teacher-title {
+            padding: 10px;
+        }
+
+        .teacher-name {
+            padding: 10px;
+        }
+
+        .teacher-sign-space {
+            height: 100px;
+        }
+
+        .teacher-stamp {
+            font-size: 11px;
+            color: #666;
+        }
+
+        img {
+            width: 100px;
+            height: 130px;
         }
     </style>
     <title>원서</title>
@@ -225,12 +264,12 @@
                 <th scope="row" class="ba">지원자 성명</th>
                 <td class="ba" colspan="3" th:text="${form.applicant.name}"></td>
                 <th scope="row" class="ba" rowspan="2" colspan="1">주민등록<br/>번호</th>
-                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 0, 1)}"></td>
-                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 1, 2)}"></td>
-                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 2, 3)}"></td>
-                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 3, 4)}"></td>
-                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 4, 5)}"></td>
-                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 5, 6)}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.length(form.applicant.registrationNumber) > 0 ? #strings.substring(form.applicant.registrationNumber, 0, 1) : ''}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.length(form.applicant.registrationNumber) > 1 ? #strings.substring(form.applicant.registrationNumber, 1, 2) : ''}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.length(form.applicant.registrationNumber) > 2 ? #strings.substring(form.applicant.registrationNumber, 2, 3) : ''}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.length(form.applicant.registrationNumber) > 3 ? #strings.substring(form.applicant.registrationNumber, 3, 4) : ''}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.length(form.applicant.registrationNumber) > 4 ? #strings.substring(form.applicant.registrationNumber, 4, 5) : ''}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.length(form.applicant.registrationNumber) > 5 ? #strings.substring(form.applicant.registrationNumber, 5, 6) : ''}"></td>
                 <td class="ba" style="width: 20px;">-</td>
             </tr>
 
@@ -239,22 +278,22 @@
                 <td class="ba" th:text="${form.parent.name}"></td>
                 <th scope="row" class="ba">관계</th>
                 <td class="ba" th:text="${'학생의(' + form.parent.relation +')'}"></td>
-                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 7, 8)}"></td>
-                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 8, 9)}"></td>
-                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 9, 10)}"></td>
-                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 10, 11)}"></td>
-                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 11, 12)}"></td>
-                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 12, 13)}"></td>
-                <td class="ba" style="width: 20px;" th:text="${#strings.substring(form.applicant.registrationNumber, 13, 14)}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.length(form.applicant.registrationNumber) > 7 ? #strings.substring(form.applicant.registrationNumber, 7, 8) : ''}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.length(form.applicant.registrationNumber) > 8 ? #strings.substring(form.applicant.registrationNumber, 8, 9) : ''}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.length(form.applicant.registrationNumber) > 9 ? #strings.substring(form.applicant.registrationNumber, 9, 10) : ''}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.length(form.applicant.registrationNumber) > 10 ? #strings.substring(form.applicant.registrationNumber, 10, 11) : ''}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.length(form.applicant.registrationNumber) > 11 ? #strings.substring(form.applicant.registrationNumber, 11, 12) : ''}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.length(form.applicant.registrationNumber) > 12 ? #strings.substring(form.applicant.registrationNumber, 12, 13) : ''}"></td>
+                <td class="ba" style="width: 20px;" th:text="${#strings.length(form.applicant.registrationNumber) > 13 ? #strings.substring(form.applicant.registrationNumber, 13, 14) : ''}"></td>
             </tr>
 
             <tr>
                 <th scope="row" class="ba" rowspan="3">주&emsp;소</th>
-                <td class="ba" colspan="2" rowspan="2" th:text="${'우편번호 (' + form.parent.address.zoneCode} + ')'"></td>
+                <td class="ba" colspan="2"  style="border: none;" rowspan="2" th:text="${'우편번호 (' + form.parent.address.zoneCode} + ')'"></td>
                 <th scope="row" class="ba" rowspan="2">연락처</th>
                 <td class="ba left" colspan="8" rowspan="2">
                     <p>자택&emsp;(&emsp;&emsp;) -</p>
-                    <p>휴대폰 <span th:text="${form.applicant.phoneNumber}"></span></p>
+                     <p th:text="${form.applicant.phoneNumber != null and #strings.length(form.applicant.phoneNumber) >= 3 ? ('휴대폰 (' + #strings.substring(form.applicant.phoneNumber, 0, 3) + ')' + (#strings.length(form.applicant.phoneNumber) > 3 ? #strings.substring(form.applicant.phoneNumber, 3, #strings.length(form.applicant.phoneNumber)) : '')) : '휴대폰 ()'}"></p>
                 </td>
             </tr>
 
@@ -262,7 +301,7 @@
             </tr>
 
             <tr>
-                <td class="ba" colspan="2" th:text="${form.parent.address.address}"></td>
+                <td class="ba" colspan="2" style="border: none; border-bottom: 1px solid #000;" th:text="${form.parent.address.address}"></td>
                 <th scope="row" class="ba">E-mail</th>
                 <td class="ba" colspan="8"></td>
             </tr>
@@ -270,13 +309,13 @@
             <tr>
                 <th scope="rowgroup" class="ba" rowspan="1">학<br/><br/>력</th>
                 <td class="ba" colspan="6" rowspan="1" style="height: 160px; border: none; padding: 10px;">
-                    <p class="middle" th:text="${'위 지원자는 ' + #dates.format(#dates.createNow(),'yyyy년 MM월 dd일') + ' ' + form.education.school.name + '중학교 (졸업예정자, 졸업자) 임을 증명함.'}"></p>
+                    <p class="middle" th:text="${'위 지원자는 ' + #dates.format(#dates.createNow(),'yyyy년 MM월 dd일') + ' ' + form.education.school.name + ' ' + (form.education.graduated ? '졸업자' : '졸업예정자') + '임을 증명함.'}"></p>
                     <div class="horizontal-space"></div>
                     <p class="middle" th:text="${ #dates.format(#dates.createNow(),'yyyy년 MM월 dd일')}"></p>
                     <div class="horizontal-space"></div>
                     <p class="middle" th:text="${form.education.school.name + '중학교장'}"></p>
                     <div class="horizontal-space"></div>
-                    <p class="middle" th:text="${form.education.teacher.phoneNumber}"></p>
+                    <p class="middle" th:text="${form.education.teacher.phoneNumber != null and #strings.length(form.education.teacher.phoneNumber) >= 3 ? ('학교 전화번호 (' + #strings.substring(form.education.teacher.phoneNumber, 0, 3) + ')' + (#strings.length(form.education.teacher.phoneNumber) > 3 ? #strings.substring(form.education.teacher.phoneNumber, 3, #strings.length(form.education.teacher.phoneNumber)) : '')) : '학교 전화번호 ()'}"></p>
                     <div class="horizontal-space"></div>
                     <div class="principal-stamp" style="position: absolute; transform: translate(735%, -50%);">
                         출신학교장<br/>직인
@@ -285,7 +324,7 @@
                 </td>
                 <td class="ba" colspan="6" style="border-left: none;">
                     <div class="id-photo">
-                        사진 3cm×4cm
+                        <img th:src="${identificationPictureUri}" alt="증명사진"/>
                         <div class="principal-stamp">
                             출신학교장<br/>직인
                         </div>
@@ -325,7 +364,7 @@
 
 
             <tr>
-                <td class="ba text-box" colspan="13" style="padding: 26.5px 0;">
+                <td class="ba text-box" colspan="7" style="padding: 26.5px 0;">
                     <p class="middle">본인은 귀교에 입학하고자 소정의 서류를 갖추어 지원합니다.</p>
                     <div class="horizontal-space"></div>
                     <p class="middle" th:text="${#dates.format(#dates.createNow(),'yyyy년 MM월 dd일')}"></p>
@@ -338,6 +377,19 @@
                     <div class="horizontal-space"></div>
                     <div class="horizontal-space"></div>
                     <p class="school">해운대고등학교장 귀하</p>
+                </td>
+                <td class="ba teacher-section" colspan="7">
+                    <table style="width: 100%; height: 100%; border: none;">
+                        <tr>
+                            <td class="teacher-text">작성교사명</td>
+                        </tr>
+                        <tr>
+                            <td class="teacher-text" th:text="${form.education.teacher.name}"></td>
+                        </tr>
+                        <tr>
+                            <td class="teacher-stamp">(인)</td>
+                        </tr>
+                    </table>
                 </td>
             </tr>
         </table>
@@ -369,7 +421,7 @@
                 <tr>
                     <td class="ba" colspan="2" style="height:170px;">
                         <div class="id-photo">
-                            사진 3cm×4cm
+                            <img th:src="${identificationPictureUri}" alt="증명사진"/>
                             <div class="principal-stamp">
                                 출신학교장<br/>직인
                             </div>
@@ -397,7 +449,7 @@
                 </tr>
                 <tr>
                     <th scope="row" class="ba">접수<br/>번호</th>
-                    <td class="ba"></td>
+                    <td class="ba">※&emsp;&emsp;&emsp;</td>
                 </tr>
                 <tr>
                     <th scope="row" class="ba">성명</th>
@@ -411,9 +463,9 @@
                     <td class="ba" colspan="2" style="padding: 25px 0; text-align: center; font-size: 11px;">
                         <p>위와 같이 접수함</p>
                         <div class="horizontal-space"></div>
-                        <p th:text="${#dates.format(#dates.createNow(),'yyyy. MM. dd. ')}"></p>
+                        <p>&emsp;&emsp;.&emsp;.&emsp;</p>
                         <div class="horizontal-space"></div>
-                        <span class="underline" th:utext="${'접수자&emsp;'+form.applicant.name+'&emsp;'}"></span><span class="guide">(인)</span>
+                        <span th:utext="${'접수자&emsp;'+form.applicant.name+'&emsp;'}"></span><span class="guide">(인)</span>
                         <div class="horizontal-space"></div>
                         <div class="horizontal-space"></div>
                         <strong>해운대고등학교</strong>

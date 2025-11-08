@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <meta charset="UTF-8" />
     <title>개인정보 수집 이용 및 제공 동의서</title>
@@ -15,19 +15,35 @@
             padding: 0;
             box-sizing: border-box;
         }
+
+        body {
+            width: 100%;
+            height: 100%;
+            padding: 0px;
+        }
+
         p {
-            font-size: 16px;
+            font-size: 14px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 14px;
             line-height: 1.5;
         }
 
         .middle {
             font-size: 14px;
+        }
+
+        .left {
+            text-align: left;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .center {
+            text-align: center;
         }
 
         .right {
@@ -36,13 +52,14 @@
 
         th, td {
             border: 1px solid #000;
-            padding: 8px;
+            padding: 10px;
             vertical-align: middle;
+            font-size: 12px;
         }
 
         th {
-            background-color: #ECF2FA;
-            font-weight: 500;
+            background-color: #CAD6EC;
+            font-weight: bold;
             text-align: center;
         }
 
@@ -73,16 +90,12 @@
             text-align: right;
         }
 
-        .center {
-            text-align: center;
-        }
-
-        .right {
-            text-align: right;
-        }
-
         .space {
             height: 12px;
+        }
+
+        .space-large {
+            height: 80px;
         }
 
         .sub-title {
@@ -91,51 +104,91 @@
             margin-top: 20px;
             margin-bottom: 12px;
         }
+
+        .text-indent {
+            text-indent: 14px;
+            font-size: 14px;
+        }
+
+        .text-small {
+            font-size: 12px;
+        }
+
+        .text-medium {
+            font-size: 14px;
+        }
+
+        .text-highlight {
+            font-weight: bold;
+            color: #1B4292;
+        }
+
+        .full-width {
+            width: 100%;
+        }
+
+        .width-20 {
+            width: 20%;
+        }
+
+        .table-full-width {
+            width: 100vw;
+        }
+
+        .row-height-80 {
+            height: 80%;
+        }
+
+        .checkbox {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border: 1px solid #000;
+            background-color: white;
+        }
     </style>
 </head>
 <body>
-<div style="height: 80px;"></div>
-
 <div class="title">개인정보 수집·이용 및 제공 동의서</div>
 
-<table class="section" style="width: 100vw">
-    <tr style="height: 80%">
+<table class="section table-full-width">
+    <tr class="row-height-80">
         <td>
-            <p style="text-indent: 14px">
+            <p class="text-indent">
                 본 입학원서에 기재된 지원자의 개인정보는 신입생 입학관리업무의 원할한 수행을
                 위하여 개인정보의 수집.유출.오용.남용으로부터 사생활의 비밀 등을 보호하도록 한 개인 정보보호법 규정에 따라 다음과 같이 수집.이용.제공됩니다.</p>
             <div class="space"></div>
-            <p style="text-indent: 14px">
+            <p class="text-indent">
                 1. (개인정보 처리의 법령상 근거)
                 본 입학원서에 기재된 개인정보의 처리업무는 초․중등교육법 제47조 및 동법 시행령 제81조, 제82조, 제84조, 제98조 및 본교의 입학전형 실시계획 등에 근거하고 있습니다.
             </p>
             <div class="space"></div>
-            <p style="text-indent: 14px">
+            <p class="text-indent">
                 2. (정보주체의 권리)
                 지원자는 자신이 제공한 개인정보에 대하여 개인정보 보호법 제4조 및 제35조부터 제38조까지에 따라 열람.처리정지.정정.삭제.파기 등을 요구할 수 있으며, 개인정보 보호법을 위반한 행위로 인한 손해 발생시에는 개인정보 보호법 제39조에 따라 손해배상을 청구할 수 있습니다.
             </p>
             <div class="space"></div>
-            <p style="text-indent: 14px">
+            <p class="text-indent">
                 3. (개인정보 수집항목)
                 입학관리 업무의 원활한 수행을 위하여 수집하는 개인정보는 소속, 성명, 주민등록번호, 전화번호, 보호자 성명, 보호자와의 관계, 주소, 응시 일정 및 시험 시간, 응시장소, 시험장 이동 방법 등입니다.
             </p>
             <div class="space"></div>
-            <p style="text-indent: 14px">
+            <p class="text-indent">
                 4. (개인정보의 수집, 이용 목적)
                 수집된 지원자의 개인정보는 원서접수, 지원자격.지원결격 사유 확인, 지원자 본인확인, 성적산출, 합격자 명부 관리, 합격증명서 발급, 성적 통지, 통계자료 산출 등 입학관리 업무를 위한 정보로 이용됩니다.
             </p>
             <div class="space"></div>
-            <p style="text-indent: 14px">
+            <p class="text-indent">
                 5. (개인정보 제공)
                 수집한 개인정보는 지원자격, 지원결격 사유 조회 및 교과성적 확인 등을 위하여 지원자가 졸업한 중학교 등 관련된 기관에 제공될 수 있습니다.
             </p>
             <div class="space"></div>
-            <p style="text-indent: 14px">
+            <p class="text-indent">
                 6. (개인정보의 보유기간 및 이용기간)
                 수집한 개인정보는 입학관리 업무를 계속하는 동안 보유.이용할 수 있으며, 입학관리 업무 완료 후 본인의 삭제요청이 있을 경우에는 모두 삭제됩니다.
             </p>
             <div class="space"></div>
-            <p style="text-indent: 14px">
+            <p class="text-indent">
                 7. (개인정보의 수집, 이용, 제공에 대한 동의 거부)
                 지원자는 개인정보의 수집.이용.제공에 대한 동의를 거부할 수 있으며, 동의를 거부할 경우 지원결격 사유 조회 등 입학관리 업무를 수행할 수 없으므로 원서를 접수할 수 없습니다.
             </p>
@@ -147,14 +200,14 @@
 
 <table class="section">
     <tr>
-        <th style="width: 20%;">제공받는 자</th>
+        <th class="width-20">제공받는 자</th>
         <td>한국교육개발원</td>
     </tr>
     <tr>
         <th>제공목적</th>
         <td>
-            ▪ 전기고·후기고 이중 지원자 확인<br>
-            ▪ 불합격자의 시도교육청 평준화 일반고 배정 지원
+            &#8251; 전기고·후기고 이중 지원자 확인<br>
+            &#8251; 불합격자의 시도교육청 평준화 일반고 배정 지원
         </td>
     </tr>
     <tr>
@@ -167,25 +220,21 @@
     </tr>
     <tr>
         <th>보유·이용 기간</th>
-        <td>(업무 처리 후) <span style="color: #0066FF;">1년</span></td>
+        <td>(업무 처리 후) <span class="text-highlight">1년</span></td>
     </tr>
 </table>
 
 <div class="space"></div>
-<p style="font-size: 14px;">※ 위의 개인정보 수집·이용에 대한 동의를 거부할 권리가 있습니다.<br>
-    &nbsp;&nbsp;&nbsp;그러나 동의를 거부할 경우, 고입 지원에 불이익을 받을 수 있습니다.</p>
+<p class="text-small">&#8251; 위의 개인정보 수집·이용에 대한 동의를 거부할 권리가 있습니다.<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;그러나 동의를 거부할 경우, 고입 지원에 불이익을 받을 수 있습니다.</p>
 
 <div class="space"></div>
-<p>개인정보 수집.이용.제공 및 제3자 제공하는데 동의합니다. ☐</p>
+<p class="text-small">개인정보 수집.이용.제공 및 제3자 제공하는데 동의합니다. <span class="checkbox"></span></p>
 
 <div class="space"></div>
 <div class="space"></div>
-<p class="middle" >
-</p>
 <p class="middle">
-    <span class="left" th:text="${#dates.format(#dates.createNow(),'yyyy년 MM월 dd일')}"></span>
-    <span class="middle right" style="font-size: 14px;">지원자&nbsp;&nbsp;&nbsp;&nbsp;</span>
-    <span class="middle" th:text="${form.applicant.name}" style="font-size: 14px;"></span>&nbsp;
+    <span class="left" th:text="${#dates.format(#dates.createNow(),'yyyy년 MM월 dd일')+ ' 지원자' + form.applicant.name}"></span>
     <span class="guide">(인)</span>
 </p>
 </body>
