@@ -14,6 +14,7 @@ public class ApplicantResponse {
     private String phoneNumber;
     private String registrationNumber;
     private Gender gender;
+    private String email;
 
     public ApplicantResponse(Applicant applicant, String identificationPictureUri) {
         this.identificationPictureUri = identificationPictureUri;
@@ -21,5 +22,6 @@ public class ApplicantResponse {
         this.phoneNumber = applicant.getPhoneNumber().toString();
         this.registrationNumber = applicant.getRegistrationNumber();
         this.gender = applicant.getGender();
+        this.email = applicant.getEmail();
     }
 }

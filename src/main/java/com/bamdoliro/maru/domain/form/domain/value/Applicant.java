@@ -40,4 +40,7 @@ public class Applicant {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 6)
     private Gender gender;
+
+    @Column(nullable = false)
+    private String email;
 }
