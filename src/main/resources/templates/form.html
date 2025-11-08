@@ -114,12 +114,12 @@
             justify-content: center;
             position: absolute;
             bottom: -10px;
-            left: 50%;
-            transform: translateX(25%);
+            left: 70%;
+            transform: translateX(30%);
             z-index: 10;
             border: 1px solid black;
             text-align: center;
-            background-color: #f3f3f3;
+            background-color: rgba(255, 255, 255, 0.5);
             padding: 5px;
             font-size: 8px;
         }
@@ -163,7 +163,18 @@
             align-items: center;
             justify-content: center;
             position: relative;
-            padding: 5px;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .id-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
         }
 
         .td {
@@ -216,6 +227,11 @@
         .teacher-stamp {
             font-size: 11px;
             color: #666;
+        }
+
+        img {
+            width: 100px;
+            height: 130px;
         }
     </style>
     <title>원서</title>
@@ -293,7 +309,7 @@
             <tr>
                 <th scope="rowgroup" class="ba" rowspan="1">학<br/><br/>력</th>
                 <td class="ba" colspan="6" rowspan="1" style="height: 160px; border: none; padding: 10px;">
-                    <p class="middle" th:text="${'위 지원자는 ' + #dates.format(#dates.createNow(),'yyyy년 MM월 dd일') + ' ' + form.education.school.name + '중학교 (졸업예정자, 졸업자) 임을 증명함.'}"></p>
+                    <p class="middle" th:text="${'위 지원자는 ' + #dates.format(#dates.createNow(),'yyyy년 MM월 dd일') + ' ' + form.education.school.name + ' ' + (form.education.graduated ? '졸업자' : '졸업예정자') + '임을 증명함.'}"></p>
                     <div class="horizontal-space"></div>
                     <p class="middle" th:text="${ #dates.format(#dates.createNow(),'yyyy년 MM월 dd일')}"></p>
                     <div class="horizontal-space"></div>
@@ -308,7 +324,7 @@
                 </td>
                 <td class="ba" colspan="6" style="border-left: none;">
                     <div class="id-photo">
-                        사진 3cm×4cm
+                        <img th:src="${identificationPictureUri}" alt="증명사진"/>
                         <div class="principal-stamp">
                             출신학교장<br/>직인
                         </div>
@@ -405,7 +421,7 @@
                 <tr>
                     <td class="ba" colspan="2" style="height:170px;">
                         <div class="id-photo">
-                            사진 3cm×4cm
+                            <img th:src="${identificationPictureUri}" alt="증명사진"/>
                             <div class="principal-stamp">
                                 출신학교장<br/>직인
                             </div>
@@ -447,7 +463,7 @@
                     <td class="ba" colspan="2" style="padding: 25px 0; text-align: center; font-size: 11px;">
                         <p>위와 같이 접수함</p>
                         <div class="horizontal-space"></div>
-                        <p th:text="${#dates.format(#dates.createNow(),'yyyy. MM. dd. ')}"></p>
+                        <p>&emsp;&emsp;.&emsp;.&emsp;</p>
                         <div class="horizontal-space"></div>
                         <span th:utext="${'접수자&emsp;'+form.applicant.name+'&emsp;'}"></span><span class="guide">(인)</span>
                         <div class="horizontal-space"></div>
