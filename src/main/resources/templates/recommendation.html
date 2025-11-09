@@ -179,8 +179,9 @@
                 <span th:text="${form.education.graduationType.description}"></span>
                 <span th:text="${form.education. getGraduationDateToString + '&emsp;&emsp;&emsp;&emsp;지구 합격'}"></span>
             </td>
-            <td class="ba" colspan="3" th:unless="${form.education.qualificationExamination}">
-                <span th:text="${form.education.school.name}"></span>중학교&emsp;&emsp;&emsp;&emsp;년&emsp;&emsp;&emsp;&emsp;월 (<span th:text="${form.education.graduated ? '졸업' : '졸업예정'}"></span>)
+            <td class="ba left" colspan="3" th:unless="${form.education.qualificationExamination}">
+                <span th:text="${form.education.school.name + ' ' + form.education. getGraduationDateToString}"></span>
+                (<span th:text="${form.education.graduated ? '졸업' : '졸업예정'}"></span>)
             </td>
         </tr>
 
@@ -198,7 +199,7 @@
                         <th class="ba" style="width: 20%;">확인</th>
                     </tr>
                     <tr>
-                        <th class="ba" rowspan="7">기회균등전형</th>
+                        <th class="ba" rowspan="6">기회균등전형</th>
                         <td class="ba left" style="padding-left: 10px;">국가보훈대상자 (국가유공자 자녀)</td>
                         <td class="ba" th:text="${form.type.name() == 'NATIONAL_VETERANS' ? 'O' : ''}"></td>
                     </tr>
@@ -224,7 +225,7 @@
                     </tr>
                     <tr>
                         <th class="ba">사회다양성전형</th>
-                        <td class="ba" colspan="1" style="padding-left: 10px;" th:text="${form.type.societyDiversity ? '(' + form.type.description + ')' : '(          )'}"></td>
+                        <td class="ba" colspan="2" style="padding-left: 10px;" th:text="${form.type.societyDiversity ? '( ' + form.type.description + ' )' : '(&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;)'}"></td>
                     </tr>
                 </table>
             </td>
