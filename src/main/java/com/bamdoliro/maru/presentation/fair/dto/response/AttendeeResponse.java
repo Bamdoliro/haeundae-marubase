@@ -8,6 +8,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class AttendeeResponse {
 
+    private Long id;
     private String schoolName;
     private String name;
     private String type;
@@ -16,6 +17,7 @@ public class AttendeeResponse {
     private String question;
 
     public AttendeeResponse(Attendee attendee) {
+        this.id = attendee.getId();
         this.schoolName = attendee.getSchoolName();
         this.name = attendee.getName();
         this.type = attendee.getType();
