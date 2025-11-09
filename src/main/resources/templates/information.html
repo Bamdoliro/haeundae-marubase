@@ -146,13 +146,27 @@
             border: 1px solid #000;
             background-color: white;
         }
+
+        .title-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .title-section h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 8px 0;
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
-<div class="title">개인정보 수집·이용 및 제공 동의서</div>
+<div class="title-section">
+    <h1>개인정보 수집·이용 및 제공 동의서</h1>
+</div>
 
 <table class="section table-full-width">
-    <tr class="row-height-80">
+    <tr class="row-height-60">
         <td>
             <p class="text-indent">
                 본 입학원서에 기재된 지원자의 개인정보는 신입생 입학관리업무의 원할한 수행을
@@ -224,14 +238,11 @@
     </tr>
 </table>
 
-<div class="space"></div>
+
 <p class="text-small">&#8251; 위의 개인정보 수집·이용에 대한 동의를 거부할 권리가 있습니다.<br>
     &nbsp;&nbsp;&nbsp;&nbsp;그러나 동의를 거부할 경우, 고입 지원에 불이익을 받을 수 있습니다.</p>
-
 <div class="space"></div>
 <p class="text-small">개인정보 수집.이용.제공 및 제3자 제공하는데 동의합니다. <span class="checkbox"></span></p>
-
-<div class="space"></div>
 <div class="space"></div>
 <p class="middle">
     <span class="left" th:text="${#dates.format(#dates.createNow(),'yyyy년 MM월 dd일')+ ' 지원자' + form.applicant.name}"></span>
