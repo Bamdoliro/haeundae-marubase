@@ -4,7 +4,7 @@ import com.bamdoliro.maru.domain.fair.domain.Attendee;
 import com.bamdoliro.maru.domain.fair.domain.Fair;
 import org.springframework.data.repository.CrudRepository;
 
-public interface AttendeeRepository extends CrudRepository<Attendee, Long> {
+public interface AttendeeRepository extends CrudRepository<Attendee, Long>, AttendeeRepositoryCustom {
 
     Integer countByFair(Fair fair);
 }

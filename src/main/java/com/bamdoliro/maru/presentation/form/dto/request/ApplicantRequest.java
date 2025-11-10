@@ -3,10 +3,7 @@ package com.bamdoliro.maru.presentation.form.dto.request;
 import com.bamdoliro.maru.domain.form.domain.type.Gender;
 import com.bamdoliro.maru.domain.form.domain.value.Applicant;
 import com.bamdoliro.maru.domain.form.domain.value.PhoneNumber;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,6 +34,10 @@ public class ApplicantRequest {
     @NotNull(message = "필수값입니다.")
     private Gender gender;
 
+    @Email(message = "올바른 이메일 형식이 아닙니다.")
+    @NotBlank(message = "필수값입니다.")
+    private String email;
+
     public Applicant toValue() {
         System.out.println("sex: " + registrationNumber.length());
         return new Applicant(
@@ -44,7 +45,8 @@ public class ApplicantRequest {
                 new PhoneNumber(phoneNumber),
                 birthday,
                 registrationNumber,
-                gender
+                gender,
+                email
         );
     }
 }
