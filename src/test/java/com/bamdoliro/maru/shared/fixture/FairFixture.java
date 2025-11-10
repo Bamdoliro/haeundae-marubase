@@ -127,6 +127,7 @@ public class FairFixture {
     }
 
     public static FairDetailResponse createFairDetailResponse() {
-        return new FairDetailResponse(createFairDetail(), null);
+        Fair fair = createFairDetail();
+        return new FairDetailResponse(fair, fair.getAttendeeList(), null);
     }
 }
