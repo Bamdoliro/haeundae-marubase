@@ -81,10 +81,13 @@ class FormControllerTest extends RestDocsTestSupport {
                                         .description("지원자 생년월일 (yyyy-MM-dd)"),
                                 fieldWithPath("applicant.registrationNumber")
                                         .type(JsonFieldType.STRING)
-                                        .description("지원장 주민등록번호 (앞 6자리-뒷 7자리)"),
+                                        .description("지원자 주민등록번호 (앞 6자리-뒷 7자리)"),
                                 fieldWithPath("applicant.gender")
                                         .type(JsonFieldType.STRING)
                                         .description("<<gender,지원자 성별>>"),
+                                fieldWithPath("applicant.email")
+                                        .type(JsonFieldType.STRING)
+                                        .description("지원자 이메일"),
                                 fieldWithPath("parent.name")
                                         .type(JsonFieldType.STRING)
                                         .description("보호자 이름"),
@@ -735,6 +738,9 @@ class FormControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("applicant.gender")
                                         .type(JsonFieldType.STRING)
                                         .description("<<gender,지원자 성별>>"),
+                                fieldWithPath("applicant.email")
+                                        .type(JsonFieldType.STRING)
+                                        .description("지원자 이메일"),
                                 fieldWithPath("parent.name")
                                         .type(JsonFieldType.STRING)
                                         .description("보호자 이름"),
