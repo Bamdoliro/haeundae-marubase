@@ -112,7 +112,7 @@ public class ExportFormUseCase {
     }
 
     private List<String> getRequiredTemplates(Form form) {
-        if (form.getType().equals(FormType.PRINCIPAL_RECOMMENDATION)) {
+        if (form.getType().isSpecial()) {
             return List.of(
                     Templates.COVER,
                     form.getEducation().isQualificationExamination() ? Templates.QUALIFICATION_FORM : Templates.FORM,

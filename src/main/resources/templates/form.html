@@ -303,17 +303,17 @@
             <tr>
                 <td class="ba" colspan="2" style="border: none; border-bottom: 1px solid #000;" th:text="${form.parent.address.address}"></td>
                 <th scope="row" class="ba">E-mail</th>
-                <td class="ba" colspan="8"></td>
+                <td class="ba" colspan="8" th:text="${form.applicant.email}"></td>
             </tr>
 
             <tr>
                 <th scope="rowgroup" class="ba" rowspan="1">학<br/><br/>력</th>
                 <td class="ba" colspan="6" rowspan="1" style="height: 160px; border: none; padding: 10px;">
-                    <p class="middle" th:text="${'위 지원자는 ' + #dates.format(#dates.createNow(),'yyyy년 MM월 dd일') + ' ' + form.education.school.name + ' ' + (form.education.graduated ? '졸업자' : '졸업예정자') + '임을 증명함.'}"></p>
+                    <p class="middle" th:text="${'위 지원자는 ' + form.education.getGraduationDateToString + ' ' + form.education.school.name + ' ' + (form.education.graduated ? '졸업자' : '졸업예정자') + '임을 증명함.'}"></p>
                     <div class="horizontal-space"></div>
                     <p class="middle" th:text="${ #dates.format(#dates.createNow(),'yyyy년 MM월 dd일')}"></p>
                     <div class="horizontal-space"></div>
-                    <p class="middle" th:text="${form.education.school.name + '중학교장'}"></p>
+                    <p class="middle" th:text="${form.education.school.name + '장'}"></p>
                     <div class="horizontal-space"></div>
                     <p class="middle" th:text="${form.education.teacher.phoneNumber != null and #strings.length(form.education.teacher.phoneNumber) >= 3 ? ('학교 전화번호 (' + #strings.substring(form.education.teacher.phoneNumber, 0, 3) + ')' + (#strings.length(form.education.teacher.phoneNumber) > 3 ? #strings.substring(form.education.teacher.phoneNumber, 3, #strings.length(form.education.teacher.phoneNumber)) : '')) : '학교 전화번호 ()'}"></p>
                     <div class="horizontal-space"></div>
@@ -465,7 +465,7 @@
                         <div class="horizontal-space"></div>
                         <p>&emsp;&emsp;.&emsp;.&emsp;</p>
                         <div class="horizontal-space"></div>
-                        <span th:utext="${'접수자&emsp;'+form.applicant.name+'&emsp;'}"></span><span class="guide">(인)</span>
+                        <span> 접수자&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</span><span class="guide">(인)</span>
                         <div class="horizontal-space"></div>
                         <div class="horizontal-space"></div>
                         <strong>해운대고등학교</strong>

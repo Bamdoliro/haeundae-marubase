@@ -45,7 +45,6 @@ public class Fair extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDate applicationEndDate;
 
-
     @OneToMany(mappedBy = "fair", fetch = FetchType.LAZY)
     private final List<Attendee> attendeeList = new ArrayList<>();
 

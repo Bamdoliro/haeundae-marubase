@@ -43,4 +43,9 @@ public class Education {
         String[] dateParts = graduationDate.split("-");
         return String.format("%s년 %s월 %s일 %s", dateParts[0], dateParts[1], dateParts[2], graduationType.getDescription());
     }
+
+    public String getGraduationDateToString() {
+        String[] dateParts = graduationDate.split("-");
+        return String.format("%s년 %s월 %s일", dateParts[0], dateParts[1], dateParts[2]);
+    }
 }
