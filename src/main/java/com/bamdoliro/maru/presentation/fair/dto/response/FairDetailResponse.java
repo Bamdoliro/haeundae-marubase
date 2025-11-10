@@ -1,5 +1,6 @@
 package com.bamdoliro.maru.presentation.fair.dto.response;
 
+import com.bamdoliro.maru.domain.fair.domain.Attendee;
 import com.bamdoliro.maru.domain.fair.domain.Fair;
 import com.bamdoliro.maru.domain.fair.domain.type.FairStatus;
 import com.bamdoliro.maru.domain.fair.domain.type.FairType;
@@ -25,7 +26,7 @@ public class FairDetailResponse {
     private FairStatus status;
     private List<AttendeeResponse> attendeeList;
 
-    public FairDetailResponse(Fair fair, AttendeeRepository attendeeRepository) {
+    public FairDetailResponse(Fair fair, List<Attendee> sortedAttendeeList, AttendeeRepository attendeeRepository) {
         this.start = fair.getStart();
         this.place = fair.getPlace();
         this.capacity = fair.getCapacity();
@@ -33,7 +34,7 @@ public class FairDetailResponse {
         this.applicationStartDate = fair.getApplicationStartDate();
         this.applicationEndDate = fair.getApplicationEndDate();
         this.status = fair.getStatus(attendeeRepository);
-        this.attendeeList = fair.getAttendeeList().stream()
+        this.attendeeList = sortedAttendeeList.stream()
                 .map(AttendeeResponse::new)
                 .collect(Collectors.toList());
     }
