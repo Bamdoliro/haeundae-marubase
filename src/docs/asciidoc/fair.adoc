@@ -118,6 +118,9 @@ include::{snippets}/fair-controller-test/입학설명회를_상세히_불러온�
 ===== Path Parameter
 include::{snippets}/fair-controller-test/입학설명회를_상세히_불러온다/path-parameters.adoc[]
 
+===== Query Parameter
+include::{snippets}/fair-controller-test/입학설명회를_상세히_불러온다/query-parameters.adoc[]
+
 ===== 요청
 include::{snippets}/fair-controller-test/입학설명회를_상세히_불러온다/http-request.adoc[]
 
