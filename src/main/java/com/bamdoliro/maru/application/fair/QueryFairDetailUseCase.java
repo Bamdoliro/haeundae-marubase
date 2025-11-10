@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @UseCase
@@ -23,11 +22,11 @@ public class QueryFairDetailUseCase {
 
         List<Attendee> sortedAttendeeList = switch (sort) {
             case "name_asc" -> fair.getAttendeeList().stream()
-                .sorted(Comparator.comparing(Attendee::getName))
-                .collect(Collectors.toList());
+                    .sorted(Comparator.comparing(Attendee::getName))
+                    .toList();
             case "name_desc" -> fair.getAttendeeList().stream()
-                .sorted(Comparator.comparing(Attendee::getName).reversed())
-                .collect(Collectors.toList());
+                    .sorted(Comparator.comparing(Attendee::getName).reversed())
+                    .toList();
             default -> fair.getAttendeeList();
         };
 
