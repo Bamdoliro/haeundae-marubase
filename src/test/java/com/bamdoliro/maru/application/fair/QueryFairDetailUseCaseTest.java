@@ -17,9 +17,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class QueryFairDetailUseCaseTest {
@@ -40,7 +38,41 @@ class QueryFairDetailUseCaseTest {
         given(fairFacade.getFairDetail(fair.getId())).willReturn(fair);
 
         // when
-        FairDetailResponse response = queryFairDetailUseCase.execute(fair.getId());
+        FairDetailResponse response = queryFairDetailUseCase.execute(fair.getId(), "none");
+
+        // then
+        assertEquals(fair.getStart(), response.getStart());
+        assertEquals(fair.getPlace(), response.getPlace());
+        assertEquals(fair.getAttendeeList().size(), response.getAttendeeList().size());
+
+        verify(fairFacade, times(1)).getFairDetail(fair.getId());
+    }
+
+    @Test
+    void 입학설명회를_상세히_불러올_때_이름_오름차순으로_정렬한다() {
+        // given
+        Fair fair = FairFixture.createFairDetail();
+        given(fairFacade.getFairDetail(fair.getId())).willReturn(fair);
+
+        // when
+        FairDetailResponse response = queryFairDetailUseCase.execute(fair.getId(), "name_asc");
+
+        // then
+        assertEquals(fair.getStart(), response.getStart());
+        assertEquals(fair.getPlace(), response.getPlace());
+        assertEquals(fair.getAttendeeList().size(), response.getAttendeeList().size());
+
+        verify(fairFacade, times(1)).getFairDetail(fair.getId());
+    }
+
+    @Test
+    void 입학설명회를_상세히_불러올_때_이름_내림차순으로_정렬한다() {
+        // given
+        Fair fair = FairFixture.createFairDetail();
+        given(fairFacade.getFairDetail(fair.getId())).willReturn(fair);
+
+        // when
+        FairDetailResponse response = queryFairDetailUseCase.execute(fair.getId(), "name_desc");
 
         // then
         assertEquals(fair.getStart(), response.getStart());
@@ -57,7 +89,7 @@ class QueryFairDetailUseCaseTest {
 
         // when and then
         assertThrows(FairNotFoundException.class,
-                () -> queryFairDetailUseCase.execute(-1L));
+                () -> queryFairDetailUseCase.execute(-1L, "none"));
 
         verify(fairFacade, times(1)).getFairDetail(anyLong());
         verify(attendeeRepository, never()).countByFair(any(Fair.class));

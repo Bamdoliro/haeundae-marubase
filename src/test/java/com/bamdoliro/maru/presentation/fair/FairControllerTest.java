@@ -321,7 +321,7 @@ class FairControllerTest extends RestDocsTestSupport {
 
         given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
         given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
-        given(queryFairDetailUseCase.execute(fairId)).willReturn(FairFixture.createFairDetailResponse());
+        given(queryFairDetailUseCase.execute(fairId, "none")).willReturn(FairFixture.createFairDetailResponse());
 
         mockMvc.perform(get("/fairs/{fair-id}", fairId)
                         .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
@@ -338,10 +338,55 @@ class FairControllerTest extends RestDocsTestSupport {
                         pathParameters(
                                 parameterWithName("fair-id")
                                         .description("입학설명회 id")
+                        ),
+                        queryParameters(
+                                parameterWithName("sort")
+                                        .optional()
+                                        .description("정렬 방식 (none, name_asc, name_desc)")
                         )
                 ));
 
-        verify(queryFairDetailUseCase, times(1)).execute(fairId);
+        verify(queryFairDetailUseCase, times(1)).execute(fairId, "none");
+    }
+
+    @Test
+    void 입학설명회를_상세히_불러올_때_이름_오름차순으로_정렬한다() throws Exception {
+        Long fairId = 1L;
+        User user = UserFixture.createAdminUser();
+
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+        given(queryFairDetailUseCase.execute(fairId, "name_asc")).willReturn(FairFixture.createFairDetailResponse());
+
+        mockMvc.perform(get("/fairs/{fair-id}", fairId)
+                        .param("sort", "name_asc")
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+
+                .andExpect(status().isOk());
+
+        verify(queryFairDetailUseCase, times(1)).execute(fairId, "name_asc");
+    }
+
+    @Test
+    void 입학설명회를_상세히_불러올_때_이름_내림차순으로_정렬한다() throws Exception {
+        Long fairId = 1L;
+        User user = UserFixture.createAdminUser();
+
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+        given(queryFairDetailUseCase.execute(fairId, "name_desc")).willReturn(FairFixture.createFairDetailResponse());
+
+        mockMvc.perform(get("/fairs/{fair-id}", fairId)
+                        .param("sort", "name_desc")
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+
+                .andExpect(status().isOk());
+
+        verify(queryFairDetailUseCase, times(1)).execute(fairId, "name_desc");
     }
 
     @Test
@@ -351,7 +396,7 @@ class FairControllerTest extends RestDocsTestSupport {
 
         given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
         given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
-        willThrow(new FairNotFoundException()).given(queryFairDetailUseCase).execute(fairId);
+        willThrow(new FairNotFoundException()).given(queryFairDetailUseCase).execute(fairId, "none");
 
         mockMvc.perform(get("/fairs/{fair-id}", fairId)
                         .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
@@ -362,7 +407,7 @@ class FairControllerTest extends RestDocsTestSupport {
 
                 .andDo(restDocs.document());
 
-        verify(queryFairDetailUseCase, times(1)).execute(fairId);
+        verify(queryFairDetailUseCase, times(1)).execute(fairId, "none");
     }
 
     @Test

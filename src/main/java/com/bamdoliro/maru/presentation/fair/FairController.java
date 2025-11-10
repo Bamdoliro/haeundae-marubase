@@ -87,10 +87,11 @@ public class FairController {
     @GetMapping("/{fair-id}")
     public SingleCommonResponse<FairDetailResponse> getFairDetail(
             @AuthenticationPrincipal(authority = Authority.ADMIN) User user,
-            @PathVariable(name = "fair-id") Long fairId
+            @PathVariable(name = "fair-id") Long fairId,
+            @RequestParam(name = "sort", required = false, defaultValue = "none") String sort
     ) {
         return CommonResponse.ok(
-                queryFairDetailUseCase.execute(fairId)
+                queryFairDetailUseCase.execute(fairId, sort)
         );
     }
 
