@@ -22,9 +22,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AttendAdmissionFairUseCaseTest {
@@ -60,7 +58,7 @@ class AttendAdmissionFairUseCaseTest {
         verify(fairFacade, times(1)).getFair(fair.getId());
         verify(attendeeRepository, times(1)).countByFair(fair);
         verify(attendeeRepository, times(1)).save(captor.capture());
-        // verify(sendMessageService, times(1)).execute(anyString(), anyString(), anyString());
+         verify(sendMessageService, times(1)).execute(anyString(), anyString(), anyString());
 
         Attendee savedAttendee = captor.getValue();
         assertEquals(attendee.getName(), savedAttendee.getName());
