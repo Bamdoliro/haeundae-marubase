@@ -296,7 +296,7 @@
             <tr>
                 <th scope="rowgroup" class="ba" rowspan="1">학<br/><br/>력</th>
                 <td class="ba" colspan="6" rowspan="1" style="height: 160px; border: none; padding: 10px;">
-                    <p class="middle" th:text="${'위 지원자는 ' + #dates.format(#dates.createNow(),'yyyy년 MM월 dd일') + ' 중학교 졸업자격검정고시 (합격자) 임을 증명함.'}"></p>
+                    <p class="middle" th:text="${'위 지원자는 ' + form.education.getGraduationDateToString + ' 중학교 졸업자격검정고시 (합격자) 임을 증명함.'}"></p>
                     <div class="horizontal-space"></div>
                     <p class="middle" th:text="${#dates.format(#dates.createNow(),'yyyy년 MM월 dd일')}"></p>
                     <div class="horizontal-space"></div>

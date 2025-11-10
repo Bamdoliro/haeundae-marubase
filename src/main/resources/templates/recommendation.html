@@ -8,12 +8,12 @@
              margin: 70px;
          }
 
-         * {
-             font-family: SUIT, sans-serif;
-             margin: 0;
-             padding: 0;
-             box-sizing: border-box;
-         }
+        * {
+            font-family: SUIT, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
          body {
              width: 100%;
@@ -58,7 +58,7 @@
          }
 
          .horizontal-space {
-             height: 20px;
+             height: 10px;
          }
 
         .admission-label {
@@ -119,8 +119,8 @@
         .sub-title {
             font-size: 16px;
             font-weight: 500;
-            margin-top: 20px;
-            margin-bottom: 12px;
+            margin-top: 10px;
+            margin-bottom: 8px;
         }
 
         .bold {
@@ -199,7 +199,7 @@
                         <th class="ba" style="width: 20%;">확인</th>
                     </tr>
                     <tr>
-                        <th class="ba" rowspan="6">기회균등전형</th>
+                        <th class="ba" rowspan="7">기회균등전형</th>
                         <td class="ba left" style="padding-left: 10px;">국가보훈대상자 (국가유공자 자녀)</td>
                         <td class="ba" th:text="${form.type.name() == 'NATIONAL_VETERANS' ? 'O' : ''}"></td>
                     </tr>
@@ -222,6 +222,10 @@
                     <tr>
                         <td class="ba left" style="padding-left: 10px;">학교장 추천</td>
                         <td class="ba" th:text="${form.type.name() == 'PRINCIPAL_RECOMMENDATION' ? 'O' : ''}"></td>
+                    </tr>
+                    <tr>
+                        <td class="ba left" style="padding-left: 10px;">교육감 추천</td>
+                        <td class="ba" th:text="${form.type.name() == 'SUPERINTENDENT_RECOMMENDATION' ? 'O' : ''}"></td>
                     </tr>
                     <tr>
                         <th class="ba">사회다양성전형</th>
@@ -249,7 +253,7 @@
         </tr>
 
         <tr>
-            <td class="ba" colspan="3" style="padding: 10px 20px;">
+            <td class="ba" colspan="3" style="padding: 0px 20px; padding-bottom: 10px;">
                 <p class="sub-title">
                     위의 사항이 사실과 틀림없음을 확인함
                 </p>
