@@ -177,7 +177,7 @@
             <th class="ba">출신학교</th>
             <td class="ba left" colspan="3" th:if="${form.education.qualificationExamination}">
                 <span th:text="${form.education.graduationType.description}"></span>
-                <span th:text="${form.education. getGraduationDateToString + '&emsp;&emsp;&emsp;&emsp;지구 합격'}"></span>
+                <span th:text="${'중학교 졸업 자격 검정고시 (' + form.education. getGraduationDateToString} + ')'"></span>
             </td>
             <td class="ba left" colspan="3" th:unless="${form.education.qualificationExamination}">
                 <span th:text="${form.education.school.name + ' ' + form.education. getGraduationDateToString}"></span>
