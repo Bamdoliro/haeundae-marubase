@@ -40,9 +40,13 @@ public class ExportAllDocumentsUseCase {
                         "form", form
                 );
 
-                String html = processTemplateService.execute(Templates.DOCUMENT, documentMap);
-                ByteArrayOutputStream pdfStream = generatePdfService.execute(html);
-                mergePdfService.execute(pdfMerger, pdfStream);
+                String html1 = processTemplateService.execute(Templates.DOCUMENT_ONE, documentMap);
+                ByteArrayOutputStream pdfStream1 = generatePdfService.execute(html1);
+                mergePdfService.execute(pdfMerger, pdfStream1);
+
+                String html2 = processTemplateService.execute(Templates.DOCUMENT_TWO, documentMap);
+                ByteArrayOutputStream pdfStream2 = generatePdfService.execute(html2);
+                mergePdfService.execute(pdfMerger, pdfStream2);
             }
 
             pdfMerger.close();
