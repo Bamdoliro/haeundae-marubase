@@ -66,8 +66,8 @@ class ExportAllDocumentsUseCaseTest {
 
         // then
         verify(formRepository, times(1)).findAll();
-        verify(processTemplateService, times(2)).execute(any(String.class), any());
-        verify(generatePdfService, times(2)).execute(any(String.class));
-        verify(mergePdfService, times(2)).execute(any(PdfMerger.class), any(ByteArrayOutputStream.class));
+        verify(processTemplateService, times(4)).execute(any(String.class), any());
+        verify(generatePdfService, times(4)).execute(any(String.class));
+        verify(mergePdfService, times(4)).execute(any(PdfMerger.class), any(ByteArrayOutputStream.class));
     }
 }
