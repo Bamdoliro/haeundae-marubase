@@ -6,7 +6,8 @@ import lombok.experimental.UtilityClass;
 public class Templates {
 
     public static final String FORM = "form";
-    public static final String DOCUMENT = "document";
+    public static final String DOCUMENT_ONE = "document-one";
+    public static final String DOCUMENT_TWO = "document-two";
     public static final String RECOMMENDATION = "recommendation";
     public static final String ADMISSION_TICKET = "admission-ticket";
     public static final String PROOF_OF_APPLICATION = "proof-of-application";

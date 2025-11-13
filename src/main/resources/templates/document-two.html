@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <style>
+        @page {
+            size: A4;
+            margin: 70px;
+        }
+
+        * {
+            font-family: SUIT, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
+        p {
+            font-size: 14px;
+        }
+
+        .admission-box {
+            height: 40px;
+            display: flex;
+            width: 175px;
+            gap: 0;
+            margin-left: auto;
+        }
+
+        .admission-label {
+            background-color: #CAD6EC;
+            padding: 8px 12px;
+            border: 1px solid #000;
+            font-weight: bold;
+            text-align: center;
+            width: 85px;
+            height: 40px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .admission-input {
+            flex: 1;
+            background-color: #CAD6EC;
+            border: 1px solid #000;
+            border-left: none;
+            width: 90px;
+            text-align: center;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .section-header {
+            text-align: left;
+            font-weight: bold;
+            font-size: 18px;
+            margin: 20px 0;
+        }
+
+        .question-section {
+            border: 1px solid #000;
+            margin-bottom: 15px;
+        }
+
+        .question-header {
+            background-color: #CAD6EC;
+            border-bottom: 1px solid #000;
+            padding: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 1.5;
+        }
+
+        .answer-area {
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        .caution {
+            color: #1B4292;
+            font-size: 12px;
+        }
+
+        .admission-sort {
+            display: block;
+            width: 175px;
+        }
+
+        .admission-sort .admission-box {
+            display: flex;
+        }
+
+        .admission-sort .admission-box:first-child {
+            border-bottom: none;
+        }
+
+        .admission-header {
+            display: flex;
+            justify-content: flex-end;
+        }
+    </style>
+    <title>자기소개서2</title>
+</head>
+<body>
+        <div class="admission-header">
+            <div class="admission-sort">
+                <div class="admission-box">
+                    <div class="admission-label">수험번호</div>
+                    <div class="admission-input" th:text="${form.examinationNumber}"></div>
+                </div>
+                <div class="admission-box">
+                    <div class="admission-label">면접번호</div>
+                    <div class="admission-input"></div>
+                </div>
+            </div>
+        </div>
+        <div class="section-header">나의 꿈과 끼, 인성 (1500자 이내)</div>
+
+        <div class="question-section">
+            <div class="question-header">
+                1. 중학교 재학 중 자기주도적으로 수행한 활동 중 가장 큰 성취감을 느꼈던
+                학습 경험에 대하여 기술하십시오. (띄어쓰기 제외 700자 이내)
+            </div>
+            <div class="answer-area" th:text="${form.document.learningExperience}"></div>
+        </div>
+
+        <div class="question-section">
+            <div class="question-header">
+                2. 본교 건학이념과 연계해 본교에 관심을 갖게 된 동기와 고등학교 입학 후 본인의 꿈과 끼를 살리기 위한 활동계획, 그리고 고등학교 졸업 후 진로계획에 관하여 구체적으로 기술하십시오. (띄어쓰기 제외 300자 이내)
+                <p class="caution">* 해운대고등학교 건학이념 : 국가와 인류사회의 번영에 공헌하는 창의융합형 글로벌 리더 육성</p>
+            </div>
+            <div class="answer-area" th:text="${form.document.statementOfPurpose}"></div>
+        </div>
+
+        <div class="question-section">
+            <div class="question-header">
+                3. 본인의 인성(배려, 나눔, 협력, 타인 존중, 규칙준수 등)을 나타낼 수 있는 개인적 경험 및 이를 통해
+                배우고 느낀 점을 구체적으로 기술하십시오. (띄어쓰기 제외 500자 이내)
+                <p class="caution">(반드시 생활기록부에 기재된 활동 중에서 선택하여 자세히 서술 하십시오.)</p>
+            </div>
+            <div class="answer-area" th:text="${form.document.personality}"></div>
+        </div>
+</body>
+</html>

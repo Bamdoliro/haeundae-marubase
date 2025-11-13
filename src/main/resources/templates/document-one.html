@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <style>
+        @page {
+            size: A4;
+            margin: 70px;
+        }
+
+        * {
+            font-family: SUIT, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
+        p {
+            font-size: 14px;
+        }
+
+        .logo-wrapper {
+            width: 160px;
+            height: 40px;
+        }
+
+        .header-title {
+            text-align: center;
+            flex: 1;
+        }
+
+        .header-title-main {
+            font-size: 28px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .header-title-sub {
+            font-size: 24px;
+            font-weight: normal;
+            margin-bottom: 5px;
+            white-space: nowrap;
+        }
+
+        .admission-box {
+            height: 40px;
+            display: flex;
+            width: 175px;
+            gap: 0;
+            margin-left: auto;
+        }
+
+        .admission-label {
+            background-color: #CAD6EC;
+            padding: 8px 12px;
+            border: 1px solid #000;
+            font-weight: bold;
+            text-align: center;
+            width: 85px;
+            height: 40px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .admission-input {
+            flex: 1;
+            background-color: #CAD6EC;
+            border: 1px solid #000;
+            border-left: none;
+            width: 90px;
+            text-align: center;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .info-section {
+            border: 1px solid #000;
+            margin: 20px 0;
+        }
+
+        .info-title {
+            background-color: #CAD6EC;
+            padding: 8px;
+            font-weight: bold;
+            font-size: 18px;
+            text-align: left;
+            border-bottom: 1px solid #000;
+        }
+
+        .info-content {
+            padding: 15px;
+        }
+
+        .info-line {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .info-line:last-child {
+            margin-bottom: 0;
+        }
+
+        .label {
+            font-size: 16px;
+            min-width: 80px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .input-field {
+            flex: 1;
+            border-bottom: 1px solid #000;
+            font-size: 16px;
+            min-height: 20px;
+            padding: 2px 5px;
+        }
+
+        .spacer {
+            width: 30px;
+        }
+
+        .checkboxes {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .signature-area {
+            text-align: center;
+            font-size: 22px;
+            line-height: 1.8;
+            font-weight: bold;
+        }
+
+        .signature-area p {
+            text-align: center;
+            font-size: 18px;
+            line-height: 1.8;
+            font-weight: bold;
+        }
+
+        .guidelines {
+            border: 1px solid #000;
+            padding: 15px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .guidelines p {
+            margin-bottom: 8px;
+        }
+
+        .guidelines-highlight {
+            font-weight: bold;
+            margin: 18px 0 10px 0;
+            font-size: 16px;
+        }
+
+        .horizontal-space {
+            height: 24px;
+        }
+    </style>
+    <title>자기소개서1</title>
+</head>
+<body>
+<table style="width: 100%; border: none; table-layout: fixed;">
+    <tr>
+        <td colspan="3">
+            <div class="header-title">
+                <div class="header-title-sub">2026학년도 자기주도학습전형</div>
+                <h1 class="header-title-main">자기소개서</h1>
+            </div>
+        </td>
+    </tr>
+    <tr></tr>
+    <tr>
+        <td>
+            <img th:src="@{classpath:/static/images/haeundae-highschool-logo.png}" alt="logo" class="logo-wrapper"/>
+        </td>
+        <td></td>
+        <td style="text-align: right;">
+            <div class="admission-box">
+                <div class="admission-label">*수험번호</div>
+                <div class="admission-input" th:text="${form.examinationNumber}">213001</div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+    <div class="horizontal-space"></div>
+
+    <table>
+        <div class="info-section">
+            <div class="info-title">지원자 기재 사항</div>
+            <div class="info-content">
+                <div class="info-line">
+                    <span class="label">성&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;명</span>
+                    <span class="input-field" th:text="${form.applicant.name}">염일영</span>
+                    <span class="spacer"></span>
+                    <span class="label">주민등록번호</span>
+                    <span class="input-field" th:text="${form.applicant.registrationNumber}">090909-3283988</span>
+                </div>
+
+                <div class="info-line">
+                    <span class="label">연&nbsp;&nbsp;락&nbsp;&nbsp;처</span>
+                    <span class="label" style="min-width: 60px;">전화번호</span>
+                    <span class="input-field"></span>
+                    <span class="spacer"></span>
+                    <span class="label">휴대전화번호</span>
+                    <span class="input-field" th:text="${form.applicant.phoneNumber}"></span>
+                </div>
+
+                <div class="info-line">
+                    <span class="label">지&nbsp;원&nbsp;구&nbsp;분</span>
+                    <div class="checkboxes">
+                        <span>일반 ( <span th:if="${form.type.regular}">V</span><span th:unless="${form.type.regular}">&nbsp;&nbsp;</span> )</span>
+                        <span>기회균등 ( <span th:if="${form.type.equalOpportunity}">V</span><span th:unless="${form.type.equalOpportunity}">&nbsp;&nbsp;</span> )</span>
+                        <span>사회다양성 ( <span th:if="${form.type.societyDiversity}">V</span><span th:unless="${form.type.societyDiversity}">&nbsp;&nbsp;</span> )</span>
+                        <span>특례입학대상자 ( <span th:if="${form.type.specialAdmission}">V</span><span th:unless="${form.type.specialAdmission}">&nbsp;&nbsp;</span> )</span>
+                        <span>국가보훈대상자 중 교육지원대상자 ( <span th:if="${form.type.nationalVeteransEducation}">V</span><span th:unless="${form.type.nationalVeteransEducation}">&nbsp;&nbsp;</span> )</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="horizontal-space"></div>
+
+        <div class="signature-area">
+            <p th:text="${#dates.format(#dates.createNow(),'yyyy년 MM월 dd일')}">2025년 11월 12일</p>
+            <p>
+                <span>지원자 </span>
+                <span th:text="${form.applicant.name}">염일영</span>
+                <span> 자필 서명</span>
+            </p>
+            <p>해운대 고등학교장 귀하</p>
+        </div>
+
+        <p class="guidelines-highlight">자기소개서 작성 시 유의사항</p>
+
+        <div class="guidelines">
+            <p>1. 자기소개서는 평가를 위한 중요한 자료이므로 반드시 본인이 작성하여야 하며, 사실에 입각하여 정직하게 자기주도학습과정, 건학이념과 연계한 지원동기, 꿈과 끼를 살리기 위한 활동계획 및 진로계획 그리고 생활기록부에 기록된 인성영역 활동 실적과 이를 통해 배우고 느낀 점 등을 기술하십시오.</p>
+
+            <p class="guidelines-highlight">※ 자기소개서의 대리작성, 허위작성 혹은 표절 시에는 사후에도 입학 취소 등 불이익 부과</p>
+
+            <p>2. 본문에는 자신의 경험이나 사례 등을 들어 구체적으로 작성하되, 영어 등 각종 인증시험 점수, 교과목의 점수·석차, 교내·외 각종 대회 입상실적, 자격증, 영재교육원 교육 및 수료 여부(우회적·간접적 기재 포함) 등은 기재 시 0점 처리되며, 부모의 사회·경제적 지위 암시 내용, 지원자 본인의 인적사항을 암시하는 내용 등은 기재 시 항목 배점의 10%이상 감점 처리되니 기재하지 마십시오.</p>
+
+            <p>3. 반드시 본 서식을 사용하여 작성하고, 띄어쓰기를 제외한 영역별 제한된 글자수 이내로 제시된 형식에 따라 작성하십시오.</p>
+
+            <p>4. 자기소개서를 입학원서와 함께 본교에 일괄 제출하십시오.</p>
+
+            <p>5. 표지와 본문이 분리되지 않도록 좌측 상단을 클립으로 묶어 주십시오.</p>
+
+            <p>6. 자기소개서는 입학전형 및 입학 후 학생 지도 자료로 활용되며, 비공개 문서로 관리될 것입니다.</p>
+        </div>
+    </table>
+</body>
+</html>

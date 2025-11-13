@@ -116,7 +116,8 @@ public class ExportFormUseCase {
             return List.of(
                     Templates.COVER,
                     form.getEducation().isQualificationExamination() ? Templates.QUALIFICATION_FORM : Templates.FORM,
-                    Templates.DOCUMENT,
+                    Templates.DOCUMENT_ONE,
+                    Templates.DOCUMENT_TWO,
                     Templates.RECOMMENDATION,
                     Templates.INFORMATION
             );
@@ -124,7 +125,8 @@ public class ExportFormUseCase {
             return List.of(
                     Templates.COVER,
                     form.getEducation().isQualificationExamination() ? Templates.QUALIFICATION_FORM : Templates.FORM,
-                    Templates.DOCUMENT,
+                    Templates.DOCUMENT_ONE,
+                    Templates.DOCUMENT_TWO,
                     Templates.SPECIAL_ADMISSION,
                     Templates.CONFIRMATION,
                     Templates.INFORMATION
@@ -134,7 +136,8 @@ public class ExportFormUseCase {
         return List.of(
                 Templates.COVER,
                 form.getEducation().isQualificationExamination() ? Templates.QUALIFICATION_FORM : Templates.FORM,
-                Templates.DOCUMENT,
+                Templates.DOCUMENT_ONE,
+                Templates.DOCUMENT_TWO,
                 Templates.INFORMATION
         );
     }
