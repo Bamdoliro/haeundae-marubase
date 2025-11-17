@@ -224,11 +224,6 @@
             height: 100px;
         }
 
-        .teacher-stamp {
-            font-size: 11px;
-            color: #666;
-        }
-
         img {
             width: 100px;
             height: 130px;
@@ -301,7 +296,7 @@
             </tr>
 
             <tr>
-                <td class="ba" colspan="2" style="border: none; border-bottom: 1px solid #000;" th:text="${form.parent.address.address}"></td>
+                <td class="ba" colspan="2" style="border: none; border-bottom: 1px solid #000;" th:text="${form.parent.address.address + form.parent.address.detailAddress}"></td>
                 <th scope="row" class="ba">E-mail</th>
                 <td class="ba" colspan="8" th:text="${form.applicant.email}"></td>
             </tr>
@@ -359,7 +354,11 @@
                 <td class="ba disabled" th:if="${subject.achievementLevel32 == null}"></td>
                 <td class="ba" th:unless="${subject.achievementLevel32 == null}"
                     th:text="${subject.achievementLevel32.name()}"></td>
-                <td class="ba" th:if="${iterStat.first}" th:rowspan="${subjectList.size()}" th:text="${form.grade.getTotalAbsenceCount() + '일'}" colspan="8"></td>
+                <td class="ba"
+                    th:if="${iterStat.first}"
+                    th:rowspan="${subjectList.size()}"
+                    th:text="${#numbers.formatInteger(T(java.lang.Math).abs(form.score.attendanceScore), 0) + '일'}"
+                    colspan="8"></td>
             </tr>
 
 
