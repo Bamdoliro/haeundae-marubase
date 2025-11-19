@@ -12,14 +12,14 @@ public class Schedule {
     public static final LocalDateTime START = LocalDateTime.of(2025, 1, 20, 9, 0);
     public static final LocalDateTime END = LocalDateTime.of(2025, 12, 10, 17, 0);
     public static final LocalDateTime ANNOUNCEMENT_OF_FIRST_PASS = LocalDateTime.of(2025, 12, 12, 15, 0);
-    public static final LocalDateTime ANNOUNCEMENT_OF_SECOND_PASS = LocalDateTime.of(2025, 11, 5, 15, 0);
-    public static final LocalDateTime DEPTH_INTERVIEW = LocalDateTime.of(2025, 10, 31, 13, 0);
-    public static final LocalDateTime ENTRANCE_REGISTRATION_PERIOD_START = LocalDateTime.of(2025, 11, 16, 0, 0);
-    public static final LocalDateTime ENTRANCE_REGISTRATION_PERIOD_END = LocalDateTime.of(2025, 12, 18, 0, 0);
-    public static final LocalDateTime ADMISSION_AND_PLEDGE_START = LocalDateTime.of(2025, 12, 15, 0, 0);
-    public static final LocalDateTime ADMISSION_AND_PLEDGE_END = LocalDateTime.of(2025, 12, 17, 23, 59);
+    public static final LocalDateTime ANNOUNCEMENT_OF_SECOND_PASS = LocalDateTime.of(2025, 12, 26, 12, 0);
+    public static final LocalDateTime DEPTH_INTERVIEW = LocalDateTime.of(2025, 12, 16, 9, 0);
+    public static final LocalDateTime ENTRANCE_REGISTRATION_PERIOD_START = LocalDateTime.of(2026, 1, 6, 0, 0);
+    public static final LocalDateTime ENTRANCE_REGISTRATION_PERIOD_END = LocalDateTime.of(2026, 1, 9, 0, 0);
+    public static final LocalDateTime ADMISSION_AND_PLEDGE_START = LocalDateTime.of(2026, 1, 6, 0, 0);
+    public static final LocalDateTime ADMISSION_AND_PLEDGE_END = LocalDateTime.of(2026, 1, 8, 23, 59);
 
-    public static final String SELECT_FIRST_PASS_CRON = "0 55 14 27 10 ?";
+    public static final String SELECT_FIRST_PASS_CRON = "0 55 9 26 12 ?";
 
     public static int getAdmissionYear() {
         return START.plusYears(1L).getYear();
