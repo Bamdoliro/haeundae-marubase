@@ -316,18 +316,16 @@
             </tr>
 
             <tr>
-                <th scope="colgroup" class="ba" colspan="5">중학교 학업성취도</th>
-                <th scope="colgroup" class="ba" rowspan="2" colspan="9">미인정 결석<br/>일&emsp;수</th>
+                <th scope="colgroup" class="ba" colspan="14">중학교 학업성취도</th>
             </tr>
 
             <tr>
-                <th class="ba">과목</th>
-                <th class="ba" colspan="4">원점수(성취도)</th>
+                <th class="ba" colspan="2">과목</th>
+                <th class="ba" colspan="12">원점수(성취도)</th>
             </tr>
             <tr th:each="subject, iterStat : ${subjectList}">
-                <td class="ba" th:text="${subject.subjectName}"></td>
-                <td class="ba" colspan="4" th:text="${subject.score + '/' + (subject.score >= 99 ? 'A' : subject.score >= 97 ? 'B' : subject.score >= 93 ? 'C' : subject.score >= 89 ? 'D' : 'E')}"></td>
-                <td class="ba" th:if="${iterStat.first}" th:rowspan="${subjectList.size()}" th:text="${form.grade.getTotalAbsenceCount() + '일'}" colspan="9"></td>
+                <td class="ba" colspan="2" th:text="${subject.subjectName}"></td>
+                <td class="ba" colspan="12" th:text="${subject.score + '/' + (subject.score >= 99 ? 'A' : subject.score >= 97 ? 'B' : subject.score >= 93 ? 'C' : subject.score >= 89 ? 'D' : 'E')}"></td>
             </tr>
 
 
