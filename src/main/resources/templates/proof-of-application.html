@@ -18,7 +18,7 @@
         table {
             border: none;
             border-collapse: collapse;
-            font-size: 14px;
+            font-size: 12px;
             text-align: center;
             line-height: normal;
         }
@@ -97,10 +97,12 @@
 
         .red {
             color: #F44336;
+            font-size: 12px;
         }
 
         .more {
             padding-top: 4px;
+            font-size: 12px;
         }
 
         .title {
@@ -160,22 +162,30 @@
         </table>
     </section>
     <section class="information-container">
-        <p class="title">1단계 합격자 결과 발표</p>
+        <p class="title">전형일정 안내</p>
         <table class="information ba">
             <caption class="big left">1. 일정</caption>
             <tr>
-                <th scope="colgroup" class="ba" style="width: 40%">구분</th>
+                <th scope="colgroup" class="ba" style="width: 30%">구분</th>
                 <th scope="colgroup" class="ba" style="width: 40%">시각</th>
-                <th scope="colgroup" class="ba" style="width: 20%">장소</th>
+                <th scope="colgroup" class="ba" style="width: 30%">장소</th>
             </tr>
             <tr>
-                <td class="ba" style="word-break: keep-all;">1단계 합격자 결과 발표</td>
+                <td class="ba" style="word-break: keep-all;">원서 서류 및 제출</td>
+                <td class="ba"  th:text="${start + '~' + end}" style="word-break: keep-all;"> </td>
+                <td class="ba" style="word-break: keep-all;">-본교 접수처</td>
+            </tr>
+            <tr>
+                <td class="ba" style="word-break: keep-all;">면접대상자 발표</td>
                 <td class="ba" th:text="${announcement_of_first_pass}"></td>
-                <td class="ba">본교홈페이지</td>
+                <td class="ba">-본교홈페이지<br/>-해당학교 공문 발송</td>
             </tr>
         </table>
         <div class="red more">
-            <p>※ 서류전형 합격자는 일반전형 및 사회통합전형 각각 모집정원의 150% 이내입니다.</p>
+            <p>※ 작성한 원서 및 전형별제출서류를 본교에 제출하지 않을 경우 원서는 접수되지않음.
+                <br/>※ 전형료 10,000원 (1단계: 2,500원, 2단계: 7,500원)
+            <br/>-전형료를 입학서류 제출 시 본교 접수처에 현금납부
+            <br/>-1단계 불합격자는 사정 이루 2단계 전형료 환불</p>
         </div>
     </section>
 </main>
