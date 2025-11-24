@@ -60,7 +60,7 @@ class UpdateSecondRoundScoreUseCaseTest {
         formList.forEach(form -> {
             assignExaminationNumberService.execute(form);
             form.assignInterviewNumber(form.getExaminationNumber());
-            form.receive();
+            form.approve();
             calculateFormScoreService.execute(form);
             if (form.getInterviewNumber() == 111001L ||
                     form.getInterviewNumber() == 111002L ||
