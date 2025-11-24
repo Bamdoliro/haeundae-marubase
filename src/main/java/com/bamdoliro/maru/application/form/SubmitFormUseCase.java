@@ -47,5 +47,10 @@ public class SubmitFormUseCase {
         if (form.isPresent()) {
             throw new FormAlreadySubmittedException();
         }
+        form.ifPresent(existingForm -> {
+            if (existingForm.isRejected()) {
+                formRepository.delete(existingForm);
+            }
+        });
     }
 }
