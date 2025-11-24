@@ -5,6 +5,7 @@ import com.bamdoliro.maru.domain.form.exception.CannotUpdateNotRejectedFormExcep
 import com.bamdoliro.maru.domain.form.service.CalculateFormScoreService;
 import com.bamdoliro.maru.domain.form.service.FormFacade;
 import com.bamdoliro.maru.domain.user.domain.User;
+import com.bamdoliro.maru.infrastructure.persistence.form.FormRepository;
 import com.bamdoliro.maru.presentation.form.dto.request.UpdateFormRequest;
 import com.bamdoliro.maru.shared.annotation.UseCase;
 import com.bamdoliro.maru.shared.annotation.ValidateApplicationFormPeriod;
@@ -17,6 +18,7 @@ public class UpdateFormUseCase {
 
     private final FormFacade formFacade;
     private final CalculateFormScoreService calculateFormScoreService;
+    private final FormRepository formRepository;
 
     @ValidateApplicationFormPeriod
     @Transactional
@@ -35,6 +37,7 @@ public class UpdateFormUseCase {
         );
 
         calculateFormScoreService.execute(form);
+        formRepository.save(form);
 
     }
 
