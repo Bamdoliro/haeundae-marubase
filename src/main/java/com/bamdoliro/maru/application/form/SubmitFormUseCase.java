@@ -12,8 +12,6 @@ import com.bamdoliro.maru.shared.annotation.ValidateApplicationFormPeriod;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @RequiredArgsConstructor
 @UseCase
 public class SubmitFormUseCase {
@@ -25,9 +23,40 @@ public class SubmitFormUseCase {
     @ValidateApplicationFormPeriod
     @Transactional
     public void execute(User user, SubmitFormRequest request) {
-        validateOnlyOneFormPerUser(user);
+        Form form = formRepository.findByUser(user)
+                .filter(existingForm -> existingForm.isRejected())
+                .map(rejectedForm -> updateRejectedForm(rejectedForm, request))
+                .orElseGet(() -> createNewForm(user, request));
 
-        Form form = Form.builder()
+        validateFormNotAlreadySubmitted(user);
+
+        calculateFormScoreService.execute(form);
+        assignExaminationNumberService.execute(form);
+        formRepository.save(form);
+    }
+
+    private void validateFormNotAlreadySubmitted(User user) {
+        formRepository.findByUser(user)
+                .filter(existingForm -> !existingForm.isRejected())
+                .ifPresent(form -> {
+                    throw new FormAlreadySubmittedException();
+                });
+    }
+
+    private Form updateRejectedForm(Form form, SubmitFormRequest request) {
+        form.update(
+                request.getApplicant().toValue(),
+                request.getParent().toValue(),
+                request.getEducation().toValue(),
+                request.getGrade().toValue(),
+                request.getDocument().toValue(),
+                request.getType()
+        );
+        return form;
+    }
+
+    private Form createNewForm(User user, SubmitFormRequest request) {
+        return Form.builder()
                 .applicant(request.getApplicant().toValue())
                 .parent(request.getParent().toValue())
                 .education(request.getEducation().toValue())
@@ -36,21 +65,5 @@ public class SubmitFormUseCase {
                 .type(request.getType())
                 .user(user)
                 .build();
-
-        calculateFormScoreService.execute(form);
-        assignExaminationNumberService.execute(form);
-        formRepository.save(form);
-    }
-
-    private void validateOnlyOneFormPerUser(User user) {
-        Optional<Form> form = formRepository.findByUser(user);
-        if (form.isPresent()) {
-            throw new FormAlreadySubmittedException();
-        }
-        form.ifPresent(existingForm -> {
-            if (existingForm.isRejected()) {
-                formRepository.delete(existingForm);
-            }
-        });
     }
 }
