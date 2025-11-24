@@ -60,7 +60,7 @@ public class SelectSecondPassUseCaseTest {
         formList.forEach(form -> {
             assignExaminationNumberService.execute(form);
             form.assignInterviewNumber(form.getExaminationNumber());
-            form.receive();
+            form.approve();
             calculateFormScoreService.execute(form);
             formRepository.save(form);
         });
