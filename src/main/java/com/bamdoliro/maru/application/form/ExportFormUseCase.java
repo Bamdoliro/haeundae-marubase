@@ -2,7 +2,6 @@ package com.bamdoliro.maru.application.form;
 
 import com.bamdoliro.maru.domain.form.domain.Form;
 import com.bamdoliro.maru.domain.form.domain.type.AchievementLevel;
-import com.bamdoliro.maru.domain.form.domain.type.FormType;
 import com.bamdoliro.maru.domain.form.domain.value.Subject;
 import com.bamdoliro.maru.domain.form.domain.value.SubjectMap;
 import com.bamdoliro.maru.domain.form.service.FormFacade;
@@ -127,7 +126,6 @@ public class ExportFormUseCase {
                     form.getEducation().isQualificationExamination() ? Templates.QUALIFICATION_FORM : Templates.FORM,
                     Templates.DOCUMENT_ONE,
                     Templates.DOCUMENT_TWO,
-                    Templates.SPECIAL_ADMISSION,
                     Templates.CONFIRMATION,
                     Templates.INFORMATION
             );
