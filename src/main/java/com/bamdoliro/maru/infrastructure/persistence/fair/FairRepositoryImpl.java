@@ -28,8 +28,6 @@ public class FairRepositoryImpl implements FairRepositoryCustom {
         return queryFactory
                 .selectFrom(fair)
                 .where(
-                        fair.applicationStartDate.after(now).not()
-                                .and(fair.applicationEndDate.before(now).not()),
                         eqType(type)
                 )
                 .orderBy(fair.start.asc())
