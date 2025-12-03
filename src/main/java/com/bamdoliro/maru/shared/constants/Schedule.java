@@ -9,7 +9,7 @@ import java.util.Locale;
 @UtilityClass
 public class Schedule {
 
-    public static final LocalDateTime START = LocalDateTime.of(2025, 12, 8, 0, 0);
+    public static final LocalDateTime START = LocalDateTime.of(2025, 12, 5, 0, 0);
     public static final LocalDateTime END = LocalDateTime.of(2025, 12, 10, 17, 0);
     public static final LocalDateTime ANNOUNCEMENT_OF_FIRST_PASS = LocalDateTime.of(2025, 12, 12, 15, 0);
     public static final LocalDateTime ANNOUNCEMENT_OF_SECOND_PASS = LocalDateTime.of(2025, 12, 26, 12, 0);
