@@ -30,6 +30,10 @@ public class SearchSchoolService {
         "세종특별자치시"
     );
 
+    private static final Set<String> EXCEPTION_SCHOOLS = Set.of(
+            "지평선중학교"
+    );
+
     public List<SchoolResponse> execute(String q) throws JsonProcessingException {
         String htmlResponse1 = neisClient.getSchoolInfo(neisProperties.getKey(), q, "중학교");
         String htmlResponse2 = neisClient.getSchoolInfo(neisProperties.getKey(), q, "각종학교(중)");
@@ -42,7 +46,7 @@ public class SearchSchoolService {
         combinedSchoolInfo.addAll(response2.getSchoolInfo());
 
         return combinedSchoolInfo.stream()
-                .filter(s -> isAllowedRegion(s.getLocation()))
+                .filter(s -> isAllowedRegion(s.getLocation()) || isExceptionSchool(s.getSchoolName()))
                 .limit(10)
                 .map(s -> SchoolResponse.builder()
                         .name(s.getSchoolName())
@@ -55,5 +59,9 @@ public class SearchSchoolService {
 
     private boolean isAllowedRegion(String location) {
         return location != null && ALLOWED_REGIONS.contains(location);
+    }
+
+    private boolean isExceptionSchool(String schoolName) {
+        return schoolName != null && EXCEPTION_SCHOOLS.contains(schoolName);
     }
 }
