@@ -1,5 +1,6 @@
 package com.bamdoliro.maru.infrastructure.neis;
 
+import com.bamdoliro.maru.domain.form.domain.type.AllowedRegion;
 import com.bamdoliro.maru.infrastructure.neis.feign.NeisClient;
 import com.bamdoliro.maru.infrastructure.neis.feign.dto.response.NeisSchoolResponse;
 import com.bamdoliro.maru.presentation.school.dto.response.SchoolResponse;
@@ -21,15 +22,6 @@ public class SearchSchoolService {
     private final NeisClient neisClient;
     private final ObjectMapper objectMapper;
 
-    private static final Set<String> ALLOWED_REGIONS = Set.of(
-        "부산광역시",
-        "광주광역시",
-        "경상남도",
-        "제주특별자치도",
-        "충청북도",
-        "세종특별자치시"
-    );
-
     private static final Set<String> EXCEPTION_SCHOOLS = Set.of(
             "지평선중학교"
     );
@@ -46,7 +38,7 @@ public class SearchSchoolService {
         combinedSchoolInfo.addAll(response2.getSchoolInfo());
 
         return combinedSchoolInfo.stream()
-                .filter(s -> isAllowedRegion(s.getLocation()) || isExceptionSchool(s.getSchoolName()))
+                .filter(this::isAccessibleSchool)
                 .limit(10)
                 .map(s -> SchoolResponse.builder()
                         .name(s.getSchoolName())
@@ -57,11 +49,8 @@ public class SearchSchoolService {
                 .toList();
     }
 
-    private boolean isAllowedRegion(String location) {
-        return location != null && ALLOWED_REGIONS.contains(location);
-    }
-
-    private boolean isExceptionSchool(String schoolName) {
-        return schoolName != null && EXCEPTION_SCHOOLS.contains(schoolName);
+    private boolean isAccessibleSchool(NeisSchoolResponse.SchoolInfo.Row school) {
+        return AllowedRegion.isAllowed(school.getLocation()) ||
+        EXCEPTION_SCHOOLS.contains(school.getSchoolName());
     }
 }
