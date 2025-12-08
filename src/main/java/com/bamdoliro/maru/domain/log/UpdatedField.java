@@ -21,10 +21,10 @@ public class UpdatedField {
     @Column(nullable = false)
     private String filedName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String oldValue;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String newValue;
 
     @ManyToOne(fetch = FetchType.LAZY)
