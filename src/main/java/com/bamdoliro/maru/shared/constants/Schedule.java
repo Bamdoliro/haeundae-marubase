@@ -19,7 +19,7 @@ public class Schedule {
     public static final LocalDateTime ADMISSION_AND_PLEDGE_START = LocalDateTime.of(2026, 1, 6, 0, 0);
     public static final LocalDateTime ADMISSION_AND_PLEDGE_END = LocalDateTime.of(2026, 1, 8, 23, 59);
 
-    public static final String SELECT_FIRST_PASS_CRON = "0 55 9 26 12 ?";
+    public static final String SELECT_FIRST_PASS_CRON = "0 20 21 10 12 ?";
 
     public static int getAdmissionYear() {
         return START.plusYears(1L).getYear();
