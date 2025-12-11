@@ -26,7 +26,6 @@ public class Form extends BaseTimeEntity {
     @Column(nullable = true, unique = true)
     private Long examinationNumber;
 
-    @Convert(converter = LongEncryptedConverter.class)
     @Column(nullable = true, unique = true)
     private String interviewNumber;
 
