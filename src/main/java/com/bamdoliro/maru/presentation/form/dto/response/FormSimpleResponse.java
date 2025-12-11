@@ -16,7 +16,7 @@ public class FormSimpleResponse {
 
     private Long id;
     private Long examinationNumber;
-    private Long interviewNumber;
+    private String interviewNumber;
     private String name;
     private LocalDate birthday;
     private GraduationType graduationType;

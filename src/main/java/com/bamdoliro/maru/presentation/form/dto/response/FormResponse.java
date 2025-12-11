@@ -11,7 +11,7 @@ import lombok.Getter;
 public class FormResponse {
     private Long id;
     private Long examinationNumber;
-    private Long interviewNumber;
+    private String interviewNumber;
     private ApplicantResponse applicant;
     private ParentResponse parent;
     private EducationResponse education;
