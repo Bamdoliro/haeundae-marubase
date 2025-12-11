@@ -59,13 +59,13 @@ class UpdateSecondRoundScoreUseCaseTest {
         List<Form> formList = FormFixture.generateBusanFormList(userList);
         formList.forEach(form -> {
             assignExaminationNumberService.execute(form);
-            form.assignInterviewNumber(form.getExaminationNumber());
+            form.assignInterviewNumber(String.valueOf(form.getExaminationNumber()));
             form.approve();
             calculateFormScoreService.execute(form);
-            if (form.getInterviewNumber() == 111001L ||
-                    form.getInterviewNumber() == 111002L ||
-                    form.getInterviewNumber() == 212001L ||
-                    form.getInterviewNumber() == 212002L
+            if ("111001".equals(form.getInterviewNumber()) ||
+                    "111002".equals(form.getInterviewNumber()) ||
+                    "212001".equals(form.getInterviewNumber()) ||
+                    "212002".equals(form.getInterviewNumber())
             ) {
                 formRepository.save(form);
             }

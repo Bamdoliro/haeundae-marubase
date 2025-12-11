@@ -71,7 +71,7 @@ public class UpdateSecondRoundScoreUseCase {
             return null;
         }
 
-        voList.sort(Comparator.comparingLong(SecondScoreVo::getInterviewNumber));
+        voList.sort(Comparator.comparing(SecondScoreVo::getInterviewNumber));
 
         return voList;
     }
@@ -85,7 +85,7 @@ public class UpdateSecondRoundScoreUseCase {
             FormType.Category type = getFormType(row.getCell(2).getStringCellValue());
 
             return new SecondScoreVo(
-                    (long) row.getCell(0).getNumericCellValue(),
+                    row.getCell(0).getStringCellValue(),
                     type,
                     isShow ? row.getCell(3).getNumericCellValue() : null,
                     isShow ? row.getCell(4).getNumericCellValue() : null,
@@ -108,7 +108,7 @@ public class UpdateSecondRoundScoreUseCase {
         Cell isShowCell = row.getCell(5);
         boolean isShow = false;
 
-        if (interviewNumberCell.getCellType() != CellType.NUMERIC) {
+        if (interviewNumberCell.getCellType() != CellType.STRING) {
             setErrorCell(interviewNumberCell, "타입 불일치");
             cellList.add(interviewNumberCell);
         }
@@ -212,7 +212,7 @@ public class UpdateSecondRoundScoreUseCase {
 @Getter
 @AllArgsConstructor
 class SecondScoreVo {
-    private Long interviewNumber;
+    private String interviewNumber;
     private FormType.Category type;
     private Double selfDirectedScore;
     private Double personalityScore;

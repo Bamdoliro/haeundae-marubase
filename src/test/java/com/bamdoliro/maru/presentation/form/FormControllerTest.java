@@ -2598,8 +2598,8 @@ class FormControllerTest extends RestDocsTestSupport {
     @Test
     void 면접번호를_일괄_지정한다() throws Exception {
         List<AssignInterviewNumberRequest> requestList = List.of(
-                new AssignInterviewNumberRequest(1L, 10001L),
-                new AssignInterviewNumberRequest(2L, 10002L)
+                new AssignInterviewNumberRequest(1L, "10001"),
+                new AssignInterviewNumberRequest(2L, "10002")
         );
         AssignInterviewNumberListRequest request = new AssignInterviewNumberListRequest(requestList);
         User user = UserFixture.createAdminUser();
@@ -2622,7 +2622,7 @@ class FormControllerTest extends RestDocsTestSupport {
                         requestFields(
                                 fieldWithPath("formList").type(JsonFieldType.ARRAY).description("면접번호 지정 목록"),
                                 fieldWithPath("formList[].formId").type(JsonFieldType.NUMBER).description("원서 ID"),
-                                fieldWithPath("formList[].interviewNumber").type(JsonFieldType.NUMBER).description("면접번호")
+                                fieldWithPath("formList[].interviewNumber").type(JsonFieldType.STRING).description("면접번호")
                         )
                 ));
 
@@ -2632,8 +2632,8 @@ class FormControllerTest extends RestDocsTestSupport {
     @Test
     void 면접번호를_지정할_때_원서가_없으면_에러가_발생한다() throws Exception {
         List<AssignInterviewNumberRequest> requestList = List.of(
-                new AssignInterviewNumberRequest(1L, 10001L),
-                new AssignInterviewNumberRequest(999L, 10002L) // 존재하지 않는 원서 ID
+                new AssignInterviewNumberRequest(1L, "10001"),
+                new AssignInterviewNumberRequest(999L, "10002") // 존재하지 않는 원서 ID
         );
         AssignInterviewNumberListRequest request = new AssignInterviewNumberListRequest(requestList);
         User user = UserFixture.createAdminUser();

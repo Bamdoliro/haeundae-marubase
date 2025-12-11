@@ -32,7 +32,7 @@ public class AssignInterviewNumberUseCase {
 
         for (int i = 0; i < formList.size(); i++) {
             Form form = formList.get(i);
-            Long interviewNumber = requestList.get(i).getInterviewNumber();
+            String interviewNumber = requestList.get(i).getInterviewNumber();
 
             if (interviewNumber == null) {
                 continue;

@@ -17,8 +17,6 @@ public class AssignInterviewNumberRequest {
     @NotNull(message = "필수값입니다.")
     private Long formId;
 
-    @Min(value = 10000, message = "면접번호는 5자리여야 합니다.")
-    @Max(value = 99999, message = "면접번호는 5자리여야 합니다.")
     @NotNull(message = "면접번호는 필수입니다.")
-    private Long interviewNumber;
+    private String interviewNumber;
 }

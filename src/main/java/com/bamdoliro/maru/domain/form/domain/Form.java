@@ -26,9 +26,8 @@ public class Form extends BaseTimeEntity {
     @Column(nullable = true, unique = true)
     private Long examinationNumber;
 
-    @Convert(converter = LongEncryptedConverter.class)
     @Column(nullable = true, unique = true)
-    private Long interviewNumber;
+    private String interviewNumber;
 
     @Embedded
     private Applicant applicant;
@@ -255,7 +254,7 @@ public class Form extends BaseTimeEntity {
         this.examinationNumber = examinationNumber;
     }
 
-    public void assignInterviewNumber(Long interviewNumber) {
+    public void assignInterviewNumber(String interviewNumber) {
         this.interviewNumber = interviewNumber;
     }
 
