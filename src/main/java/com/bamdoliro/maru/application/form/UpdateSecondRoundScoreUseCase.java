@@ -42,7 +42,7 @@ public class UpdateSecondRoundScoreUseCase {
         errorCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
         List<Form> formList = formRepository.findByStatus(FormStatus.FIRST_PASSED);
-        formList.sort(Comparator.comparing(Form::getInterviewNumber));
+        formList.sort(Comparator.comparing(form -> Long.parseLong(form.getInterviewNumber())));
         List<SecondScoreVo> secondScoreVoList = getSecondScoreVoList(sheet);
         if (secondScoreVoList == null) {
             return xlsxService.convertToByteArrayResource(workbook);
@@ -71,7 +71,7 @@ public class UpdateSecondRoundScoreUseCase {
             return null;
         }
 
-        voList.sort(Comparator.comparing(SecondScoreVo::getInterviewNumber));
+        voList.sort(Comparator.comparing(vo -> Long.parseLong(vo.getInterviewNumber())));
 
         return voList;
     }
