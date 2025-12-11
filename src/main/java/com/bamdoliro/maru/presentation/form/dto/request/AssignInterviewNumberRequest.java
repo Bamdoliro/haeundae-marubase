@@ -17,6 +17,5 @@ public class AssignInterviewNumberRequest {
     @NotNull(message = "필수값입니다.")
     private Long formId;
 
-    @NotNull(message = "면접번호는 필수입니다.")
     private String interviewNumber;
 }
