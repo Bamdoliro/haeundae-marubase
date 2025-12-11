@@ -50,7 +50,7 @@ class ExportSecondRoundResultUseCaseTest {
         List<Form> formList = FormFixture.generateBusanFormList(userList);
         formList.forEach(form -> {
             assignExaminationNumberService.execute(form);
-            form.assignInterviewNumber(form.getExaminationNumber());
+            form.assignInterviewNumber(String.valueOf(form.getExaminationNumber()));
 
             if (getRandomBoolean()) {
                 form.pass();

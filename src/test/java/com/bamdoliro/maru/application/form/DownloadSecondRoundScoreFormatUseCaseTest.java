@@ -50,7 +50,7 @@ class DownloadSecondRoundScoreFormatUseCaseTest {
         List<Form> formList = FormFixture.generateBusanFormList(userList);
         formList.forEach(form -> {
             assignExaminationNumberService.execute(form);
-            form.assignInterviewNumber(form.getExaminationNumber());
+            form.assignInterviewNumber(String.valueOf(form.getExaminationNumber()));
             form.receive();
             calculateFormScoreService.execute(form);
             formRepository.save(form);

@@ -37,8 +37,8 @@ class AssignInterviewNumberUseCaseTest {
         List<Form> formList = List.of(form1, form2);
 
         List<AssignInterviewNumberRequest> requestList = List.of(
-                new AssignInterviewNumberRequest(1L, 1001L),
-                new AssignInterviewNumberRequest(2L, 1002L)
+                new AssignInterviewNumberRequest(1L, "1001"),
+                new AssignInterviewNumberRequest(2L, "1002")
         );
         AssignInterviewNumberListRequest request = new AssignInterviewNumberListRequest(requestList);
 
@@ -49,16 +49,16 @@ class AssignInterviewNumberUseCaseTest {
 
         // then
         verify(formRepository).findByFormIdList(List.of(1L, 2L));
-        assertEquals(1001L, form1.getInterviewNumber());
-        assertEquals(1002L, form2.getInterviewNumber());
+        assertEquals("1001", form1.getInterviewNumber());
+        assertEquals("1002", form2.getInterviewNumber());
     }
 
     @Test
     void 면접번호를_지정할_때_원서가_없으면_에러가_발생한다() {
         // given
         List<AssignInterviewNumberRequest> requestList = List.of(
-                new AssignInterviewNumberRequest(1L, 1001L),
-                new AssignInterviewNumberRequest(2L, 1002L)
+                new AssignInterviewNumberRequest(1L, "1001"),
+                new AssignInterviewNumberRequest(2L, "1002")
         );
         AssignInterviewNumberListRequest request = new AssignInterviewNumberListRequest(requestList);
 
@@ -77,7 +77,7 @@ class AssignInterviewNumberUseCaseTest {
         List<Form> formList = List.of(form1, form2);
 
         List<AssignInterviewNumberRequest> requestList = List.of(
-                new AssignInterviewNumberRequest(1L, 1001L),
+                new AssignInterviewNumberRequest(1L, "1001"),
                 new AssignInterviewNumberRequest(2L, null) // null 면접번호
         );
         AssignInterviewNumberListRequest request = new AssignInterviewNumberListRequest(requestList);
@@ -88,7 +88,7 @@ class AssignInterviewNumberUseCaseTest {
         assignInterviewNumberUseCase.execute(request);
 
         // then
-        assertEquals(1001L, form1.getInterviewNumber());
+        assertEquals("1001", form1.getInterviewNumber());
         assertEquals(null, form2.getInterviewNumber()); // null로 유지
     }
 }
