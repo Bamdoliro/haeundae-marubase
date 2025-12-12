@@ -26,7 +26,7 @@ public class Form extends BaseTimeEntity {
     @Column(nullable = true, unique = true)
     private Long examinationNumber;
 
-    @Column(nullable = true, unique = true)
+    @Column(nullable = true)
     private String interviewNumber;
 
     @Embedded
