@@ -2,285 +2,217 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <meta charset="UTF-8"/>
+    <link rel="stylesheet" th:href="@{classpath:/static/css/common.css}"/>
     <style>
-        * {
-            font-family: SUIT, sans-serif;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        table {
-            border: none;
-            border-collapse: collapse;
-            font-size: 14px;
-            text-align: center;
-            line-height: normal;
-        }
-
-        caption {
-            padding-bottom: 6px;
-        }
-
-        tr {
-            vertical-align: middle;
-        }
-
-        td {
-            padding: 8px 8px;
-            background-color: white;
-        }
-
-        th {
-            background-color: #EFF3F9;
-            font-weight: 500;
-            padding: 8px 0;
-            letter-spacing: 6px;
-            text-indent: 6px;
-        }
-
-        .ba {
-            border: #000000 1px solid;
-        }
-
-        .center {
-            text-align: center;
-        }
-
-        .left {
-            text-align: left;
-        }
-
-        .right {
-            text-align: right;
-        }
-
-        .big {
-            font-weight: 500;
-            font-size: 20px;
-        }
-
-        .letter-spacing-10 {
-            letter-spacing: 10px;
-            text-indent: 10px;
-        }
-
-        .letter-spacing-25 {
-            letter-spacing: 25px;
-            text-indent: 25px;
-        }
-
-        .red {
-            color: #F44336;
-        }
-
-        .blue {
-            color: #1B4292;
-        }
-
-        .background-blue {
-            background-color: #EFF3F9;
-        }
-
-        .container {
-            padding: 40px 68px;
-        }
-
         @page {
-            size: A4 landscape;
-            margin: 20px;
-        }
+    size: A4 landscape;
+    margin: 20px;
+}
 
-        body {
-            width: 100%;
-            height: 100%;
-            padding: 20px;
-        }
+body {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+}
 
-        .container {
-            display: flex;
-            flex-direction: row;
-            gap: 20px;
-            align-items: stretch;
-            width: 100%;
-            height: 100%;
-        }
+.container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: stretch;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+}
 
-        .main-table {
-            flex: 3;
-            height: 100%;
-        }
+.main-table {
+    flex: 3;
+    height: 100%;
+}
 
-        .side-tables {
-            flex: 1;
-            position: relative;
-            height: 100%;
-            width: 100%;
-            gap: 20px;
-        }
+.side-tables {
+    flex: 1;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    gap: 20px;
+}
 
-        table {
-            width: 100%;
-            font-size: 12px;
-        }
+table {
+    border: none;
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 12px;
+    text-align: center;
+}
 
-        th {
-            padding: 6px 0;
-            font-size: 12px;
-        }
+td {
+    padding: 2px 0;
+    background-color: transparent;
+}
 
-        .format {
-            font-size: 13px;
-            font-weight: bold;
-        }
+th {
+    padding: 6px 0;
+    font-size: 12px;
+    letter-spacing: 0;
+    text-indent: 0;
+}
 
-        .school {
-            font-weight: bold;
-            font-size: 18px;
-        }
+.format {
+    font-size: 13px;
+    font-weight: bold;
+}
 
-        .middle {
-            font-size: 14px;
-        }
+.school {
+    font-weight: bold;
+    font-size: 18px;
+}
 
-        .vertical-space {
-            width: 8px;
-        }
 
-        .horizontal-space {
-            height: 8px;
-        }
+.middle {
+    font-size: 14px;
+}
 
-        .inline {
-            display: inline-block;
-        }
+.vertical-space {
+width: 8px;
 
-        .text-box {
-            padding: 4px 8px;
-        }
+}
 
-        .principal-stamp {
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: absolute;
-            bottom: -10px;
-            left: 70%;
-            transform: translateX(30%);
-            z-index: 10;
-            border: 1px solid black;
-            text-align: center;
-            background-color: rgba(255, 255, 255, 0.5);
-            padding: 5px;
-            font-size: 8px;
-        }
+.horizontal-space {
+    height: 8px;
+}
 
-        .underline {
-            border-bottom: 1px solid black;
-        }
+.inline {
+    display: inline-block;
+}
 
-        .teacher-section {
-            text-align: center;
-            font-size: 12px;
-            vertical-align: top;
-        }
+.text-box {
+    padding: 4px 8px;
+}
 
-        .teacher-text {
-            padding: 10px;
-            border: none;
-            border-bottom: 1px solid #000;
-        }
+.principal-stamp {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    bottom: -10px;
+    left: 70%;
+    transform: translateX(30%);
+    z-index: 10;
+    border: 1px solid black;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 5px;
+    font-size: 8px;
+}
 
-        .teacher-stamp {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            border: none;
-            height: 80px;
-            background-color: #f3f3f3;
-        }
+.underline {
+    border-bottom: 1px solid black;
+}
 
-        .side-tables table {
-            width: 100%;
-        }
+.teacher-section {
+    text-align: center;
+    font-size: 12px;
+    vertical-align: top;
+}
 
-        .id-photo {
-            width: 100px;
-            height: 130px;
-            border: 1px solid black;
-            margin: 10px auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            padding: 0;
-            overflow: hidden;
-        }
+.teacher-text {
+    padding: 10px;
+    border: none;
+    border-bottom: 1px solid #000;
+}
 
-        .id-photo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 1;
-        }
+.teacher-stamp {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    border: none;
+    height: 80px;
+    background-color: #f3f3f3;
+}
 
-        .td {
-            font-size: 10px;
-        }
+.side-tables table {
+    width: 100%;
+}
 
-        .horizontal-divider {
-            border-top: 1px dotted #000;
-            height: 0;
-            min-width: 100%;
-            flex-shrink: 0;
-        }
+.id-photo {
+    width: 100px;
+    height: 130px;
+    border: 1px solid black;
+    margin: 10px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 0;
+    overflow: hidden;
+}
 
-        .vertical-divider {
-            width: 0;
-            min-height: 100%;
-            border-right: 1px dotted #000;
-            flex-shrink: 0;
-        }
+.id-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
 
-        .disabled {
-            color: #f3f3f3;
-            background-color: #f3f3f3;
-        }
+.td {
+    font-size: 10px;
+}
 
-        .guide {
-            font-size: 11px;
-            color: #BBBCC2;
-            font-weight: 300;
-        }
+.horizontal-divider {
+    border-top: 1px dotted #000;
+    height: 0;
+    min-width: 100%;
+    flex-shrink: 0;
+}
 
-        .teacher-section {
-            text-align: center;
-            font-size: 12px;
-            vertical-align: top;
-        }
+.vertical-divider {
+    width: 0;
+    min-height: 100%;
+    border-right: 1px dotted #000;
+    flex-shrink: 0;
+}
 
-        .teacher-title {
-            padding: 10px;
-        }
+.disabled {
+    color: #f3f3f3;
+    background-color: #f3f3f3;
+}
 
-        .teacher-name {
-            padding: 10px;
-        }
+.guide {
+    font-size: 11px;
+    color: #BBBCC2;
+    font-weight: 300;
+}
 
-        .teacher-sign-space {
-            height: 100px;
-        }
+.teacher-section {
+    text-align: center;
+    font-size: 12px;
+    vertical-align: top;
+}
 
-        img {
-            width: 100px;
-            height: 130px;
-        }
+.teacher-title {
+    padding: 10px;
+}
+
+.teacher-name {
+    padding: 10px;
+}
+
+.teacher-sign-space {
+    height: 100px;
+}
+
+img {
+    width: 100px;
+    height: 130px;
+}
+
     </style>
     <title>원서</title>
 </head>

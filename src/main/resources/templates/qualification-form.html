@@ -2,89 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <meta charset="UTF-8"/>
+    <link rel="stylesheet" th:href="@{classpath:/static/css/common.css}"/>
     <style>
-        * {
-            font-family: SUIT, sans-serif;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        table {
-            border: none;
-            border-collapse: collapse;
-            font-size: 14px;
-            text-align: center;
-            line-height: normal;
-        }
-
-        caption {
-            padding-bottom: 6px;
-        }
-
-        tr {
-            vertical-align: middle;
-        }
-
-        td {
-            padding: 8px 8px;
-            background-color: white;
-        }
-
-        th {
-            background-color: #EFF3F9;
-            font-weight: 500;
-            padding: 8px 0;
-            letter-spacing: 6px;
-            text-indent: 6px;
-        }
-
-        .ba {
-            border: #000000 1px solid;
-        }
-
-        .center {
-            text-align: center;
-        }
-
-        .left {
-            text-align: left;
-        }
-
-        .right {
-            text-align: right;
-        }
-
-        .big {
-            font-weight: 500;
-            font-size: 20px;
-        }
-
-        .letter-spacing-10 {
-            letter-spacing: 10px;
-            text-indent: 10px;
-        }
-
-        .letter-spacing-25 {
-            letter-spacing: 25px;
-            text-indent: 25px;
-        }
-
-        .red {
-            color: #F44336;
-        }
-
-        .blue {
-            color: #1B4292;
-        }
-
-        .background-blue {
-            background-color: #EFF3F9;
-        }
-
-        .container {
-            padding: 40px 68px;
-        }
 
         @page {
             size: A4 landscape;
@@ -104,6 +23,7 @@
             align-items: stretch;
             width: 100%;
             height: 100%;
+            padding: 0;
         }
 
         .main-table {
@@ -121,15 +41,24 @@
         }
 
         table {
+            border: none;
+            border-collapse: collapse;
             width: 100%;
             font-size: 12px;
+            text-align: center;
+        }
+
+        td {
+            padding: 2px 0;
+            background-color: transparent;
         }
 
         th {
             padding: 6px 0;
             font-size: 12px;
+            letter-spacing: 0;
+            text-indent: 0;
         }
-
 
         .format {
             font-size: 13px;
@@ -141,10 +70,6 @@
             font-size: 18px;
         }
 
-
-        .left {
-            text-align: left;
-        }
 
         .middle {
             font-size: 14px;
@@ -279,7 +204,6 @@
             color: #BBBCC2;
             font-weight: 300;
         }
-
     </style>
     <title>원서</title>
 </head>
