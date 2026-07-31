@@ -3,13 +3,13 @@ name: Deploy to AWS EC2
 on:
   workflow_dispatch:
 
-env: 
+env:
   S3_BUCKET_NAME: ${{ secrets.AWS_S3_BUCKET_NAME }}
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -27,8 +27,8 @@ jobs:
       run: ./gradlew clean build -x test -x asciidoctor
 
     - name: Make Directory
-      run: mkdir -p deploy
-  
+      run: mkdir -p deploy/scripts
+
     - name: Copy Jar
       run: cp ./build/libs/*.jar ./deploy
 
@@ -36,32 +36,32 @@ jobs:
       run: cp appspec.yml ./deploy
 
     - name: Copy script
-      run: cp ./scripts/*.sh ./deploy
-  
+      run: cp ./scripts/*.sh ./deploy/scripts/
+
     - name: Make zip file
-      run: zip -r ./maru.zip ./deploy 
+      run: cd deploy && zip -r ../haemaru.zip .
       shell: bash
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
-      with: 
+      with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ap-northeast-2
 
     - name: Upload to S3
-      run: aws s3 cp --region ap-northeast-2 ./maru.zip s3://$S3_BUCKET_NAME/
+      run: aws s3 cp --region ap-northeast-2 ./haemaru.zip s3://$S3_BUCKET_NAME/
 
     - name: Cancle previous deployment if exists
       run: |
         DEPLOYMENT_ID=$(aws deploy list-deployments \
-          --application-name maru-hhs \
-          --deployment-group-name maru-hhs-deploy-group \
+          --application-name haemaru \
+          --deployment-group-name haemaru-deploy-group \
           --include-only-statuses InProgress \
           --query "deployments[0]" --output text \
           --region ap-northeast-2)
 
-        if ["$DEPLOYMENT_ID" != "None"]; then
+        if [ "$DEPLOYMENT_ID" != "None" ]; then
           echo "Stopping previous deployment: $DEPLOYMENT_ID"
           aws deploy stop-deployment --deployment-id $DEPLOYMENT_ID --region ap-northeast-2
         else
@@ -74,8 +74,8 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: |
         aws deploy create-deployment \
-        --application-name maru-hhs \
-        --deployment-group-name maru-hhs-deploy-group \
+        --application-name haemaru \
+        --deployment-group-name haemaru-deploy-group \
         --file-exists-behavior OVERWRITE \
-        --s3-location bucket=maru-hhs-deploy,bundleType=zip,key=maru.zip \
+        --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=haemaru.zip \
         --region ap-northeast-2
