@@ -15,7 +15,7 @@ public class UploadImageUtil {
         connection.setDoOutput(true);
         connection.setRequestMethod("PUT");
         connection.setRequestProperty("Content-Type", "image/png");
-        connection.setRequestProperty("Content-Length", String.valueOf(file.length()));
+        connection.setFixedLengthStreamingMode(file.length());
 
         try (OutputStream outputStream = connection.getOutputStream();
              FileInputStream fileInputStream = new FileInputStream(file)) {

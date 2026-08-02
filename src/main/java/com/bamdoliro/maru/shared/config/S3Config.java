@@ -1,14 +1,16 @@
 package com.bamdoliro.maru.shared.config;
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.bamdoliro.maru.shared.config.properties.S3Properties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.S3Configuration;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
 @Configuration
 @RequiredArgsConstructor
@@ -20,13 +22,30 @@ public class S3Config {
     private String region;
 
     @Bean
-    public AmazonS3Client amazonS3Client() {
-        BasicAWSCredentials awsCredentials = new BasicAWSCredentials(
+    public S3Client s3Client() {
+        AwsBasicCredentials awsCredentials = AwsBasicCredentials.create(
                 s3Properties.getAccessKey(), s3Properties.getSecretKey());
-        return (AmazonS3Client) AmazonS3ClientBuilder.standard()
-                .withRegion(region)
-                .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
-                .enablePathStyleAccess()
+
+        return S3Client.builder()
+                .credentialsProvider(StaticCredentialsProvider.create(awsCredentials))
+                .region(Region.of(region))
+                .serviceConfiguration(S3Configuration.builder()
+                        .pathStyleAccessEnabled(true)
+                        .build())
+                .build();
+    }
+
+    @Bean
+    public S3Presigner s3Presigner() {
+        AwsBasicCredentials awsCredentials = AwsBasicCredentials.create(
+                s3Properties.getAccessKey(), s3Properties.getSecretKey());
+
+        return S3Presigner.builder()
+                .credentialsProvider(StaticCredentialsProvider.create(awsCredentials))
+                .region(Region.of(region))
+                .serviceConfiguration(S3Configuration.builder()
+                        .pathStyleAccessEnabled(true)
+                        .build())
                 .build();
     }
 }

@@ -1,7 +1,5 @@
 package com.bamdoliro.maru.infrastructure.s3;
 
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.bamdoliro.maru.infrastructure.s3.dto.request.FileMetadata;
 import com.bamdoliro.maru.infrastructure.s3.dto.response.UrlResponse;
 import com.bamdoliro.maru.infrastructure.s3.validator.DefaultFileValidator;
@@ -11,6 +9,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.HeadObjectRequest;
+import software.amazon.awssdk.services.s3.model.HeadObjectResponse;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
 import java.net.URL;
 import java.util.Set;
@@ -18,6 +24,7 @@ import java.util.Set;
 import static com.bamdoliro.maru.shared.constants.FileConstant.MB;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -28,7 +35,10 @@ class FileServiceTest {
     private FileService fileService;
 
     @Mock
-    private AmazonS3Client amazonS3Client;
+    private S3Client s3Client;
+
+    @Mock
+    private S3Presigner s3Presigner;
 
     @Test
     void Presigned_URL을_생성한다() throws Exception {
@@ -39,7 +49,16 @@ class FileServiceTest {
                 MediaType.IMAGE_PNG_VALUE,
                 MB
         );
-        given(amazonS3Client.generatePresignedUrl(any(GeneratePresignedUrlRequest.class))).willReturn(new URL(url));
+
+        PresignedPutObjectRequest putPresignedRequest = mock(PresignedPutObjectRequest.class);
+        given(putPresignedRequest.url()).willReturn(new URL(url));
+
+        PresignedGetObjectRequest getPresignedRequest = mock(PresignedGetObjectRequest.class);
+        given(getPresignedRequest.url()).willReturn(new URL(url));
+
+        given(s3Client.headObject(any(HeadObjectRequest.class))).willReturn(HeadObjectResponse.builder().build());
+        given(s3Presigner.presignPutObject(any(PutObjectPresignRequest.class))).willReturn(putPresignedRequest);
+        given(s3Presigner.presignGetObject(any(GetObjectPresignRequest.class))).willReturn(getPresignedRequest);
 
         // when
         UrlResponse response = fileService.getPresignedUrl("folder", "uuid", fileMetadata, metadata ->
@@ -47,6 +66,7 @@ class FileServiceTest {
         );
 
         // then
-        verify(amazonS3Client, times(2)).generatePresignedUrl(any(GeneratePresignedUrlRequest.class));
+        verify(s3Presigner, times(1)).presignPutObject(any(PutObjectPresignRequest.class));
+        verify(s3Presigner, times(1)).presignGetObject(any(GetObjectPresignRequest.class));
     }
 }
