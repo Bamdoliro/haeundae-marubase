@@ -9,8 +9,11 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.S3ClientBuilder;
 import software.amazon.awssdk.services.s3.S3Configuration;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+
+import java.net.URI;
 
 @Configuration
 @RequiredArgsConstructor
@@ -21,18 +24,26 @@ public class S3Config {
     @Value("${spring.cloud.aws.region.static}")
     private String region;
 
+    @Value("${spring.cloud.aws.s3.endpoint:}")
+    private String endpoint;
+
     @Bean
     public S3Client s3Client() {
         AwsBasicCredentials awsCredentials = AwsBasicCredentials.create(
                 s3Properties.getAccessKey(), s3Properties.getSecretKey());
 
-        return S3Client.builder()
+        S3ClientBuilder builder = S3Client.builder()
                 .credentialsProvider(StaticCredentialsProvider.create(awsCredentials))
                 .region(Region.of(region))
                 .serviceConfiguration(S3Configuration.builder()
                         .pathStyleAccessEnabled(true)
-                        .build())
-                .build();
+                        .build());
+
+        if (!endpoint.isEmpty()) {
+            builder.endpointOverride(URI.create(endpoint));
+        }
+
+        return builder.build();
     }
 
     @Bean
@@ -40,12 +51,17 @@ public class S3Config {
         AwsBasicCredentials awsCredentials = AwsBasicCredentials.create(
                 s3Properties.getAccessKey(), s3Properties.getSecretKey());
 
-        return S3Presigner.builder()
+        S3Presigner.Builder builder = S3Presigner.builder()
                 .credentialsProvider(StaticCredentialsProvider.create(awsCredentials))
                 .region(Region.of(region))
                 .serviceConfiguration(S3Configuration.builder()
                         .pathStyleAccessEnabled(true)
-                        .build())
-                .build();
+                        .build());
+
+        if (!endpoint.isEmpty()) {
+            builder.endpointOverride(URI.create(endpoint));
+        }
+
+        return builder.build();
     }
 }
