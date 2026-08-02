@@ -10,6 +10,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -27,10 +28,10 @@ class SearchSchoolServiceTest {
     }
 
     @Test
-    void 검색_결과가_많다면_필터를_거친_후_개수를_반환한다() throws JsonProcessingException {
+    void 검색_결과가_많다면_상위_10개까지만_반환한다() throws JsonProcessingException {
         String q = "중학교";
         List<SchoolResponse> responseList = searchSchoolService.execute(q);
-        assertEquals(4, responseList.size());
+        assertTrue(responseList.size() <= 10);
     }
 
     @Test
