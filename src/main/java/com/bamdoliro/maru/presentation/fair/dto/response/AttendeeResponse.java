@@ -14,6 +14,7 @@ public class AttendeeResponse {
     private String type;
     private String phoneNumber;
     private Integer headcount;
+    private Integer grade;
     private String question;
 
     public AttendeeResponse(Attendee attendee) {
@@ -23,6 +24,7 @@ public class AttendeeResponse {
         this.type = attendee.getType();
         this.phoneNumber = attendee.getPhoneNumber();
         this.headcount = attendee.getHeadcount();
+        this.grade = attendee.getGrade();
         this.question = attendee.getQuestion();
     }
 }

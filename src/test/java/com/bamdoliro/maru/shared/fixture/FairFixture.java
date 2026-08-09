@@ -78,6 +78,7 @@ public class FairFixture {
                 "학생",
                 "01012344321",
                 2,
+                3,
                 "내신 커트라인 몇인가요?"
         );
     }
@@ -89,6 +90,7 @@ public class FairFixture {
                 "학생",
                 "010" + RandomCodeUtil.generate(8),
                 2,
+                3,
                 "내신 커트라인 몇인가요?",
                 fair
         );

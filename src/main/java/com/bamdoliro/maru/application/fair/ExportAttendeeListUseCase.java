@@ -53,11 +53,17 @@ public class ExportAttendeeListUseCase {
             schoolCell.setCellValue(attendee.getSchoolName());
             schoolCell.setCellStyle(cellStyle);
 
-            Cell typeCell = row.createCell(4);
+            Cell gradeCell = row.createCell(4);
+            if (attendee.getGrade() != null) {
+                gradeCell.setCellValue(attendee.getGrade());
+            }
+            gradeCell.setCellStyle(cellStyle);
+
+            Cell typeCell = row.createCell(5);
             typeCell.setCellValue(attendee.getType());
             typeCell.setCellStyle(cellStyle);
 
-            Cell questionCell = row.createCell(5);
+            Cell questionCell = row.createCell(6);
             questionCell.setCellValue(attendee.getQuestion());
             questionCell.setCellStyle(cellStyle);
         }

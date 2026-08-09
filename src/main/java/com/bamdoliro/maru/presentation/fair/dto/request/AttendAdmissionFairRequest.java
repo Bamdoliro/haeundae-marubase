@@ -1,6 +1,7 @@
 package com.bamdoliro.maru.presentation.fair.dto.request;
 
 import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -33,6 +34,11 @@ public class AttendAdmissionFairRequest {
     @NotNull(message = "필수값입니다.")
     @Min(value = 1, message = "1명 이상 신청해야 합니다.")
     private Integer headcount;
+
+    @Nullable
+    @Min(value = 1, message = "1학년 이상이어야 합니다.")
+    @Max(value = 3, message = "3학년 이하여야 합니다.")
+    private Integer grade;
 
     @Nullable
     @Size(max = 255, message = "255자 이하여야 합니다.")
