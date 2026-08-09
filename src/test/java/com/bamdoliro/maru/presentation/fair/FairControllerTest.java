@@ -225,6 +225,10 @@ class FairControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("headcount")
                                         .type(JsonFieldType.NUMBER)
                                         .description("신청자 인원수"),
+                                fieldWithPath("grade")
+                                        .type(JsonFieldType.NUMBER)
+                                        .optional()
+                                        .description("신청자 학년 (1~3, 학생인 경우)"),
                                 fieldWithPath("question")
                                         .type(JsonFieldType.STRING)
                                         .optional()
