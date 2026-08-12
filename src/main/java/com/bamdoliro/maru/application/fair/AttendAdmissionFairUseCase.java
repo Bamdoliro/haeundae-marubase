@@ -35,6 +35,7 @@ public class AttendAdmissionFairUseCase {
                         .type(request.getType())
                         .phoneNumber(request.getPhoneNumber())
                         .headcount(request.getHeadcount())
+                        .grade(request.getGrade())
                         .question(request.getQuestion())
                         .fair(fair)
                         .build()

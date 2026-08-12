@@ -41,6 +41,9 @@ public class Attendee extends BaseTimeEntity {
     @Column(nullable = false)
     private Integer headcount;
 
+    @Column(nullable = true)
+    private Integer grade;
+
     @Column(nullable = true, length = 255)
     private String question;
 
@@ -49,12 +52,13 @@ public class Attendee extends BaseTimeEntity {
     private Fair fair;
 
     @Builder
-    public Attendee(String schoolName, String name, String type, String phoneNumber, Integer headcount, String question, Fair fair) {
+    public Attendee(String schoolName, String name, String type, String phoneNumber, Integer headcount, Integer grade, String question, Fair fair) {
         this.schoolName = schoolName;
         this.name = name;
         this.type = type;
         this.phoneNumber = phoneNumber;
         this.headcount = headcount;
+        this.grade = grade;
         this.question = question;
         this.fair = fair;
     }

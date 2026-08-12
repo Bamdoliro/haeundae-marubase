@@ -28,6 +28,7 @@ class AttendAdmissionFairUseCaseSpringBootTest {
                 "학생",
                 "01012345678",
                 2,
+                3,
                 "급식 존맛?"
         );
 
