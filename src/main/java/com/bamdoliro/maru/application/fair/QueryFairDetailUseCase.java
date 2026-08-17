@@ -25,8 +25,12 @@ public class QueryFairDetailUseCase {
             case "name_asc" -> fair.getAttendeeList().stream()
                     .sorted(Comparator.comparing(Attendee::getName))
                     .toList();
-            case "name_desc" -> fair.getAttendeeList().stream()
-                    .sorted(Comparator.comparing(Attendee::getName).reversed())
+            case "school_name_asc" -> fair.getAttendeeList().stream()
+                    .sorted(Comparator.comparing(Attendee::getSchoolName))
+                    .toList();
+            case "grade_asc" -> fair.getAttendeeList().stream()
+                    .sorted(Comparator.comparing(
+                            Attendee::getGrade, Comparator.nullsLast(Comparator.naturalOrder())))
                     .toList();
             default -> fair.getAttendeeList();
         };

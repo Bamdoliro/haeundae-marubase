@@ -66,13 +66,30 @@ class QueryFairDetailUseCaseTest {
     }
 
     @Test
-    void 입학설명회를_상세히_불러올_때_이름_내림차순으로_정렬한다() {
+    void 입학설명회를_상세히_불러올_때_학교명_오름차순으로_정렬한다() {
         // given
         Fair fair = FairFixture.createFairDetail();
         given(fairFacade.getFairDetail(fair.getId())).willReturn(fair);
 
         // when
-        FairDetailResponse response = queryFairDetailUseCase.execute(fair.getId(), "name_desc");
+        FairDetailResponse response = queryFairDetailUseCase.execute(fair.getId(), "school_name_asc");
+
+        // then
+        assertEquals(fair.getStart(), response.getStart());
+        assertEquals(fair.getPlace(), response.getPlace());
+        assertEquals(fair.getAttendeeList().size(), response.getAttendeeList().size());
+
+        verify(fairFacade, times(1)).getFairDetail(fair.getId());
+    }
+
+    @Test
+    void 입학설명회를_상세히_불러올_때_학년_오름차순으로_정렬한다() {
+        // given
+        Fair fair = FairFixture.createFairDetail();
+        given(fairFacade.getFairDetail(fair.getId())).willReturn(fair);
+
+        // when
+        FairDetailResponse response = queryFairDetailUseCase.execute(fair.getId(), "grade_asc");
 
         // then
         assertEquals(fair.getStart(), response.getStart());
