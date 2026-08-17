@@ -346,7 +346,7 @@ class FairControllerTest extends RestDocsTestSupport {
                         queryParameters(
                                 parameterWithName("sort")
                                         .optional()
-                                        .description("정렬 방식 (none, name_asc, name_desc)")
+                                        .description("정렬 방식 (none, name_asc, school_name_asc, grade_asc)")
                         )
                 ));
 
@@ -374,23 +374,43 @@ class FairControllerTest extends RestDocsTestSupport {
     }
 
     @Test
-    void 입학설명회를_상세히_불러올_때_이름_내림차순으로_정렬한다() throws Exception {
+    void 입학설명회를_상세히_불러올_때_학교명_오름차순으로_정렬한다() throws Exception {
         Long fairId = 1L;
         User user = UserFixture.createAdminUser();
 
         given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
         given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
-        given(queryFairDetailUseCase.execute(fairId, "name_desc")).willReturn(FairFixture.createFairDetailResponse());
+        given(queryFairDetailUseCase.execute(fairId, "school_name_asc")).willReturn(FairFixture.createFairDetailResponse());
 
         mockMvc.perform(get("/fairs/{fair-id}", fairId)
-                        .param("sort", "name_desc")
+                        .param("sort", "school_name_asc")
                         .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
                         .accept(MediaType.APPLICATION_JSON)
                 )
 
                 .andExpect(status().isOk());
 
-        verify(queryFairDetailUseCase, times(1)).execute(fairId, "name_desc");
+        verify(queryFairDetailUseCase, times(1)).execute(fairId, "school_name_asc");
+    }
+
+    @Test
+    void 입학설명회를_상세히_불러올_때_학년_오름차순으로_정렬한다() throws Exception {
+        Long fairId = 1L;
+        User user = UserFixture.createAdminUser();
+
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+        given(queryFairDetailUseCase.execute(fairId, "grade_asc")).willReturn(FairFixture.createFairDetailResponse());
+
+        mockMvc.perform(get("/fairs/{fair-id}", fairId)
+                        .param("sort", "grade_asc")
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+
+                .andExpect(status().isOk());
+
+        verify(queryFairDetailUseCase, times(1)).execute(fairId, "grade_asc");
     }
 
     @Test
