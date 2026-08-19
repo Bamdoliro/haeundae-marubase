@@ -58,7 +58,8 @@ class AttendAdmissionFairUseCaseTest {
         verify(fairFacade, times(1)).getFair(fair.getId());
         verify(attendeeRepository, times(1)).countByFair(fair);
         verify(attendeeRepository, times(1)).save(captor.capture());
-         verify(sendMessageService, times(1)).execute(anyString(), anyString(), anyString());
+        // TODO: 솔라피 일일 발송 한도 초과 이슈로 SMS 발송 임시 중단. 원인 조치 후 다시 활성화할 것.
+        // verify(sendMessageService, times(1)).execute(anyString(), anyString(), anyString());
 
         Attendee savedAttendee = captor.getValue();
         assertEquals(attendee.getName(), savedAttendee.getName());
