@@ -41,7 +41,8 @@ public class AttendAdmissionFairUseCase {
                         .build()
         );
 
-        sendMessage(fair, attendee);
+        // TODO: 솔라피 일일 발송 한도 초과 이슈로 임시 중단. 원인 조치 후 다시 활성화할 것.
+        // sendMessage(fair, attendee);
     }
 
     private void validateFairCapacity(Fair fair, Integer headcount) {
