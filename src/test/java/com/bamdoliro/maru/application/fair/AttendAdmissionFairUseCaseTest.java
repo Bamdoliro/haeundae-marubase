@@ -47,7 +47,7 @@ class AttendAdmissionFairUseCaseTest {
         Attendee attendee = FairFixture.createAttendee(fair);
 
         given(fairFacade.getFair(fair.getId())).willReturn(fair);
-        given(attendeeRepository.countByFair(fair)).willReturn(20);
+        given(attendeeRepository.sumHeadcountByFair(fair)).willReturn(20);
         given(attendeeRepository.save(any(Attendee.class))).willReturn(attendee);
         ArgumentCaptor<Attendee> captor = ArgumentCaptor.forClass(Attendee.class);
 
@@ -56,7 +56,7 @@ class AttendAdmissionFairUseCaseTest {
 
         // then
         verify(fairFacade, times(1)).getFair(fair.getId());
-        verify(attendeeRepository, times(1)).countByFair(fair);
+        verify(attendeeRepository, times(1)).sumHeadcountByFair(fair);
         verify(attendeeRepository, times(1)).save(captor.capture());
         // TODO: 솔라피 일일 발송 한도 초과 이슈로 SMS 발송 임시 중단. 원인 조치 후 다시 활성화할 것.
         // verify(sendMessageService, times(1)).execute(anyString(), anyString(), anyString());
@@ -79,7 +79,7 @@ class AttendAdmissionFairUseCaseTest {
                 () -> attendAdmissionFairUseCase.execute(fair.getId(), request));
 
         verify(fairFacade, times(1)).getFair(fair.getId());
-        verify(attendeeRepository, never()).countByFair(any());
+        verify(attendeeRepository, never()).sumHeadcountByFair(any());
         verify(attendeeRepository, never()).save(any());
         verify(sendMessageService, never()).execute(anyString(), anyString(), anyString());
     }
@@ -91,14 +91,14 @@ class AttendAdmissionFairUseCaseTest {
         AttendAdmissionFairRequest request = FairFixture.createAttendAdmissionFairRequest();
 
         given(fairFacade.getFair(fair.getId())).willReturn(fair);
-        given(attendeeRepository.countByFair(fair)).willReturn(121);
+        given(attendeeRepository.sumHeadcountByFair(fair)).willReturn(121);
 
         // when and then
         assertThrows(HeadcountExceededException.class,
                 () -> attendAdmissionFairUseCase.execute(fair.getId(), request));
 
         verify(fairFacade, times(1)).getFair(fair.getId());
-        verify(attendeeRepository, times(1)).countByFair(fair);
+        verify(attendeeRepository, times(1)).sumHeadcountByFair(fair);
         verify(attendeeRepository, never()).save(any());
         // verify(sendMessageService, never()).execute(anyString(), anyString(), anyString());
     }
@@ -115,7 +115,7 @@ class AttendAdmissionFairUseCaseTest {
                 () -> attendAdmissionFairUseCase.execute(fair.getId(), request));
 
         verify(fairFacade, times(1)).getFair(fair.getId());
-        verify(attendeeRepository, never()).countByFair(fair);
+        verify(attendeeRepository, never()).sumHeadcountByFair(fair);
         verify(attendeeRepository, never()).save(any());
         verify(sendMessageService, never()).execute(anyString(), anyString());
     }

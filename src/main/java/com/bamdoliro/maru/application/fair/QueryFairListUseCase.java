@@ -20,7 +20,7 @@ public class QueryFairListUseCase {
         return fairRepository.findByType(type)
                 .stream()
                 .map(fair -> {
-                    Integer headCount = attendeeRepository.countByFair(fair);
+                    Integer headCount = attendeeRepository.sumHeadcountByFair(fair);
                     return new FairResponse(fair, headCount);
                 })
                 .toList();

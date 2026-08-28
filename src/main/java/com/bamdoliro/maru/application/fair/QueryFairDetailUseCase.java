@@ -19,7 +19,7 @@ public class QueryFairDetailUseCase {
 
     public FairDetailResponse execute(Long fairId, String sort) {
         Fair fair = fairFacade.getFairDetail(fairId);
-        Integer headCount = attendeeRepository.countByFair(fair);
+        Integer headCount = attendeeRepository.sumHeadcountByFair(fair);
 
         List<Attendee> sortedAttendeeList = switch (sort) {
             case "name_asc" -> fair.getAttendeeList().stream()
