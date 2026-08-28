@@ -109,6 +109,6 @@ class QueryFairDetailUseCaseTest {
                 () -> queryFairDetailUseCase.execute(-1L, "none"));
 
         verify(fairFacade, times(1)).getFairDetail(anyLong());
-        verify(attendeeRepository, never()).countByFair(any(Fair.class));
+        verify(attendeeRepository, never()).sumHeadcountByFair(any(Fair.class));
     }
 }

@@ -1,6 +1,7 @@
 package com.bamdoliro.maru.infrastructure.persistence.fair;
 
 import com.bamdoliro.maru.domain.fair.domain.Attendee;
+import com.bamdoliro.maru.domain.fair.domain.Fair;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -22,5 +23,16 @@ public class AttendeeRepositoryImpl implements AttendeeRepositoryCustom {
                 .where(attendee.id.in(idList))
                 .orderBy(attendee.id.asc())
                 .fetch();
+    }
+
+    @Override
+    public Integer sumHeadcountByFair(Fair fair) {
+        Integer sum = queryFactory
+                .select(attendee.headcount.sum())
+                .from(attendee)
+                .where(attendee.fair.eq(fair))
+                .fetchOne();
+
+        return sum != null ? sum : 0;
     }
 }

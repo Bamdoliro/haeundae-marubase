@@ -46,7 +46,7 @@ public class AttendAdmissionFairUseCase {
     }
 
     private void validateFairCapacity(Fair fair, Integer headcount) {
-        if (attendeeRepository.countByFair(fair) + headcount > fair.getCapacity()) {
+        if (attendeeRepository.sumHeadcountByFair(fair) + headcount > fair.getCapacity()) {
             throw new HeadcountExceededException();
         }
     }
