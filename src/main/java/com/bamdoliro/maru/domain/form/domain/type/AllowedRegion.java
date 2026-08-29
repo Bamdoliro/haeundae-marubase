@@ -9,12 +9,7 @@ import java.util.Arrays;
 @Getter
 @RequiredArgsConstructor
 public enum  AllowedRegion implements EnumProperty {
-    BUSAN("부산광역시"),
-    GWANGJU("광주광역시"),
-    GYENGNAM("경상남도"),
-    CHUNGBUK("충청북도"),
-    JEJU("제주특별자치도"),
-    SEJONG("세종특별자치시");
+    BUSAN("부산광역시");
 
     private final String description;
 

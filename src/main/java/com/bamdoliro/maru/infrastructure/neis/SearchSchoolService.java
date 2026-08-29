@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
@@ -21,10 +20,6 @@ public class SearchSchoolService {
     private final NeisProperties neisProperties;
     private final NeisClient neisClient;
     private final ObjectMapper objectMapper;
-
-    private static final Set<String> EXCEPTION_SCHOOLS = Set.of(
-            "지평선중학교"
-    );
 
     public List<SchoolResponse> execute(String q) throws JsonProcessingException {
         String htmlResponse1 = neisClient.getSchoolInfo(neisProperties.getKey(), q, "중학교");
@@ -50,7 +45,6 @@ public class SearchSchoolService {
     }
 
     private boolean isAccessibleSchool(NeisSchoolResponse.SchoolInfo.Row school) {
-        return AllowedRegion.isAllowed(school.getLocation()) ||
-        EXCEPTION_SCHOOLS.contains(school.getSchoolName());
+        return AllowedRegion.isAllowed(school.getLocation());
     }
 }
