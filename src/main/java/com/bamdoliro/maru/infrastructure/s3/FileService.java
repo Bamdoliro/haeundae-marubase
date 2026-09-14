@@ -15,6 +15,8 @@ import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 
 @Service
@@ -36,8 +38,16 @@ public class FileService {
     }
 
     public String getDownloadPresignedUrl(String folder, String fileName) {
+        return getDownloadPresignedUrl(folder, fileName, null, null);
+    }
+
+    public String getAttachmentDownloadPresignedUrl(String folder, String fileName, String contentType, String displayFileName) {
+        return getDownloadPresignedUrl(folder, fileName, contentType, createAttachmentContentDisposition(displayFileName));
+    }
+
+    private String getDownloadPresignedUrl(String folder, String fileName, String contentType, String contentDisposition) {
         String fullFileName = createFileName(folder, fileName);
-        GetObjectPresignRequest request = getGenerateDownloadPresignedUrlRequest(bucket, fullFileName);
+        GetObjectPresignRequest request = getGenerateDownloadPresignedUrlRequest(bucket, fullFileName, contentType, contentDisposition);
 
         return request != null ? s3Presigner.presignGetObject(request).url().toString() : null;
     }
@@ -63,7 +73,7 @@ public class FileService {
                 .build();
     }
 
-    private GetObjectPresignRequest getGenerateDownloadPresignedUrlRequest(String bucket, String fileName) {
+    private GetObjectPresignRequest getGenerateDownloadPresignedUrlRequest(String bucket, String fileName, String contentType, String contentDisposition) {
         try {
             s3Client.headObject(HeadObjectRequest.builder()
                     .bucket(bucket)
@@ -78,8 +88,20 @@ public class FileService {
                 .getObjectRequest(GetObjectRequest.builder()
                         .bucket(bucket)
                         .key(fileName)
+                        .responseContentType(contentType)
+                        .responseContentDisposition(contentDisposition)
                         .build())
                 .build();
+    }
+
+    private String createAttachmentContentDisposition(String displayFileName) {
+        if (displayFileName == null) {
+            return null;
+        }
+
+        String encodedFileName = URLEncoder.encode(displayFileName, StandardCharsets.UTF_8).replace("+", "%20");
+
+        return String.format("attachment; filename*=UTF-8''%s", encodedFileName);
     }
 
     private String createFileName(String folder, String fileName) {

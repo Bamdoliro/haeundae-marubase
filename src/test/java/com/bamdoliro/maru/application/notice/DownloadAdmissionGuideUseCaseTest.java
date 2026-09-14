@@ -25,16 +25,16 @@ class DownloadAdmissionGuideUseCaseTest {
     @Test
     void 입학전형요강을_다운로드한다() {
         // given
-        String expectedUrl = "https://s3.amazonaws.com/haeundae-maru-s3-bucket/admission-guide/2026학년도 해운대고등학교 입학전형요강.pdf";
+        String expectedUrl = "https://s3.amazonaws.com/haeundae-maru-s3-bucket/admission-guide/2027-admission-guide.pdf";
         doReturn(expectedUrl)
                 .when(fileService)
-                .getDownloadPresignedUrl(anyString(), anyString());
+                .getAttachmentDownloadPresignedUrl(anyString(), anyString(), anyString(), anyString());
 
         // when
         UrlResponse response = downloadAdmissionGuideUseCase.execute();
 
         // then
-        verify(fileService, times(1)).getDownloadPresignedUrl(anyString(), anyString());
+        verify(fileService, times(1)).getAttachmentDownloadPresignedUrl(anyString(), anyString(), anyString(), anyString());
         assertEquals(expectedUrl, response.getDownloadUrl());
         assertNull(response.getUploadUrl());
     }
@@ -44,13 +44,13 @@ class DownloadAdmissionGuideUseCaseTest {
         // given
         doReturn(null)
                 .when(fileService)
-                .getDownloadPresignedUrl(anyString(), anyString());
+                .getAttachmentDownloadPresignedUrl(anyString(), anyString(), anyString(), anyString());
 
         // when
         UrlResponse response = downloadAdmissionGuideUseCase.execute();
 
         // then
-        verify(fileService, times(1)).getDownloadPresignedUrl(anyString(), anyString());
+        verify(fileService, times(1)).getAttachmentDownloadPresignedUrl(anyString(), anyString(), anyString(), anyString());
         assertNull(response.getDownloadUrl());
         assertNull(response.getUploadUrl());
     }
