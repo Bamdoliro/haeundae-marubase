@@ -9,8 +9,8 @@ import java.util.Locale;
 @UtilityClass
 public class Schedule {
 
-    public static final LocalDateTime START = LocalDateTime.of(2026, 9, 17, 14, 0);
-    public static final LocalDateTime END = LocalDateTime.of(2026, 9, 19, 23, 59);
+    public static final LocalDateTime START = LocalDateTime.of(2026, 9, 21, 16, 0);
+    public static final LocalDateTime END = LocalDateTime.of(2026, 9, 24, 23, 59);
     public static final LocalDateTime ANNOUNCEMENT_OF_FIRST_PASS = LocalDateTime.of(2026, 12, 11, 15, 0);
     public static final LocalDateTime ANNOUNCEMENT_OF_SECOND_PASS = LocalDateTime.of(2026, 12, 24, 12, 0);
     public static final LocalDateTime DEPTH_INTERVIEW = LocalDateTime.of(2026, 12, 15, 9, 0);
