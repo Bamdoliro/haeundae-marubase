@@ -21,5 +21,6 @@ chmod +x $JAR_NAME
 echo "> running $JAR_NAME"
 nohup env $(cat $REPOSITORY/.env | xargs) \
   java -Xmx768m \
+  -Duser.timezone=Asia/Seoul \
   -Dspring.profiles.active=prod \
   -jar $JAR_NAME >> $REPOSITORY/nohup.out 2>&1 &

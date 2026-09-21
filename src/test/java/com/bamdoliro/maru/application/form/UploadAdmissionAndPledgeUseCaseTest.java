@@ -62,7 +62,7 @@ public class UploadAdmissionAndPledgeUseCaseTest {
 
         //when
         try (MockedStatic<LocalDateTime> mockedLocalDateTime = mockStatic(LocalDateTime.class)) {
-            mockedLocalDateTime.when(LocalDateTime::now).thenReturn(Schedule.ADMISSION_AND_PLEDGE_START.plusSeconds(1));
+            mockedLocalDateTime.when(() -> LocalDateTime.now(Schedule.ZONE)).thenReturn(Schedule.ADMISSION_AND_PLEDGE_START.plusSeconds(1));
 
             uploadAdmissionAndPledgeUseCase.execute(user, metadata);
         }
@@ -88,7 +88,7 @@ public class UploadAdmissionAndPledgeUseCaseTest {
 
         // when and then
         try (MockedStatic<LocalDateTime> mockedLocalDateTime = Mockito.mockStatic(LocalDateTime.class)) {
-            mockedLocalDateTime.when(LocalDateTime::now).thenReturn(Schedule.ADMISSION_AND_PLEDGE_START.minusSeconds(1));
+            mockedLocalDateTime.when(() -> LocalDateTime.now(Schedule.ZONE)).thenReturn(Schedule.ADMISSION_AND_PLEDGE_START.minusSeconds(1));
 
             assertThrows(OutOfAdmissionAndPledgePeriodException.class, () -> uploadAdmissionAndPledgeUseCase.execute(user, metadata));
         }
@@ -116,7 +116,7 @@ public class UploadAdmissionAndPledgeUseCaseTest {
 
         //when
         try (MockedStatic<LocalDateTime> mockedLocalDateTime = Mockito.mockStatic(LocalDateTime.class)) {
-            mockedLocalDateTime.when(LocalDateTime::now).thenReturn(Schedule.ADMISSION_AND_PLEDGE_START.plusSeconds(1));
+            mockedLocalDateTime.when(() -> LocalDateTime.now(Schedule.ZONE)).thenReturn(Schedule.ADMISSION_AND_PLEDGE_START.plusSeconds(1));
 
             assertThrows(InvalidFormStatusException.class, () -> uploadAdmissionAndPledgeUseCase.execute(user, metadata));
         }

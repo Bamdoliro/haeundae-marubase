@@ -2,6 +2,7 @@ package com.bamdoliro.maru.domain.fair.domain;
 
 import com.bamdoliro.maru.domain.fair.domain.type.FairStatus;
 import com.bamdoliro.maru.domain.fair.domain.type.FairType;
+import com.bamdoliro.maru.shared.constants.Schedule;
 import com.bamdoliro.maru.shared.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -58,7 +59,7 @@ public class Fair extends BaseTimeEntity {
     }
 
     public FairStatus getStatus(Integer headcount) {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = Schedule.now();
         if (now.isAfter(start)) {
             return FairStatus.CLOSED;
         } else if (now.toLocalDate().isBefore(applicationStartDate)) {
@@ -73,7 +74,7 @@ public class Fair extends BaseTimeEntity {
     }
 
     public FairStatus getStatus() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = Schedule.now();
         if (now.isAfter(start)) {
             return FairStatus.CLOSED;
         } else if (now.toLocalDate().isBefore(applicationStartDate)) {
