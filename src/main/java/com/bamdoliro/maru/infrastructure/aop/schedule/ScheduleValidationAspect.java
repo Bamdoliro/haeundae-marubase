@@ -17,7 +17,7 @@ public class ScheduleValidationAspect {
 
     @Before("@annotation(com.bamdoliro.maru.shared.annotation.ValidateApplicationFormPeriod)")
     public void validateApplicationFormPeriod() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = Schedule.now();
         if (now.isBefore(Schedule.START) || now.isAfter(Schedule.END)) {
             throw new OutOfApplicationFormPeriodException();
         }

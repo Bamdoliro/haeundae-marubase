@@ -26,7 +26,7 @@ public class UploadAdmissionAndPledgeUseCase {
     private final FormFacade formFacade;
 
     public UrlResponse execute(User user, FileMetadata fileMetadata) {
-        validateApplicationPeriod(LocalDateTime.now());
+        validateApplicationPeriod(Schedule.now());
         Form form = formFacade.getForm(user);
         validateFormStatus(form);
 

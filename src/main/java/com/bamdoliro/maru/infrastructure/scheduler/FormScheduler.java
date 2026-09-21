@@ -12,7 +12,7 @@ public class FormScheduler {
 
     private final SelectFirstPassUseCase selectFirstPassUseCase;
 
-    @Scheduled(cron = Schedule.SELECT_FIRST_PASS_CRON)
+    @Scheduled(cron = Schedule.SELECT_FIRST_PASS_CRON, zone = Schedule.ZONE_ID)
     public void selectFirstPass() {
         selectFirstPassUseCase.execute();
     }
