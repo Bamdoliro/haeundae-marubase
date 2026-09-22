@@ -3,6 +3,7 @@ package com.bamdoliro.maru.application.user;
 import com.bamdoliro.maru.domain.user.domain.SignUpVerification;
 import com.bamdoliro.maru.domain.user.domain.UpdatePasswordVerification;
 import com.bamdoliro.maru.domain.user.domain.type.VerificationType;
+import com.bamdoliro.maru.domain.user.exception.SignUpTemporarilyUnavailableException;
 import com.bamdoliro.maru.infrastructure.message.SendMessageService;
 import com.bamdoliro.maru.infrastructure.message.exception.FailedToSendException;
 import com.bamdoliro.maru.infrastructure.persistence.user.SignUpVerificationRepository;
@@ -38,35 +39,49 @@ class VerificationUseCaseTest {
     private UpdatePasswordVerificationRepository updatePasswordVerificationRepository;
 
     @Test
-    void 유저가_회원가입_전화번호_인증을_요청한다() {
+    void 회원가입_전화번호_인증_요청이_임시로_중단되어_에러가_발생한다() {
         // given
         SignUpVerification signUpVerification = UserFixture.createSignUpVerification(false);
-        willDoNothing().given(sendMessageService).execute(anyString(), anyString());
-        given(signUpVerificationRepository.save(any(SignUpVerification.class))).willReturn(signUpVerification);
-
-        // when
-        sendVerificationUseCase.execute(new SendVerificationRequest(signUpVerification.getPhoneNumber(), VerificationType.SIGNUP));
-
-        // then
-        verify(sendMessageService, times(1)).execute(anyString(), anyString());
-        verify(signUpVerificationRepository, times(1)).save(any(SignUpVerification.class));
-
-        assertNotNull(signUpVerification.getCode());
-    }
-
-    @Test
-    void 회원가입_전화번호_전송이_실패한다() {
-        // given
-        SignUpVerification signUpVerification = UserFixture.createSignUpVerification(false);
-        doThrow(new FailedToSendException()).when(sendMessageService).execute(anyString(), anyString());
 
         // when and then
-        assertThrows(FailedToSendException.class,
+        assertThrows(SignUpTemporarilyUnavailableException.class,
                 () -> sendVerificationUseCase.execute(new SendVerificationRequest(signUpVerification.getPhoneNumber(), VerificationType.SIGNUP)));
 
-        verify(sendMessageService, times(1)).execute(anyString(), anyString());
+        verify(sendMessageService, never()).execute(anyString(), anyString());
         verify(signUpVerificationRepository, never()).save(any(SignUpVerification.class));
     }
+
+    // TODO: 회원가입 임시 중단 해제 후 아래 테스트를 복구할 것.
+//    @Test
+//    void 유저가_회원가입_전화번호_인증을_요청한다() {
+//        // given
+//        SignUpVerification signUpVerification = UserFixture.createSignUpVerification(false);
+//        willDoNothing().given(sendMessageService).execute(anyString(), anyString());
+//        given(signUpVerificationRepository.save(any(SignUpVerification.class))).willReturn(signUpVerification);
+//
+//        // when
+//        sendVerificationUseCase.execute(new SendVerificationRequest(signUpVerification.getPhoneNumber(), VerificationType.SIGNUP));
+//
+//        // then
+//        verify(sendMessageService, times(1)).execute(anyString(), anyString());
+//        verify(signUpVerificationRepository, times(1)).save(any(SignUpVerification.class));
+//
+//        assertNotNull(signUpVerification.getCode());
+//    }
+//
+//    @Test
+//    void 회원가입_전화번호_전송이_실패한다() {
+//        // given
+//        SignUpVerification signUpVerification = UserFixture.createSignUpVerification(false);
+//        doThrow(new FailedToSendException()).when(sendMessageService).execute(anyString(), anyString());
+//
+//        // when and then
+//        assertThrows(FailedToSendException.class,
+//                () -> sendVerificationUseCase.execute(new SendVerificationRequest(signUpVerification.getPhoneNumber(), VerificationType.SIGNUP)));
+//
+//        verify(sendMessageService, times(1)).execute(anyString(), anyString());
+//        verify(signUpVerificationRepository, never()).save(any(SignUpVerification.class));
+//    }
 
     @Test
     void 유저가_비밀번호_변경_전화번호_인증을_요청한다() {

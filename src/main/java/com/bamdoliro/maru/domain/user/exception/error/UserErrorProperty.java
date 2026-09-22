@@ -13,6 +13,7 @@ public enum UserErrorProperty implements ErrorProperty {
     PASSWORD_MISMATCH(HttpStatus.UNAUTHORIZED, "비밀번호가 틀렸습니다."),
     VERIFYING_HAS_FAILED(HttpStatus.UNAUTHORIZED, "전화번호 인증이 실패했습니다."),
     VERIFICATION_CODE_MISMATCH(HttpStatus.UNAUTHORIZED, "전화번호 인증 코드가 틀렸습니다."),
+    SIGN_UP_TEMPORARILY_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, "일시적으로 회원가입을 받지 않고 있습니다."),
     ;
 
     private final HttpStatus status;
