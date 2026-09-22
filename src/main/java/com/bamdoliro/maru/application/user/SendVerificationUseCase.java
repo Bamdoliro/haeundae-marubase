@@ -3,6 +3,7 @@ package com.bamdoliro.maru.application.user;
 import com.bamdoliro.maru.domain.user.domain.SignUpVerification;
 import com.bamdoliro.maru.domain.user.domain.UpdatePasswordVerification;
 import com.bamdoliro.maru.domain.user.domain.type.VerificationType;
+import com.bamdoliro.maru.domain.user.exception.SignUpTemporarilyUnavailableException;
 import com.bamdoliro.maru.infrastructure.message.SendMessageService;
 import com.bamdoliro.maru.infrastructure.persistence.user.SignUpVerificationRepository;
 import com.bamdoliro.maru.infrastructure.persistence.user.UpdatePasswordVerificationRepository;
@@ -21,18 +22,21 @@ public class SendVerificationUseCase {
     public void execute(SendVerificationRequest request) {
 
         if (request.getType() == VerificationType.SIGNUP) {
-            SignUpVerification signUpVerification = new SignUpVerification(request.getPhoneNumber());
-            String text = String.format(
-                    "[해운대고등학교] 회원가입 인증번호는 [%s]입니다.",
-                    signUpVerification.getCode()
-            );
+            // TODO: 회원가입 임시 중단. 인증번호 문자도 발송하지 않는다. 원인 조치 후 다시 활성화할 것.
+            throw new SignUpTemporarilyUnavailableException();
 
-            sendMessageService.execute(
-                    request.getPhoneNumber(),
-                    text
-            );
-
-            signUpVerificationRepository.save(signUpVerification);
+//            SignUpVerification signUpVerification = new SignUpVerification(request.getPhoneNumber());
+//            String text = String.format(
+//                    "[해운대고등학교] 회원가입 인증번호는 [%s]입니다.",
+//                    signUpVerification.getCode()
+//            );
+//
+//            sendMessageService.execute(
+//                    request.getPhoneNumber(),
+//                    text
+//            );
+//
+//            signUpVerificationRepository.save(signUpVerification);
         } else {
             UpdatePasswordVerification updatePasswordVerification = new UpdatePasswordVerification(request.getPhoneNumber());
             String text = String.format(
