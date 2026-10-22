@@ -49,6 +49,7 @@ public class ExportFormUseCase {
                 "grade32", subjectMap.getSubjectListOf(3, 2),
                 "subjectList", getSubjectList(form),
                 "year", Schedule.getAdmissionYear(),
+                "applicationDeadline", Schedule.toShortLocaleString(Schedule.END),
                 "identificationPictureUri", fileService.getDownloadPresignedUrl(FolderConstant.IDENTIFICATION_PICTURE, user.getUuid().toString())
         );
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
