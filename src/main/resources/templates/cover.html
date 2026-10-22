@@ -276,7 +276,7 @@
 <div class="cover-wrapper">
     <img th:src="@{classpath:/static/images/haeundae-highschool-logo.png}" alt="logo" class="logo-wrapper"/>
     <div class="title-section">
-        <h1>2026학년도 신입생 전형<br/>
+        <h1>[[${year+"학년도"}]] 신입생 전형<br/>
             제출 서류 봉투 표지</h1>
     </div>
 
@@ -326,7 +326,7 @@
     </table>
 
     <div class="notice-text">
-        ※ 우편으로 접수하는 경우 <span class="highlight">2025.12.10.(수) 17:00까지</span> 도착하여야 합니다.
+        ※ 우편으로 접수하는 경우 <span class="highlight" th:text="${applicationDeadline}">2025.12.10.(수) 17:00</span>까지 도착하여야 합니다.
     </div>
 
     <div class="documents-section">

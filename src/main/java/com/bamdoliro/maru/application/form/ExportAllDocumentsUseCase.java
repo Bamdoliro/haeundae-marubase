@@ -8,6 +8,7 @@ import com.bamdoliro.maru.infrastructure.s3.FileService;
 import com.bamdoliro.maru.infrastructure.thymeleaf.ProcessTemplateService;
 import com.bamdoliro.maru.infrastructure.thymeleaf.Templates;
 import com.bamdoliro.maru.shared.annotation.UseCase;
+import com.bamdoliro.maru.shared.constants.Schedule;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.utils.PdfMerger;
@@ -37,7 +38,8 @@ public class ExportAllDocumentsUseCase {
 
             for(Form form : forms) {
                 Map<String, Object> documentMap = Map.of(
-                        "form", form
+                        "form", form,
+                        "year", Schedule.getAdmissionYear()
                 );
 
                 String html1 = processTemplateService.execute(Templates.DOCUMENT_ONE, documentMap);
