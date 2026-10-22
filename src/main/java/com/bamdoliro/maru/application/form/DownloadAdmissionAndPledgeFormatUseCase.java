@@ -9,6 +9,7 @@ import com.bamdoliro.maru.infrastructure.pdf.MergePdfService;
 import com.bamdoliro.maru.infrastructure.thymeleaf.ProcessTemplateService;
 import com.bamdoliro.maru.infrastructure.thymeleaf.Templates;
 import com.bamdoliro.maru.shared.annotation.UseCase;
+import com.bamdoliro.maru.shared.constants.Schedule;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.utils.PdfMerger;
@@ -33,7 +34,8 @@ public class DownloadAdmissionAndPledgeFormatUseCase {
         validate(form);
 
         Map<String, Object> formMap = Map.of(
-                "form", form
+                "form", form,
+                "year", Schedule.getAdmissionYear()
         );
 
         List<String> templates = List.of(
