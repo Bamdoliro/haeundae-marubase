@@ -4,6 +4,7 @@ import com.bamdoliro.maru.domain.user.domain.SignUpVerification;
 import com.bamdoliro.maru.domain.user.domain.UpdatePasswordVerification;
 import com.bamdoliro.maru.domain.user.domain.type.VerificationType;
 import com.bamdoliro.maru.domain.user.exception.SignUpTemporarilyUnavailableException;
+import com.bamdoliro.maru.domain.user.exception.UpdatePasswordTemporarilyUnavailableException;
 import com.bamdoliro.maru.infrastructure.message.SendMessageService;
 import com.bamdoliro.maru.infrastructure.persistence.user.SignUpVerificationRepository;
 import com.bamdoliro.maru.infrastructure.persistence.user.UpdatePasswordVerificationRepository;
@@ -38,18 +39,21 @@ public class SendVerificationUseCase {
 //
 //            signUpVerificationRepository.save(signUpVerification);
         } else {
-            UpdatePasswordVerification updatePasswordVerification = new UpdatePasswordVerification(request.getPhoneNumber());
-            String text = String.format(
-                    "[해운대고등학교] 비밀번호 변경 인증번호는 [%s]입니다.",
-                    updatePasswordVerification.getCode()
-            );
+            // TODO: 비밀번호 변경 인증번호 문자 임시 중단. 원인 조치 후 다시 활성화할 것.
+            throw new UpdatePasswordTemporarilyUnavailableException();
 
-            sendMessageService.execute(
-                    request.getPhoneNumber(),
-                    text
-            );
-
-            updatePasswordVerificationRepository.save(updatePasswordVerification);
+//            UpdatePasswordVerification updatePasswordVerification = new UpdatePasswordVerification(request.getPhoneNumber());
+//            String text = String.format(
+//                    "[해운대고등학교] 비밀번호 변경 인증번호는 [%s]입니다.",
+//                    updatePasswordVerification.getCode()
+//            );
+//
+//            sendMessageService.execute(
+//                    request.getPhoneNumber(),
+//                    text
+//            );
+//
+//            updatePasswordVerificationRepository.save(updatePasswordVerification);
         }
     }
 }
