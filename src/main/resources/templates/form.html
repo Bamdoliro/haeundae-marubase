@@ -304,7 +304,7 @@ img {
                 </td>
                 <td class="ba" colspan="6" style="border-left: none;">
                     <div class="id-photo">
-                        <img th:src="${identificationPictureUri}" alt="증명사진"/>
+                        <img th:if="${identificationPictureUri != null}" th:src="${identificationPictureUri}" alt="증명사진"/>
                         <div class="principal-stamp">
                             출신학교장<br/>직인
                         </div>
@@ -405,7 +405,7 @@ img {
                 <tr>
                     <td class="ba" colspan="2" style="height:170px;">
                         <div class="id-photo">
-                            <img th:src="${identificationPictureUri}" alt="증명사진"/>
+                            <img th:if="${identificationPictureUri != null}" th:src="${identificationPictureUri}" alt="증명사진"/>
                             <div class="principal-stamp">
                                 출신학교장<br/>직인
                             </div>

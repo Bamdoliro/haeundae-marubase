@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -26,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ActiveProfiles("test")
 @ExtendWith(DatabaseClearExtension.class)
@@ -85,5 +88,21 @@ class ExportFormUseCaseSpringBootTest {
         formRepository.save(form);
 
         SaveFileUtil.execute(exportFormUseCase.execute(user), SaveFileUtil.PDF);
+    }
+
+    @Transactional
+    @Test
+    void 신분증_사진이_없어도_원서를_pdf로_저장한다() throws IOException {
+        User user = userRepository.save(UserFixture.createUser());
+        Form form = FormFixture.createRandomBusanForm(user);
+
+        calculateFormScoreService.execute(form);
+        form.assignExaminationNumber(2004L);
+        formRepository.save(form);
+
+        ByteArrayResource pdf = exportFormUseCase.execute(user);
+
+        assertTrue(pdf.contentLength() > 0);
+        SaveFileUtil.execute(pdf, SaveFileUtil.PDF);
     }
 }
