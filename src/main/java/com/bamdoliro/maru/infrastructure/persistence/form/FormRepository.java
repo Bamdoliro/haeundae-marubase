@@ -11,4 +11,6 @@ public interface FormRepository extends JpaRepository<Form, Long>, FormRepositor
     Optional<Form> findByUser(User user);
 
     Optional<Form> findByExaminationNumber(Long examinationNumber);
+
+    boolean existsByApplicant_RegistrationNumber(String registrationNumber);
 }

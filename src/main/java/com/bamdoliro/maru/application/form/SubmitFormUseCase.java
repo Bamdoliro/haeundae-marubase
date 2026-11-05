@@ -1,6 +1,7 @@
 package com.bamdoliro.maru.application.form;
 
 import com.bamdoliro.maru.domain.form.domain.Form;
+import com.bamdoliro.maru.domain.form.exception.DuplicateRegistrationNumberException;
 import com.bamdoliro.maru.domain.form.exception.FormAlreadySubmittedException;
 import com.bamdoliro.maru.domain.form.service.AssignExaminationNumberService;
 import com.bamdoliro.maru.domain.form.service.CalculateFormScoreService;
@@ -26,6 +27,7 @@ public class SubmitFormUseCase {
     @Transactional
     public void execute(User user, SubmitFormRequest request) {
         validateOnlyOneFormPerUser(user);
+        validateRegistrationNumberNotDuplicated(request.getApplicant().getRegistrationNumber());
 
         Form form = Form.builder()
                 .applicant(request.getApplicant().toValue())
@@ -46,6 +48,12 @@ public class SubmitFormUseCase {
         Optional<Form> form = formRepository.findByUser(user);
         if (form.isPresent()) {
             throw new FormAlreadySubmittedException();
+        }
+    }
+
+    private void validateRegistrationNumberNotDuplicated(String registrationNumber) {
+        if (formRepository.existsByApplicant_RegistrationNumber(registrationNumber)) {
+            throw new DuplicateRegistrationNumberException();
         }
     }
 }

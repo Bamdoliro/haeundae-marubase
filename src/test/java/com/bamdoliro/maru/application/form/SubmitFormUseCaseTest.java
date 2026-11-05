@@ -2,6 +2,7 @@ package com.bamdoliro.maru.application.form;
 
 import com.bamdoliro.maru.domain.form.domain.Form;
 import com.bamdoliro.maru.domain.form.domain.type.FormType;
+import com.bamdoliro.maru.domain.form.exception.DuplicateRegistrationNumberException;
 import com.bamdoliro.maru.domain.form.exception.FormAlreadySubmittedException;
 import com.bamdoliro.maru.domain.form.service.AssignExaminationNumberService;
 import com.bamdoliro.maru.domain.form.service.CalculateFormScoreService;
@@ -76,6 +77,26 @@ class SubmitFormUseCaseTest {
         verify(calculateFormScoreService, never()).execute(any(Form.class));
         verify(assignExaminationNumberService, never()).execute(any(Form.class));
         verify(formRepository, never()).delete(any(Form.class));
+        verify(formRepository, never()).save(any(Form.class));
+    }
+
+    @Test
+    void 원서를_제출할_때_이미_등록된_주민등록번호면_에러가_발생한다() {
+        // given
+        SubmitFormRequest request = FormFixture.createFormRequest(FormType.REGULAR);
+        User user = UserFixture.createUser();
+        String registrationNumber = request.getApplicant().getRegistrationNumber();
+
+        given(formRepository.findByUser(user)).willReturn(Optional.empty());
+        given(formRepository.existsByApplicant_RegistrationNumber(registrationNumber)).willReturn(true);
+
+        // when and then
+        assertThrows(DuplicateRegistrationNumberException.class, () -> submitFormUseCase.execute(user, request));
+
+        verify(formRepository, times(1)).findByUser(user);
+        verify(formRepository, times(1)).existsByApplicant_RegistrationNumber(registrationNumber);
+        verify(calculateFormScoreService, never()).execute(any(Form.class));
+        verify(assignExaminationNumberService, never()).execute(any(Form.class));
         verify(formRepository, never()).save(any(Form.class));
     }
 }

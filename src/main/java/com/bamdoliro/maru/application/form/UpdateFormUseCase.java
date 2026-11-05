@@ -2,6 +2,7 @@ package com.bamdoliro.maru.application.form;
 
 import com.bamdoliro.maru.domain.form.domain.Form;
 import com.bamdoliro.maru.domain.form.exception.CannotUpdateNotRejectedFormException;
+import com.bamdoliro.maru.domain.form.exception.DuplicateRegistrationNumberException;
 import com.bamdoliro.maru.domain.form.service.CalculateFormScoreService;
 import com.bamdoliro.maru.domain.form.service.FormFacade;
 import com.bamdoliro.maru.domain.user.domain.User;
@@ -26,6 +27,7 @@ public class UpdateFormUseCase {
         Form form = formFacade.getForm(user);
         form.isApplicant(user);
         validateFormStatus(form);
+        validateRegistrationNumberNotDuplicated(form, request.getApplicant().getRegistrationNumber());
 
         form.update(
                 request.getApplicant().toValue(),
@@ -44,6 +46,16 @@ public class UpdateFormUseCase {
     private void validateFormStatus(Form form) {
         if (!form.isRejected()) {
             throw new CannotUpdateNotRejectedFormException();
+        }
+    }
+
+    private void validateRegistrationNumberNotDuplicated(Form form, String registrationNumber) {
+        if (form.getApplicant().getRegistrationNumber().equals(registrationNumber)) {
+            return;
+        }
+
+        if (formRepository.existsByApplicant_RegistrationNumber(registrationNumber)) {
+            throw new DuplicateRegistrationNumberException();
         }
     }
 }
