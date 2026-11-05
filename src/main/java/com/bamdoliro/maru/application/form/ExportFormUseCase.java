@@ -41,17 +41,17 @@ public class ExportFormUseCase {
         Form form = formFacade.getForm(user);
 
         SubjectMap subjectMap = form.getGrade().getSubjectList().getSubjectMap();
-        Map<String, Object> formMap = Map.of(
-                "form", form,
-                "grade21", subjectMap.getSubjectListOf(2, 1),
-                "grade22", subjectMap.getSubjectListOf(2, 2),
-                "grade31", subjectMap.getSubjectListOf(3, 1),
-                "grade32", subjectMap.getSubjectListOf(3, 2),
-                "subjectList", getSubjectList(form),
-                "year", Schedule.getAdmissionYear(),
-                "applicationDeadline", Schedule.toShortLocaleString(Schedule.END),
-                "identificationPictureUri", fileService.getDownloadPresignedUrl(FolderConstant.IDENTIFICATION_PICTURE, user.getUuid().toString())
-        );
+        // 신분증 사진이 S3에 없으면 presigned URL이 null이라, null을 허용하지 않는 Map.of 대신 HashMap을 쓴다
+        Map<String, Object> formMap = new HashMap<>();
+        formMap.put("form", form);
+        formMap.put("grade21", subjectMap.getSubjectListOf(2, 1));
+        formMap.put("grade22", subjectMap.getSubjectListOf(2, 2));
+        formMap.put("grade31", subjectMap.getSubjectListOf(3, 1));
+        formMap.put("grade32", subjectMap.getSubjectListOf(3, 2));
+        formMap.put("subjectList", getSubjectList(form));
+        formMap.put("year", Schedule.getAdmissionYear());
+        formMap.put("applicationDeadline", Schedule.toShortLocaleString(Schedule.END));
+        formMap.put("identificationPictureUri", fileService.getDownloadPresignedUrl(FolderConstant.IDENTIFICATION_PICTURE, user.getUuid().toString()));
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PdfDocument mergedDocument = new PdfDocument(new PdfWriter(outputStream));
         PdfMerger pdfMerger = new PdfMerger(mergedDocument);
