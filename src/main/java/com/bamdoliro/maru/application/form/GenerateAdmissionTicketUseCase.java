@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 
 import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -30,14 +31,14 @@ public class GenerateAdmissionTicketUseCase {
         Form form = formFacade.getForm(user);
         validateFormStatus(form);
 
-        Map<String, Object> formMap = Map.ofEntries(
-                Map.entry("form", form),
-                Map.entry("year", Schedule.getAdmissionYear()),
-                Map.entry("depthInterview", Schedule.toLocaleString(Schedule.DEPTH_INTERVIEW)),
-                Map.entry("announcementOfSecondPass", Schedule.toLocaleString(Schedule.ANNOUNCEMENT_OF_SECOND_PASS)),
-                Map.entry("entranceRegistrationTime", Schedule.toLocaleString(Schedule.ENTRANCE_REGISTRATION_PERIOD_START, Schedule.ENTRANCE_REGISTRATION_PERIOD_END)),
-                Map.entry("identificationPictureUri", fileService.getDownloadPresignedUrl(FolderConstant.IDENTIFICATION_PICTURE, user.getUuid().toString()))
-                );
+        // 신분증 사진이 S3에 없으면 presigned URL이 null이라, null을 허용하지 않는 Map.of/Map.ofEntries 대신 HashMap을 쓴다
+        Map<String, Object> formMap = new HashMap<>();
+        formMap.put("form", form);
+        formMap.put("year", Schedule.getAdmissionYear());
+        formMap.put("depthInterview", Schedule.toLocaleString(Schedule.DEPTH_INTERVIEW));
+        formMap.put("announcementOfSecondPass", Schedule.toLocaleString(Schedule.ANNOUNCEMENT_OF_SECOND_PASS));
+        formMap.put("entranceRegistrationTime", Schedule.toLocaleString(Schedule.ENTRANCE_REGISTRATION_PERIOD_START, Schedule.ENTRANCE_REGISTRATION_PERIOD_END));
+        formMap.put("identificationPictureUri", fileService.getDownloadPresignedUrl(FolderConstant.IDENTIFICATION_PICTURE, user.getUuid().toString()));
         String html = processTemplateService.execute(Templates.ADMISSION_TICKET, formMap);
         ByteArrayOutputStream outputStream = generatePdfService.execute(html);
 

@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 
 import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -30,15 +31,14 @@ public class GenerateProofOfApplicationUseCase {
         Form form = formFacade.getForm(user);
         validateFormStatus(form);
 
-        Map<String, Object> formMap = Map.of(
-                "form", form,
-                "year", Schedule.getAdmissionYear(),
-                "announcement_of_first_pass", Schedule.toLocaleString(Schedule.ANNOUNCEMENT_OF_FIRST_PASS),
-                "identificationPictureUri", fileService.getDownloadPresignedUrl(FolderConstant.IDENTIFICATION_PICTURE, user.getUuid().toString()),
-                "start", Schedule.toLocaleString(Schedule.START),
-                "end", Schedule.toLocaleString(Schedule.END)
-
-        );
+        // 신분증 사진이 S3에 없으면 presigned URL이 null이라, null을 허용하지 않는 Map.of/Map.ofEntries 대신 HashMap을 쓴다
+        Map<String, Object> formMap = new HashMap<>();
+        formMap.put("form", form);
+        formMap.put("year", Schedule.getAdmissionYear());
+        formMap.put("announcement_of_first_pass", Schedule.toLocaleString(Schedule.ANNOUNCEMENT_OF_FIRST_PASS));
+        formMap.put("identificationPictureUri", fileService.getDownloadPresignedUrl(FolderConstant.IDENTIFICATION_PICTURE, user.getUuid().toString()));
+        formMap.put("start", Schedule.toLocaleString(Schedule.START));
+        formMap.put("end", Schedule.toLocaleString(Schedule.END));
         String html = processTemplateService.execute(Templates.PROOF_OF_APPLICATION, formMap);
         ByteArrayOutputStream outputStream = generatePdfService.execute(html);
 
