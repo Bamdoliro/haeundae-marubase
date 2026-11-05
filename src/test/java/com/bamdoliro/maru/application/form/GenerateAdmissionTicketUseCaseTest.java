@@ -14,16 +14,20 @@ import com.bamdoliro.maru.shared.fixture.SharedFixture;
 import com.bamdoliro.maru.shared.fixture.UserFixture;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.BDDMockito.given;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.*;
 
@@ -95,5 +99,33 @@ class GenerateAdmissionTicketUseCaseTest {
         verify(formFacade, times(1)).getForm(user);
         verify(processTemplateService, never()).execute(any(String.class), anyMap());
         verify(generatePdfService, never()).execute(any(String.class));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    void 신분증_사진이_없어도_수험표를_생성한다() {
+        // given
+        User user = UserFixture.createUser();
+        Form form = FormFixture.createForm(FormType.MULTI_CHILDREN);
+        form.firstPass();
+
+        given(formFacade.getForm(user)).willReturn(form);
+        given(processTemplateService.execute(any(String.class), anyMap())).willReturn("html");
+        given(fileService.getDownloadPresignedUrl(any(String.class), any(String.class))).willReturn(null);
+        given(generatePdfService.execute(any(String.class))).willReturn(new ByteArrayOutputStream());
+
+        // when
+        generateAdmissionTicketUseCase.execute(user);
+
+        // then
+        ArgumentCaptor<Map<String, Object>> formMapCaptor = ArgumentCaptor.forClass(Map.class);
+        verify(formFacade, times(1)).getForm(user);
+        verify(processTemplateService, times(1)).execute(any(String.class), formMapCaptor.capture());
+        verify(generatePdfService, times(1)).execute(any(String.class));
+        verify(fileService, times(1)).getDownloadPresignedUrl(any(String.class), any(String.class));
+
+        Map<String, Object> formMap = formMapCaptor.getValue();
+        assertTrue(formMap.containsKey("identificationPictureUri"));
+        assertNull(formMap.get("identificationPictureUri"));
     }
 }
