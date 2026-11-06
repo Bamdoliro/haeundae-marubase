@@ -218,6 +218,9 @@ public abstract class ControllerTest {
     protected ExportFinalPassedFormUseCase exportFinalPassedFormUseCase;
 
     @MockBean
+    protected ExportNewStudentFormUseCase exportNewStudentFormUseCase;
+
+    @MockBean
     protected ExportFirstRoundResultUseCase exportFirstRoundResultUseCase;
 
     @MockBean
