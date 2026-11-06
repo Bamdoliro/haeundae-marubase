@@ -280,20 +280,29 @@ public class ExportNewStudentFormUseCase {
         return school == null ? null : school.getLocation();
     }
 
-    /**
-     * 학교 주소("부산광역시 해운대구 ...")의 두 번째 토큰을 구/군으로 사용한다.
-     * 구/군/시로 끝나지 않으면(세종시 등) 비워 둔다.
-     */
     private String schoolDistrict(Form form) {
         School school = form.getEducation().getSchool();
-        if (school == null || school.getAddress() == null) {
+        return school == null ? null : extractDistrict(school.getAddress());
+    }
+
+    /**
+     * 학교 도로명 주소(NEIS ORG_RDNMA)에서 시/군/구를 뽑는다.
+     * - "부산광역시 해운대구 ..." -> "해운대구", "경상남도 거제시 ..." -> "거제시"
+     * - 구가 있는 시는 함께 붙인다: "경상남도 창원시 의창구 ..." -> "창원시 의창구"
+     * - 시/군/구 단위가 없으면(세종특별자치시 등) 비워 둔다.
+     */
+    static String extractDistrict(String address) {
+        if (address == null) {
             return null;
         }
-        String[] tokens = school.getAddress().trim().split("\\s+");
+        String[] tokens = address.trim().split("\\s+");
         if (tokens.length < 2) {
             return null;
         }
         String district = tokens[1];
+        if (district.endsWith("시") && tokens.length > 2 && tokens[2].endsWith("구")) {
+            return district + " " + tokens[2];
+        }
         if (district.endsWith("구") || district.endsWith("군") || district.endsWith("시")) {
             return district;
         }
