@@ -40,11 +40,14 @@ public class SelectSecondPassUseCase {
             socialIntegrationCount -= gap;
         }
 
-        int equalOpportunityCount = (int) Math.round(socialIntegrationCount * 0.5);
-        int societyDiversityCount = equalOpportunityCount;
+        SocialIntegrationQuota quota = SocialIntegrationQuota.of(
+                socialIntegrationCount,
+                equalOpportunityFormList.size(),
+                societyDiversityFormList.size()
+        );
 
-        processForms(equalOpportunityFormList, equalOpportunityCount, this::changeToRegularAndCalculateScoreAgain);
-        processForms(societyDiversityFormList, societyDiversityCount, this::changeToRegularAndCalculateScoreAgain);
+        processForms(equalOpportunityFormList, quota.equalOpportunityCount(), this::changeToRegularAndCalculateScoreAgain);
+        processForms(societyDiversityFormList, quota.societyDiversityCount(), this::changeToRegularAndCalculateScoreAgain);
 
         formRepository.flush();
         List<Form> regularFormList = formRepository.findFirstPassedRegularForm();
@@ -61,6 +64,11 @@ public class SelectSecondPassUseCase {
     }
 
     private void processForms(List<Form> formList, int count, Consumer<Form> action) {
+        if (count <= 0) {
+            formList.forEach(action);
+            return;
+        }
+
         for (Form form : formList) {
             if (count > 0) {
                 form.pass();

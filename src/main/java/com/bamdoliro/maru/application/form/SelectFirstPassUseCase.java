@@ -43,11 +43,14 @@ public class SelectFirstPassUseCase {
         socialIntegrationCount = calculateMultiple(socialIntegrationCount);
         nationalVeteransEducationCount = calculateMultiple(nationalVeteransEducationCount);
         specialAdmissionCount = calculateMultiple(specialAdmissionCount);
-        int equalOpportunityCount = (int) Math.round(socialIntegrationCount * 0.5);
-        int societyDiversityCount = equalOpportunityCount;
+        SocialIntegrationQuota quota = SocialIntegrationQuota.of(
+                socialIntegrationCount,
+                equalOpportunityFormList.size(),
+                societyDiversityFormList.size()
+        );
 
-        processForms(equalOpportunityFormList, equalOpportunityCount, this::changeToRegularAndCalculateGradeAgain);
-        processForms(societyDiversityFormList, societyDiversityCount, this::changeToRegularAndCalculateGradeAgain);
+        processForms(equalOpportunityFormList, quota.equalOpportunityCount(), this::changeToRegularAndCalculateGradeAgain);
+        processForms(societyDiversityFormList, quota.societyDiversityCount(), this::changeToRegularAndCalculateGradeAgain);
 
         formRepository.flush();
         List<Form> regularFormList = formRepository.findApprovedRegularForm()
@@ -72,6 +75,11 @@ public class SelectFirstPassUseCase {
     private void processForms(List<Form> formList, int count, Consumer<Form> action) {
         if (formList.isEmpty())
             return;
+
+        if (count <= 0) {
+            formList.forEach(action);
+            return;
+        }
 
         Double lastScore = formList.get(Math.min(count, formList.size()) - 1).getScore().getFirstRoundScore();
 
