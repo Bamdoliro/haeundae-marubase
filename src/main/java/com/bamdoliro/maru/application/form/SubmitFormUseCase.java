@@ -29,7 +29,8 @@ public class SubmitFormUseCase {
     private static final String REGISTRATION_NUMBER_CONSTRAINT = "uk_ewrcmw7q2sycf9m1bq5g7njwm";
 
     /**
-     * user_id 유니크 제약. 현재 엔티티 설정으로는 생성되지 않지만, 수동으로 추가했을 때의 PostgreSQL 기본 이름이다.
+     * user_id 유니크 제약. 운영 DB에는 이 이름으로 직접 추가했다.
+     * Hibernate가 새로 생성하는 DB(테스트 등)에서는 uk_로 시작하는 이름이 붙으므로 메시지 패턴으로도 판별한다.
      */
     private static final String USER_CONSTRAINT = "tbl_form_user_id_key";
 
@@ -42,7 +43,7 @@ public class SubmitFormUseCase {
     @Transactional
     public void execute(User user, SubmitFormRequest request) {
         // 중복 제출 검사부터 저장까지 한 번에 하나의 제출만 진행되도록 직렬화한다.
-        // tbl_form.user_id에는 유니크 제약이 없으므로, 같은 사용자의 동시 제출은 이 락과 아래 검사로 막는다.
+        // 같은 사용자의 동시 제출은 이 락과 아래 검사로 막고, tbl_form.user_id 유니크 제약은 최후의 방어선으로 둔다.
         examinationNumberLock.lock();
         validateOnlyOneFormPerUser(user);
         validateRegistrationNumberNotDuplicated(request.getApplicant().getRegistrationNumber());

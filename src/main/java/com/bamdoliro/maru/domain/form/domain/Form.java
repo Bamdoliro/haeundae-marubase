@@ -67,7 +67,7 @@ public class Form extends BaseTimeEntity {
     private FormStatus status;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, name = "user_id")
+    @JoinColumn(nullable = false, name = "user_id", unique = true)
     private User user;
 
     @Builder
