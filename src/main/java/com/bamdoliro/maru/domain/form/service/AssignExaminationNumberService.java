@@ -2,6 +2,7 @@ package com.bamdoliro.maru.domain.form.service;
 
 import com.bamdoliro.maru.domain.form.domain.Form;
 import com.bamdoliro.maru.domain.form.domain.type.FormType;
+import com.bamdoliro.maru.domain.form.exception.ExaminationNumberExhaustedException;
 import com.bamdoliro.maru.infrastructure.persistence.form.FormRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,19 +11,35 @@ import org.springframework.stereotype.Service;
 @Service
 public class AssignExaminationNumberService {
 
+    /**
+     * 전형별 수험번호 구간 크기. 시작값과 시작값 + RANGE_SIZE는 구간에 포함하지 않는다.
+     * (예: 일반전형 111000 -> 111001 ~ 111999)
+     */
+    private static final long RANGE_SIZE = 1000L;
+
     private final FormRepository formRepository;
+    private final ExaminationNumberLock examinationNumberLock;
 
     public void execute(Form form) {
+        examinationNumberLock.lock();
         Long examinationNumber = getNextExaminationNumber(form.getType());
         form.assignExaminationNumber(examinationNumber);
     }
 
     private Long getNextExaminationNumber(FormType type) {
-        Long startNumber = getStartNumber(type);
-        return formRepository.findAllExaminationNumber().stream()
-                .filter(num -> num >= startNumber && num <= startNumber + 1000)
+        long startNumber = getStartNumber(type);
+        long endNumber = startNumber + RANGE_SIZE;
+
+        long nextNumber = formRepository.findAllExaminationNumber().stream()
+                .filter(num -> num != null && num > startNumber && num < endNumber)
                 .max(Long::compareTo)
                 .orElse(startNumber) + 1;
+
+        if (nextNumber >= endNumber) {
+            throw new ExaminationNumberExhaustedException();
+        }
+
+        return nextNumber;
     }
 
     private Long getStartNumber(FormType type) {
