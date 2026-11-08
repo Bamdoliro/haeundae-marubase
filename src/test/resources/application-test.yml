@@ -69,6 +69,12 @@ message:
   api-domain: ${MESSAGE_API_DOMAIN}
   from: ${MESSAGE_FROM}
 
+domain:
+  name: hhsapply.com
+
+cors:
+  allowed-origins: https://hhsapply.com,https://madmin.hhsapply.com
+
 schedule:
   start: ${SCHEDULE_START}
   end: ${SCHEDULE_END}
