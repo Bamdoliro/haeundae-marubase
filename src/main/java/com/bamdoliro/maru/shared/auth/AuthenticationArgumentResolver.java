@@ -1,6 +1,8 @@
 package com.bamdoliro.maru.shared.auth;
 
+import com.bamdoliro.maru.domain.auth.domain.type.TokenType;
 import com.bamdoliro.maru.domain.auth.exception.AuthorityMismatchException;
+import com.bamdoliro.maru.domain.auth.exception.InvalidTokenException;
 import com.bamdoliro.maru.domain.auth.service.TokenService;
 import com.bamdoliro.maru.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -29,10 +31,17 @@ public class AuthenticationArgumentResolver implements HandlerMethodArgumentReso
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String token = authenticationExtractor.extract(webRequest);
+        validateTokenType(token);
         User user = tokenService.getUser(token);
         validateAuthority(user, Objects.requireNonNull(parameter.getParameterAnnotation(AuthenticationPrincipal.class)));
 
         return user;
+    }
+
+    private void validateTokenType(String token) {
+        if (!Objects.equals(tokenService.getType(token), TokenType.ACCESS_TOKEN.name())) {
+            throw new InvalidTokenException();
+        }
     }
 
     private void validateAuthority(User user, AuthenticationPrincipal authenticationPrincipal) {
