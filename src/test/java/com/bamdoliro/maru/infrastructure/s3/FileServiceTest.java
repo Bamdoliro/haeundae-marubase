@@ -9,7 +9,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
+import com.bamdoliro.maru.infrastructure.s3.exception.S3FileNotFoundException;
+import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectResponse;
+import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 import software.amazon.awssdk.services.s3.model.HeadObjectRequest;
 import software.amazon.awssdk.services.s3.model.HeadObjectResponse;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
@@ -21,6 +26,8 @@ import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignReques
 import java.net.URL;
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static com.bamdoliro.maru.shared.constants.FileConstant.MB;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -68,5 +75,22 @@ class FileServiceTest {
         // then
         verify(s3Presigner, times(1)).presignPutObject(any(PutObjectPresignRequest.class));
         verify(s3Presigner, times(1)).presignGetObject(any(GetObjectPresignRequest.class));
+    }
+
+    @Test
+    void S3_객체를_바이트로_내려받는다() {
+        byte[] bytes = "pdf-bytes".getBytes();
+        given(s3Client.getObjectAsBytes(any(GetObjectRequest.class)))
+                .willReturn(ResponseBytes.fromByteArray(GetObjectResponse.builder().build(), bytes));
+
+        assertArrayEquals(bytes, fileService.download("form", "uuid"));
+    }
+
+    @Test
+    void 내려받을_S3_객체가_없으면_에러가_발생한다() {
+        given(s3Client.getObjectAsBytes(any(GetObjectRequest.class)))
+                .willThrow(NoSuchKeyException.builder().build());
+
+        assertThrows(S3FileNotFoundException.class, () -> fileService.download("form", "uuid"));
     }
 }
