@@ -24,10 +24,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.StreamSupport;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -70,6 +72,9 @@ class AdminFormLogAspectTest {
 
     @Autowired
     private AdminFormStatusChangeLogRepository adminFormStatusChangeLogRepository;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     // 원서 조회 시 S3 presigned URL 발급은 이 테스트의 관심사가 아니다.
     @MockBean
@@ -193,6 +198,60 @@ class AdminFormLogAspectTest {
 
         assertEquals(0, adminFormViewLogRepository.count());
         assertEquals(0, adminFormStatusChangeLogRepository.count());
+    }
+
+    @Test
+    void 이미_승인된_원서를_다시_승인하면_로그가_추가로_남지_않는다() throws Exception {
+        assertNoLogOnRepeat("approve", "APPROVED");
+    }
+
+    @Test
+    void 이미_반려된_원서를_다시_반려하면_로그가_추가로_남지_않는다() throws Exception {
+        assertNoLogOnRepeat("reject", "REJECTED");
+    }
+
+    @Test
+    void 이미_접수된_원서를_다시_접수하면_로그가_추가로_남지_않는다() throws Exception {
+        assertNoLogOnRepeat("receive", "RECEIVED");
+    }
+
+    // 같은 처리를 두 번 연속 요청하면 두 요청 모두 성공하지만, 상태가 바뀐 첫 번째 요청만 로그가 남는다.
+    private void assertNoLogOnRepeat(String action, String afterStatus) throws Exception {
+        for (int i = 0; i < 2; i++) {
+            mockMvc.perform(patch("/forms/{form-id}/" + action, form.getId())
+                            .header(HttpHeaders.AUTHORIZATION, bearer(admin)))
+                    .andExpect(status().isNoContent());
+        }
+
+        List<Map<String, Object>> rows = statusChangeRows();
+        assertEquals(1, rows.size());
+        assertEquals("FINAL_SUBMITTED", rows.get(0).get("BEFORE_STATUS"));
+        assertEquals(afterStatus, rows.get(0).get("AFTER_STATUS"));
+        assertEquals(afterStatus, formRepository.findById(form.getId()).orElseThrow().getStatus().name());
+    }
+
+    @Test
+    void 제출_상태_원서를_승인하면_DB에_SUBMITTED에서_APPROVED로_남는다() throws Exception {
+        Form submitted = FormFixture.createRandomBusanForm(userRepository.save(UserFixture.createUser()));
+        assignExaminationNumberService.execute(submitted);
+        calculateFormScoreService.execute(submitted);
+        submitted = formRepository.save(submitted);
+
+        mockMvc.perform(patch("/forms/{form-id}/approve", submitted.getId())
+                        .header(HttpHeaders.AUTHORIZATION, bearer(admin)))
+                .andExpect(status().isNoContent());
+
+        List<Map<String, Object>> rows = statusChangeRows();
+        assertEquals(1, rows.size());
+        assertEquals(((Number) rows.get(0).get("FORM_ID")).longValue(), submitted.getId());
+        assertEquals("SUBMITTED", rows.get(0).get("BEFORE_STATUS"));
+        assertEquals("APPROVED", rows.get(0).get("AFTER_STATUS"));
+    }
+
+    // 엔티티 매핑을 거치지 않고 테이블 값을 직접 읽는다.
+    private List<Map<String, Object>> statusChangeRows() {
+        return jdbcTemplate.queryForList(
+                "SELECT form_id, before_status, after_status FROM tbl_admin_form_status_change_log ORDER BY id");
     }
 
     // 연관 엔티티는 LAZY 프록시지만 id 조회는 초기화 없이 가능하다.

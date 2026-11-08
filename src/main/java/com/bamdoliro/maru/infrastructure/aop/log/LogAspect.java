@@ -179,6 +179,11 @@ public class LogAspect {
         // 아니면 커밋된 상태를 읽으므로 어느 쪽이든 실제 변경 후 상태가 기록된다.
         Form form = formFacade.getForm(formId);
 
+        // 이미 같은 상태인 원서를 다시 처리한 경우는 상태가 바뀌지 않았으므로 남기지 않는다.
+        if (beforeStatus == form.getStatus()) {
+            return result;
+        }
+
         AdminFormStatusChangeLog log = AdminFormStatusChangeLog.builder()
                 .clientIp(clientIp)
                 .userAgent(userAgent)
