@@ -3,8 +3,10 @@ package com.bamdoliro.maru.infrastructure.s3;
 import com.bamdoliro.maru.infrastructure.s3.dto.response.UrlResponse;
 import com.bamdoliro.maru.infrastructure.s3.validator.FileValidator;
 import com.bamdoliro.maru.infrastructure.s3.dto.request.FileMetadata;
+import com.bamdoliro.maru.infrastructure.s3.exception.S3AccessFailedException;
 import com.bamdoliro.maru.infrastructure.s3.exception.S3FileNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -12,6 +14,7 @@ import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.HeadObjectRequest;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.S3Exception;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
@@ -20,6 +23,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FileService {
@@ -54,7 +58,8 @@ public class FileService {
     }
 
     /**
-     * 서버에서 S3 객체를 바이트로 직접 받아온다. 객체가 없으면 404(S3FileNotFoundException).
+     * 서버에서 S3 객체를 바이트로 직접 받아온다.
+     * 객체가 없으면 404(S3FileNotFoundException), 권한 부족(403) 등 그 외 S3 오류는 S3AccessFailedException.
      */
     public byte[] download(String folder, String fileName) {
         String fullFileName = createFileName(folder, fileName);
@@ -67,6 +72,8 @@ public class FileService {
             ).asByteArray();
         } catch (NoSuchKeyException e) {
             throw new S3FileNotFoundException();
+        } catch (S3Exception e) {
+            throw accessFailed("download", fullFileName, e);
         }
     }
 
@@ -99,6 +106,8 @@ public class FileService {
                     .build());
         } catch (NoSuchKeyException e) {
             return null;
+        } catch (S3Exception e) {
+            throw accessFailed("headObject", fileName, e);
         }
 
         return GetObjectPresignRequest.builder()
@@ -110,6 +119,20 @@ public class FileService {
                         .responseContentDisposition(contentDisposition)
                         .build())
                 .build();
+    }
+
+    private S3AccessFailedException accessFailed(String operation, String key, S3Exception e) {
+        log.error(
+                "S3 {} 실패 [bucket={}, key={}, status={}, errorCode={}, requestId={}]",
+                operation,
+                bucket,
+                key,
+                e.statusCode(),
+                e.awsErrorDetails() != null ? e.awsErrorDetails().errorCode() : null,
+                e.requestId(),
+                e
+        );
+        return new S3AccessFailedException();
     }
 
     private String createAttachmentContentDisposition(String displayFileName) {

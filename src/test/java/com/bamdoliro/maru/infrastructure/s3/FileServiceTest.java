@@ -9,7 +9,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
+import com.bamdoliro.maru.infrastructure.s3.exception.S3AccessFailedException;
 import com.bamdoliro.maru.infrastructure.s3.exception.S3FileNotFoundException;
+import com.bamdoliro.maru.infrastructure.s3.exception.error.S3ErrorProperty;
+import com.bamdoliro.maru.shared.error.GlobalExceptionHandler;
+import com.bamdoliro.maru.shared.response.ErrorResponse;
+import org.springframework.boot.test.system.CapturedOutput;
+import org.springframework.boot.test.system.OutputCaptureExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import software.amazon.awssdk.awscore.exception.AwsErrorDetails;
 import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
@@ -17,6 +26,7 @@ import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 import software.amazon.awssdk.services.s3.model.HeadObjectRequest;
 import software.amazon.awssdk.services.s3.model.HeadObjectResponse;
+import software.amazon.awssdk.services.s3.model.S3Exception;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
@@ -26,16 +36,20 @@ import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignReques
 import java.net.URL;
 import java.util.Set;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static com.bamdoliro.maru.shared.constants.FileConstant.MB;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith({MockitoExtension.class, OutputCaptureExtension.class})
 class FileServiceTest {
 
     @InjectMocks
@@ -92,5 +106,64 @@ class FileServiceTest {
                 .willThrow(NoSuchKeyException.builder().build());
 
         assertThrows(S3FileNotFoundException.class, () -> fileService.download("form", "uuid"));
+    }
+
+    @Test
+    void 다운로드_URL_조회_시_S3_객체가_없으면_null을_반환한다() {
+        given(s3Client.headObject(any(HeadObjectRequest.class)))
+                .willThrow(NoSuchKeyException.builder().statusCode(404).build());
+
+        assertNull(fileService.getDownloadPresignedUrl("form", "uuid"));
+        verify(s3Presigner, never()).presignGetObject(any(GetObjectPresignRequest.class));
+    }
+
+    @Test
+    void 다운로드_URL_조회_시_S3_권한_오류는_접근_실패_에러로_구분하고_로그를_남긴다(CapturedOutput output) {
+        given(s3Client.headObject(any(HeadObjectRequest.class))).willThrow(accessDenied());
+
+        S3AccessFailedException e = assertThrows(
+                S3AccessFailedException.class,
+                () -> fileService.getDownloadPresignedUrl("form", "uuid")
+        );
+
+        assertEquals(S3ErrorProperty.ACCESS_FAILED, e.getErrorProperty());
+        assertThat(output.getOut())
+                .contains("ERROR")
+                .contains("S3 headObject 실패")
+                .contains("key=form/uuid")
+                .contains("status=403")
+                .contains("errorCode=AccessDenied");
+    }
+
+    @Test
+    void 내려받을_때_S3_권한_오류는_접근_실패_에러로_구분하고_로그를_남긴다(CapturedOutput output) {
+        given(s3Client.getObjectAsBytes(any(GetObjectRequest.class))).willThrow(accessDenied());
+
+        assertThrows(S3AccessFailedException.class, () -> fileService.download("form", "uuid"));
+
+        assertThat(output.getOut())
+                .contains("ERROR")
+                .contains("S3 download 실패")
+                .contains("status=403");
+    }
+
+    @Test
+    void S3_접근_실패는_알_수_없는_서버_에러가_아닌_전용_에러_코드로_응답한다() {
+        ResponseEntity<ErrorResponse> response = new GlobalExceptionHandler()
+                .handleMaruException(new S3AccessFailedException());
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals("ACCESS_FAILED", response.getBody().getCode());
+    }
+
+    private S3Exception accessDenied() {
+        return (S3Exception) S3Exception.builder()
+                .statusCode(403)
+                .requestId("test-request-id")
+                .awsErrorDetails(AwsErrorDetails.builder()
+                        .errorCode("AccessDenied")
+                        .errorMessage("Access Denied")
+                        .build())
+                .build();
     }
 }
