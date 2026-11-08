@@ -27,7 +27,7 @@ public class EducationRequest {
     private String graduationDate;
 
     @Nullable
-    @Size(max = 20, message = "20자 이하여야 합니다.")
+    @Size(max = 30, message = "30자 이하여야 합니다.")
     private String schoolName;
 
     @Nullable
