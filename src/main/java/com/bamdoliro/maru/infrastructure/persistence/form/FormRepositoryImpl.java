@@ -86,7 +86,7 @@ public class FormRepositoryImpl implements FormRepositoryCustom {
                                                 .and(form.type.eq(FormType.SPECIAL_ADMISSION).not())
                                 )
                 )
-                .orderBy(form.score.firstRoundScore.desc())
+                .orderBy(form.score.firstRoundScore.desc(), form.id.asc())
                 .fetch();
     }
 
@@ -101,7 +101,7 @@ public class FormRepositoryImpl implements FormRepositoryCustom {
                                                 .or(form.changedToRegular.isTrue())
                                 )
                 )
-                .orderBy(form.score.firstRoundScore.desc())
+                .orderBy(form.score.firstRoundScore.desc(), form.id.asc())
                 .fetch();
     }
 
@@ -116,7 +116,7 @@ public class FormRepositoryImpl implements FormRepositoryCustom {
                                                 .or(form.type.eq(FormType.NATIONAL_VETERANS_EDUCATION))
                                 )
                 )
-                .orderBy(form.score.firstRoundScore.desc())
+                .orderBy(form.score.firstRoundScore.desc(), form.id.asc())
                 .fetch();
     }
 
@@ -397,7 +397,7 @@ public class FormRepositoryImpl implements FormRepositoryCustom {
                 .where(form.type.in(matchingFormTypes)
                         .and(form.status.in(statusList))
                         .and(form.score.firstRoundScore.isNotNull()))
-                .orderBy(form.score.firstRoundScore.desc())
+                .orderBy(form.score.firstRoundScore.desc(), form.id.asc())
                 .offset(targetPosition - 1)
                 .limit(1)
                 .fetchOne();
@@ -434,7 +434,7 @@ public class FormRepositoryImpl implements FormRepositoryCustom {
                 .where(form.type.in(matchingFormTypes)
                         .and(form.status.in(statusList))
                         .and(form.score.totalScore.isNotNull()))
-                .orderBy(form.score.totalScore.desc())
+                .orderBy(form.score.totalScore.desc(), form.id.asc())
                 .offset(targetPosition - 1)
                 .limit(1)
                 .fetchOne();
