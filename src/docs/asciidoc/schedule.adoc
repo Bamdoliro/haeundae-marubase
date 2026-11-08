@@ -1,0 +1,92 @@
+== 입학 일정 Schedule
+
+입학 전형 일정(원서 접수, 합격 발표, 면접, 입학 등록, 출결 기준일)을 관리합니다.
+활성 일정은 하나이며, 등록된 일정이 없으면 조회 API는 404를 반환합니다.
+
+시간 순서는 다음을 만족해야 합니다. 어기면 400(`INVALID_SCHEDULE_PERIOD`)을 반환합니다.
+
+* 원서 접수 시작 <= 방문 원서 접수 < 원서 접수 마감 < 1차 합격 발표 < 2차 면접 시작 < 2차 면접 종료 < 최종 합격 발표 < 입학 등록 시작 < 입학 등록 마감
+* 출결 기준일 <= 원서 접수 마감일
+
+=== 현재 입학 일정 조회
+인증 없이 현재 활성 일정을 조회할 수 있습니다.
+
+==== 요청
+include::{snippets}/schedule-controller-test/현재_입학_일정을_조회한다/http-request.adoc[]
+
+==== 응답
+
+===== 정상 응답
+include::{snippets}/schedule-controller-test/현재_입학_일정을_조회한다/http-response.adoc[]
+
+===== 등록된 일정이 없는 경우
+include::{snippets}/schedule-controller-test/등록된_입학_일정이_없으면_404를_반환한다/http-response.adoc[]
+
+=== 어드민 현재 입학 일정 조회
+어드민은 수정에 필요한 `version`을 포함한 현재 일정을 조회할 수 있습니다.
+
+==== 요청 형식
+
+===== Request Header
+include::{snippets}/admin-schedule-controller-test/어드민이_현재_입학_일정을_조회한다/request-headers.adoc[]
+
+==== 요청
+include::{snippets}/admin-schedule-controller-test/어드민이_현재_입학_일정을_조회한다/http-request.adoc[]
+
+==== 응답
+
+===== 정상 응답
+include::{snippets}/admin-schedule-controller-test/어드민이_현재_입학_일정을_조회한다/http-response.adoc[]
+
+=== 학년도별 입학 일정 조회
+
+==== 요청 형식
+
+===== Query Parameter
+include::{snippets}/admin-schedule-controller-test/어드민이_학년도로_입학_일정을_조회한다/query-parameters.adoc[]
+
+==== 요청
+include::{snippets}/admin-schedule-controller-test/어드민이_학년도로_입학_일정을_조회한다/http-request.adoc[]
+
+==== 응답
+
+===== 정상 응답
+include::{snippets}/admin-schedule-controller-test/어드민이_학년도로_입학_일정을_조회한다/http-response.adoc[]
+
+=== 입학 일정 등록
+어드민은 새 학년도 일정을 등록할 수 있습니다. 등록한 일정이 활성 일정이 되고, 기존 활성 일정은 비활성이 됩니다.
+같은 학년도 일정이 이미 있으면 409(`SCHEDULE_ALREADY_EXISTS`)를 반환합니다.
+
+==== 요청 형식
+
+===== Request Body
+include::{snippets}/admin-schedule-controller-test/어드민이_입학_일정을_등록한다/request-fields.adoc[]
+
+==== 요청
+include::{snippets}/admin-schedule-controller-test/어드민이_입학_일정을_등록한다/http-request.adoc[]
+
+==== 응답
+
+===== 정상 응답
+include::{snippets}/admin-schedule-controller-test/어드민이_입학_일정을_등록한다/http-response.adoc[]
+
+===== 필수값이 없는 경우
+include::{snippets}/admin-schedule-controller-test/필수값이_없으면_입학_일정을_등록할_수_없다/http-response.adoc[]
+
+===== 시간 순서가 잘못된 경우
+include::{snippets}/admin-schedule-controller-test/시간_순서가_잘못된_입학_일정은_400을_반환한다/http-response.adoc[]
+
+=== 현재 입학 일정 수정
+어드민은 현재 활성 일정을 수정할 수 있습니다. 요청 본문은 등록과 같고, 조회한 일정의 `version`을 함께 보내야 합니다.
+다른 관리자가 먼저 수정했다면 409(`SCHEDULE_VERSION_CONFLICT`)를 반환하므로, 다시 조회한 뒤 수정해야 합니다.
+
+==== 요청
+include::{snippets}/admin-schedule-controller-test/어드민이_현재_입학_일정을_수정한다/http-request.adoc[]
+
+==== 응답
+
+===== 정상 응답
+include::{snippets}/admin-schedule-controller-test/어드민이_현재_입학_일정을_수정한다/http-response.adoc[]
+
+===== 다른 관리자가 먼저 수정한 경우
+include::{snippets}/admin-schedule-controller-test/다른_관리자가_먼저_수정했다면_409를_반환한다/http-response.adoc[]

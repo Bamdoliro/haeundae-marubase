@@ -4,6 +4,10 @@ import com.bamdoliro.maru.application.analysis.QueryGradeDistributionUseCase;
 import com.bamdoliro.maru.application.analysis.QueryNumberOfApplicantsUseCase;
 import com.bamdoliro.maru.application.analysis.QuerySchoolStatusUseCase;
 import com.bamdoliro.maru.application.auth.LogInUseCase;
+import com.bamdoliro.maru.application.schedule.CreateScheduleUseCase;
+import com.bamdoliro.maru.application.schedule.QueryCurrentScheduleUseCase;
+import com.bamdoliro.maru.application.schedule.QueryScheduleUseCase;
+import com.bamdoliro.maru.application.schedule.UpdateScheduleUseCase;
 import com.bamdoliro.maru.application.auth.LogOutUseCase;
 import com.bamdoliro.maru.application.auth.RefreshTokenUseCase;
 import com.bamdoliro.maru.application.fair.*;
@@ -15,6 +19,8 @@ import com.bamdoliro.maru.application.school.SearchSchoolUseCase;
 import com.bamdoliro.maru.application.user.*;
 import com.bamdoliro.maru.domain.auth.service.TokenService;
 import com.bamdoliro.maru.infrastructure.neis.SearchSchoolService;
+import com.bamdoliro.maru.presentation.schedule.AdminScheduleController;
+import com.bamdoliro.maru.presentation.schedule.ScheduleController;
 import com.bamdoliro.maru.presentation.analysis.AnalysisController;
 import com.bamdoliro.maru.presentation.auth.AuthController;
 import com.bamdoliro.maru.presentation.fair.FairController;
@@ -48,7 +54,9 @@ import org.springframework.test.web.servlet.MockMvc;
             DraftFormController.class,
             FairController.class,
             MessageController.class,
-            AnalysisController.class})
+            AnalysisController.class,
+            ScheduleController.class,
+            AdminScheduleController.class})
 public abstract class ControllerTest {
 
     @Autowired
@@ -288,6 +296,18 @@ public abstract class ControllerTest {
 
     @MockBean
     protected DeleteAdmissionFairUseCase deleteAdmissionFairUseCase;
+
+    @MockBean
+    protected QueryCurrentScheduleUseCase queryCurrentScheduleUseCase;
+
+    @MockBean
+    protected QueryScheduleUseCase queryScheduleUseCase;
+
+    @MockBean
+    protected CreateScheduleUseCase createScheduleUseCase;
+
+    @MockBean
+    protected UpdateScheduleUseCase updateScheduleUseCase;
 
     protected String toJson(Object object) throws JsonProcessingException {
         return objectMapper.writeValueAsString(object);

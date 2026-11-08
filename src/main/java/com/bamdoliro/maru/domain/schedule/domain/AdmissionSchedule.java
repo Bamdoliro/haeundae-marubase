@@ -1,0 +1,250 @@
+package com.bamdoliro.maru.domain.schedule.domain;
+
+import com.bamdoliro.maru.domain.schedule.exception.InvalidSchedulePeriodException;
+import com.bamdoliro.maru.shared.entity.BaseTimeEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Version;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Objects;
+
+/**
+ * 학년도별 입학 전형 일정. 활성(active) 일정은 하나만 두고, 프론트엔드는 활성 일정을 조회해 화면에 쓴다.
+ * 동시 수정은 @Version(낙관적 락)으로 막는다.
+ */
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "tbl_admission_schedule")
+@Entity
+public class AdmissionSchedule extends BaseTimeEntity {
+
+    @Column(name = "schedule_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    private Long id;
+
+    @Column(nullable = false, unique = true)
+    private Integer admissionYear;
+
+    @Column(nullable = false)
+    private boolean active;
+
+    // 원서 접수 시작
+    @Column(nullable = false)
+    private LocalDateTime applicationFormStart;
+
+    // 방문 원서 접수 시작
+    @Column(nullable = false)
+    private LocalDateTime visitSubmissionAt;
+
+    // 원서 접수 마감
+    @Column(nullable = false)
+    private LocalDateTime applicationFormEnd;
+
+    // 1차 합격 발표
+    @Column(nullable = false)
+    private LocalDateTime announcementOfFirstPass;
+
+    // 2차 면접 시작
+    @Column(nullable = false)
+    private LocalDateTime interviewStart;
+
+    // 2차 면접 종료
+    @Column(nullable = false)
+    private LocalDateTime interviewEnd;
+
+    // 최종 합격 발표
+    @Column(nullable = false)
+    private LocalDateTime announcementOfFinalPass;
+
+    // 입학 등록 시작
+    @Column(nullable = false)
+    private LocalDateTime registrationStart;
+
+    // 입학 등록 마감
+    @Column(nullable = false)
+    private LocalDateTime registrationEnd;
+
+    // 출결 기준일 (이 날까지의 출결을 반영)
+    @Column(nullable = false)
+    private LocalDate attendanceStandardDate;
+
+    @Version
+    private Long version;
+
+    @Builder
+    public AdmissionSchedule(
+            Integer admissionYear,
+            boolean active,
+            LocalDateTime applicationFormStart,
+            LocalDateTime visitSubmissionAt,
+            LocalDateTime applicationFormEnd,
+            LocalDateTime announcementOfFirstPass,
+            LocalDateTime interviewStart,
+            LocalDateTime interviewEnd,
+            LocalDateTime announcementOfFinalPass,
+            LocalDateTime registrationStart,
+            LocalDateTime registrationEnd,
+            LocalDate attendanceStandardDate
+    ) {
+        this.active = active;
+        apply(
+                admissionYear,
+                applicationFormStart,
+                visitSubmissionAt,
+                applicationFormEnd,
+                announcementOfFirstPass,
+                interviewStart,
+                interviewEnd,
+                announcementOfFinalPass,
+                registrationStart,
+                registrationEnd,
+                attendanceStandardDate
+        );
+    }
+
+    public void update(
+            Integer admissionYear,
+            LocalDateTime applicationFormStart,
+            LocalDateTime visitSubmissionAt,
+            LocalDateTime applicationFormEnd,
+            LocalDateTime announcementOfFirstPass,
+            LocalDateTime interviewStart,
+            LocalDateTime interviewEnd,
+            LocalDateTime announcementOfFinalPass,
+            LocalDateTime registrationStart,
+            LocalDateTime registrationEnd,
+            LocalDate attendanceStandardDate
+    ) {
+        apply(
+                admissionYear,
+                applicationFormStart,
+                visitSubmissionAt,
+                applicationFormEnd,
+                announcementOfFirstPass,
+                interviewStart,
+                interviewEnd,
+                announcementOfFinalPass,
+                registrationStart,
+                registrationEnd,
+                attendanceStandardDate
+        );
+    }
+
+    public void activate() {
+        this.active = true;
+    }
+
+    public void deactivate() {
+        this.active = false;
+    }
+
+    private void apply(
+            Integer admissionYear,
+            LocalDateTime applicationFormStart,
+            LocalDateTime visitSubmissionAt,
+            LocalDateTime applicationFormEnd,
+            LocalDateTime announcementOfFirstPass,
+            LocalDateTime interviewStart,
+            LocalDateTime interviewEnd,
+            LocalDateTime announcementOfFinalPass,
+            LocalDateTime registrationStart,
+            LocalDateTime registrationEnd,
+            LocalDate attendanceStandardDate
+    ) {
+        validate(
+                admissionYear,
+                applicationFormStart,
+                visitSubmissionAt,
+                applicationFormEnd,
+                announcementOfFirstPass,
+                interviewStart,
+                interviewEnd,
+                announcementOfFinalPass,
+                registrationStart,
+                registrationEnd,
+                attendanceStandardDate
+        );
+        this.admissionYear = admissionYear;
+        this.applicationFormStart = applicationFormStart;
+        this.visitSubmissionAt = visitSubmissionAt;
+        this.applicationFormEnd = applicationFormEnd;
+        this.announcementOfFirstPass = announcementOfFirstPass;
+        this.interviewStart = interviewStart;
+        this.interviewEnd = interviewEnd;
+        this.announcementOfFinalPass = announcementOfFinalPass;
+        this.registrationStart = registrationStart;
+        this.registrationEnd = registrationEnd;
+        this.attendanceStandardDate = attendanceStandardDate;
+    }
+
+    /**
+     * 시간 순서:
+     * 원서 접수 시작 <= 방문 원서 접수 < 원서 접수 마감 < 1차 합격 발표 < 면접 시작 < 면접 종료
+     * < 최종 합격 발표 < 입학 등록 시작 < 입학 등록 마감
+     * 출결 기준일은 원서 접수 마감일 이전(같은 날 포함)이어야 한다.
+     */
+    private static void validate(
+            Integer admissionYear,
+            LocalDateTime applicationFormStart,
+            LocalDateTime visitSubmissionAt,
+            LocalDateTime applicationFormEnd,
+            LocalDateTime announcementOfFirstPass,
+            LocalDateTime interviewStart,
+            LocalDateTime interviewEnd,
+            LocalDateTime announcementOfFinalPass,
+            LocalDateTime registrationStart,
+            LocalDateTime registrationEnd,
+            LocalDate attendanceStandardDate
+    ) {
+        boolean hasNull = !allNotNull(
+                admissionYear,
+                applicationFormStart,
+                visitSubmissionAt,
+                applicationFormEnd,
+                announcementOfFirstPass,
+                interviewStart,
+                interviewEnd,
+                announcementOfFinalPass,
+                registrationStart,
+                registrationEnd,
+                attendanceStandardDate
+        );
+        if (hasNull) {
+            throw new InvalidSchedulePeriodException();
+        }
+
+        boolean invalid = visitSubmissionAt.isBefore(applicationFormStart)
+                || !visitSubmissionAt.isBefore(applicationFormEnd)
+                || !applicationFormEnd.isBefore(announcementOfFirstPass)
+                || !announcementOfFirstPass.isBefore(interviewStart)
+                || !interviewStart.isBefore(interviewEnd)
+                || !interviewEnd.isBefore(announcementOfFinalPass)
+                || !announcementOfFinalPass.isBefore(registrationStart)
+                || !registrationStart.isBefore(registrationEnd)
+                || attendanceStandardDate.isAfter(applicationFormEnd.toLocalDate());
+
+        if (invalid) {
+            throw new InvalidSchedulePeriodException();
+        }
+    }
+
+    private static boolean allNotNull(Object... values) {
+        for (Object value : values) {
+            if (Objects.isNull(value)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
