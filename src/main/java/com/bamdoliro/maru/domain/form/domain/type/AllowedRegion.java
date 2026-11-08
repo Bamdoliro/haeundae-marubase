@@ -10,7 +10,7 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public enum  AllowedRegion implements EnumProperty {
     BUSAN("부산광역시"),
-    GWANGJU("광주광역시"),
+    GWANGJU("전남광주통합특별시(광주)"),
     GYENGNAM("경상남도"),
     CHUNGBUK("충청북도"),
     JEJU("제주특별자치도"),
