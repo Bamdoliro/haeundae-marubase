@@ -4,6 +4,7 @@ import com.bamdoliro.maru.domain.user.domain.UpdatePasswordVerification;
 import com.bamdoliro.maru.domain.user.domain.User;
 import com.bamdoliro.maru.domain.user.exception.VerifyingHasFailedException;
 import com.bamdoliro.maru.domain.user.service.UserFacade;
+import com.bamdoliro.maru.infrastructure.persistence.auth.TokenRepository;
 import com.bamdoliro.maru.infrastructure.persistence.user.UpdatePasswordVerificationRepository;
 import com.bamdoliro.maru.presentation.user.dto.request.UpdatePasswordRequest;
 import com.bamdoliro.maru.shared.fixture.UserFixture;
@@ -32,6 +33,9 @@ public class UpdatePasswordUseCaseTest {
     @Mock
     private UserFacade userFacade;
 
+    @Mock
+    private TokenRepository tokenRepository;
+
     @Test
     void 비밀번호를_변경한다() {
         //given
@@ -49,6 +53,7 @@ public class UpdatePasswordUseCaseTest {
         verify(verificationRepository, times(1)).findById(request.getPhoneNumber());
 
         assertTrue(user.getPassword().match(request.getPassword()));
+        verify(tokenRepository, times(1)).deleteById(user.getPhoneNumber());
     }
 
     @Test
@@ -63,6 +68,7 @@ public class UpdatePasswordUseCaseTest {
                 () -> updatePasswordUseCase.execute(request));
 
         verify(userFacade, never()).getUser(any());
+        verify(tokenRepository, never()).deleteById(any());
     }
 
     @Test
@@ -79,5 +85,6 @@ public class UpdatePasswordUseCaseTest {
                 () -> updatePasswordUseCase.execute(request));
 
         verify(userFacade, never()).getUser(any());
+        verify(tokenRepository, never()).deleteById(any());
     }
 }
