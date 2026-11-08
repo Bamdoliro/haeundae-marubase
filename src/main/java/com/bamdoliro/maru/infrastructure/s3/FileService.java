@@ -3,6 +3,7 @@ package com.bamdoliro.maru.infrastructure.s3;
 import com.bamdoliro.maru.infrastructure.s3.dto.response.UrlResponse;
 import com.bamdoliro.maru.infrastructure.s3.validator.FileValidator;
 import com.bamdoliro.maru.infrastructure.s3.dto.request.FileMetadata;
+import com.bamdoliro.maru.infrastructure.s3.exception.S3FileNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -50,6 +51,23 @@ public class FileService {
         GetObjectPresignRequest request = getGenerateDownloadPresignedUrlRequest(bucket, fullFileName, contentType, contentDisposition);
 
         return request != null ? s3Presigner.presignGetObject(request).url().toString() : null;
+    }
+
+    /**
+     * 서버에서 S3 객체를 바이트로 직접 받아온다. 객체가 없으면 404(S3FileNotFoundException).
+     */
+    public byte[] download(String folder, String fileName) {
+        String fullFileName = createFileName(folder, fileName);
+        try {
+            return s3Client.getObjectAsBytes(
+                    GetObjectRequest.builder()
+                            .bucket(bucket)
+                            .key(fullFileName)
+                            .build()
+            ).asByteArray();
+        } catch (NoSuchKeyException e) {
+            throw new S3FileNotFoundException();
+        }
     }
 
     public UrlResponse getPresignedUrl(String folder, String fileName, FileMetadata metadata, FileValidator validator) {
