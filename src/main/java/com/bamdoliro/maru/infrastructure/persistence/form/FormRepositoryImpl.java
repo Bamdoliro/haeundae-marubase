@@ -5,6 +5,8 @@ import com.bamdoliro.maru.domain.form.domain.type.FormStatus;
 import com.bamdoliro.maru.domain.form.domain.type.FormType;
 import com.bamdoliro.maru.infrastructure.persistence.form.vo.*;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.StringExpression;
+import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -18,6 +20,8 @@ import static com.bamdoliro.maru.domain.form.domain.QForm.form;
 @Repository
 @RequiredArgsConstructor
 public class FormRepositoryImpl implements FormRepositoryCustom {
+
+    private static final String BUSAN = "부산광역시";
 
     private final JPAQueryFactory queryFactory;
 
@@ -308,9 +312,10 @@ public class FormRepositoryImpl implements FormRepositoryCustom {
                         form.education.school.address
                 ))
                 .from(form)
-                .where(form.education.school.address.contains(keyword)
-                        .or(form.education.school.location.eq(keyword))
-                        .and(form.status.in(round)))
+                .where(
+                        form.status.in(round),
+                        isInRegion(keyword.trim())
+                )
                 .fetch();
     }
 
@@ -323,8 +328,36 @@ public class FormRepositoryImpl implements FormRepositoryCustom {
                         form.education.school.address
                 ))
                 .from(form)
-                .where(form.education.school.location.eq("부산광역시").not())
+                .where(
+                        form.status.in(round),
+                        hasSchoolRegion(),
+                        isInRegion(BUSAN).not()
+                )
                 .fetch();
+    }
+
+    /**
+     * 학교 주소 또는 소재지 중 하나라도 region과 정확히 같거나 "region + 공백"으로 시작하면 해당 지역으로 본다.
+     * findSchoolByAddress(부산)와 findNotBusanSchool은 이 판정을 공유하므로 서로 겹치지 않는다.
+     */
+    private BooleanExpression isInRegion(String region) {
+        return matchesRegion(form.education.school.address, region)
+                .or(matchesRegion(form.education.school.location, region));
+    }
+
+    private BooleanExpression matchesRegion(StringPath field, String region) {
+        StringExpression trimmed = field.trim();
+        return field.isNotNull()
+                .and(trimmed.eq(region).or(trimmed.startsWith(region + " ")));
+    }
+
+    private BooleanExpression hasSchoolRegion() {
+        return hasText(form.education.school.address)
+                .or(hasText(form.education.school.location));
+    }
+
+    private BooleanExpression hasText(StringPath field) {
+        return field.isNotNull().and(field.trim().isNotEmpty());
     }
 
     @Override

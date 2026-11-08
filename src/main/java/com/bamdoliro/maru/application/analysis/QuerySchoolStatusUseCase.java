@@ -29,7 +29,8 @@ public class QuerySchoolStatusUseCase {
 
         if (isBusan) {
             String keyword = "부산광역시";
-            keyword += request.getGu() == null ? "" : (" " + request.getGu());
+            String gu = request.getGu() == null ? "" : request.getGu().trim();
+            keyword += gu.isEmpty() ? "" : (" " + gu);
 
             return formRepository.findSchoolByAddress(request.getStatusList(), keyword)
                     .stream()
