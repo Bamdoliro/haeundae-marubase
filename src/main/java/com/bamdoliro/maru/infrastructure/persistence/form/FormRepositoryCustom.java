@@ -27,6 +27,7 @@ public interface FormRepositoryCustom {
     List<Form> findChangedToRegularFirstRoundForm();
     List<Form> findSecondRoundForm();
     List<Form> findByFormIdList(List<Long> idList);
+    List<Form> findByFormIdListForUpdate(List<Long> idList);
     List<FormUrlVo> findFormUrlByFormIdList(List<Long> idList);
     List<NumberOfApplicantsVo> findTypeAndCountGroupByType();
     List<NumberOfApplicantsVo> findOriginalTypeAndCountGroupByType();

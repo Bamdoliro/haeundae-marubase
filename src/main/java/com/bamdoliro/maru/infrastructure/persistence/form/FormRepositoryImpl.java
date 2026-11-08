@@ -8,6 +8,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.LockModeType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -245,6 +246,20 @@ public class FormRepositoryImpl implements FormRepositoryCustom {
                 .selectFrom(form)
                 .where(form.id.in(idList))
                 .orderBy(form.id.asc())
+                .fetch();
+    }
+
+    /**
+     * 조회한 원서 행에 비관적 쓰기 락(SELECT ... FOR UPDATE)을 건다. 트랜잭션 안에서만 호출해야 한다.
+     * id 오름차순으로 잠가서 여러 원서를 함께 처리하는 요청끼리 교착 상태가 생기지 않게 한다.
+     */
+    @Override
+    public List<Form> findByFormIdListForUpdate(List<Long> idList) {
+        return queryFactory
+                .selectFrom(form)
+                .where(form.id.in(idList))
+                .orderBy(form.id.asc())
+                .setLockMode(LockModeType.PESSIMISTIC_WRITE)
                 .fetch();
     }
 
