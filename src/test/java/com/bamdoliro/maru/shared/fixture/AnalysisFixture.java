@@ -1,7 +1,6 @@
 package com.bamdoliro.maru.shared.fixture;
 
 import com.bamdoliro.maru.domain.form.domain.type.FormType;
-import com.bamdoliro.maru.presentation.analysis.dto.response.GenderRatioResponse;
 import com.bamdoliro.maru.presentation.analysis.dto.response.GradeDistributionResponse;
 import com.bamdoliro.maru.presentation.analysis.dto.response.NumberOfApplicantsResponse;
 import com.bamdoliro.maru.presentation.analysis.dto.response.SchoolStatusResponse;
@@ -29,54 +28,6 @@ public class AnalysisFixture {
             responseList.add(new GradeDistributionResponse(formType, randomDouble(0.0, 240.0), randomDouble(0.0, 240.0), randomDouble(0.0, 240.0), randomDouble(0.0, 240.0), randomDouble(0.0, 240.0), randomDouble(0.0, 240.0), randomDouble(0.0, 240.0), randomDouble(0.0, 240.0)));
         }
         return responseList;
-    }
-
-    public static List<GenderRatioResponse> createGenderRatioResponse(FormType.Category mainCategory) {
-        if (mainCategory.equals(FormType.Category.REGULAR)) {
-            return List.of(
-                    new GenderRatioResponse(
-                            FormType.Category.REGULAR,
-                            randomNumber(0, 30),
-                            randomNumber(0, 15),
-                            randomNumber(0, 30),
-                            randomNumber(0, 15)
-                    )
-            );
-        } else if (mainCategory.equals(FormType.Category.SPECIAL)) {
-            return List.of(
-                    new GenderRatioResponse(
-                            FormType.Category.EQUAL_OPPORTUNITY,
-                            randomNumber(0, 30),
-                            randomNumber(0, 15),
-                            randomNumber(0, 30),
-                            randomNumber(0, 15)
-                    ),
-                    new GenderRatioResponse(
-                            FormType.Category.SOCIETY_DIVERSITY,
-                            randomNumber(0, 30),
-                            randomNumber(0, 15),
-                            randomNumber(0, 30),
-                            randomNumber(0, 15)
-                    ),
-                    new GenderRatioResponse(
-                            FormType.Category.SUPERNUMERARY,
-                            randomNumber(0, 30),
-                            randomNumber(0, 15),
-                            randomNumber(0, 30),
-                            randomNumber(0, 15)
-                    )
-            );
-        } else {
-            return List.of(
-                    new GenderRatioResponse(
-                            FormType.Category.SUPERNUMERARY,
-                            randomNumber(0, 30),
-                            randomNumber(0, 15),
-                            randomNumber(0, 30),
-                            randomNumber(0, 15)
-                    )
-            );
-        }
     }
 
     public static List<SchoolStatusResponse> createSchoolStatusResponse(List<String> isBusan, List<String> gu) {

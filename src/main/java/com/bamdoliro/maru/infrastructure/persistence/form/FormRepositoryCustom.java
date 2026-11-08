@@ -15,7 +15,6 @@ public interface FormRepositoryCustom {
     List<Form> findByStatus(FormStatus status);
     List<Form> findByType(FormType type);
     List<Form> findByCategory(FormType.Category category);
-    List<Form> findByOriginalCategory(FormType.Category category);
     List<Form> findApprovedSpecialForm();
     List<Form> findApprovedRegularForm();
     List<Form> findApprovedSupernumeraryForm();

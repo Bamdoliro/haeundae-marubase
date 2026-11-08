@@ -48,16 +48,6 @@ public class FormRepositoryImpl implements FormRepositoryCustom {
                 .fetch();
     }
 
-    @Override
-    public List<Form> findByOriginalCategory(FormType.Category category) {
-        List<FormType> matchingFormTypes = getFormTypesByCategory(category);
-
-        return queryFactory
-                .selectFrom(form)
-                .where(form.originalType.in(matchingFormTypes))
-                .fetch();
-    }
-
     private BooleanExpression eqStatus(FormStatus status) {
         if (Objects.isNull(status)) {
             return null;
