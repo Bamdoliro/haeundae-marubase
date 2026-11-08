@@ -221,13 +221,25 @@ public class CalculateFormScoreService {
         return form.getScore().getSelfDirectedScore();
     }
 
+    /**
+     * 요강 3-가-2) 출결 = 미인정결석 일수 x -1(가중치), 상한/하한 없음.
+     * 중졸 학력 검정고시 합격자는 출결을 반영하지 않으므로 입력값과 무관하게 0점이다.
+     */
     private Integer calculateAttendanceScore(Form form) {
+        if (form.getEducation().isQualificationExamination()) {
+            return 0;
+        }
+
         Attendance totalAttendance = form.getGrade().getTotalAttendance();
         int convertedAbsenceCount = getConvertedAbsenceCount(totalAttendance);
 
         return -convertedAbsenceCount;
     }
 
+    /**
+     * 요강 3-가-2)-가),나) 미인정 지각/조퇴/결과는 합산 3회를 결석 1일로 환산하고 2회 이하는 버린다.
+     * 질병/기타 사유는 Attendance에 미인정 횟수만 입력받으므로 여기서 따로 제외하지 않는다.
+     */
     private Integer getConvertedAbsenceCount(Attendance attendance) {
         return attendance.getAbsenceCount() + ((attendance.getLatenessCount() + attendance.getEarlyLeaveCount() + attendance.getClassAbsenceCount()) / 3);
     }
