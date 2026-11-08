@@ -228,6 +228,15 @@ public abstract class ControllerTest {
     protected ExportFinalPassedFormUseCase exportFinalPassedFormUseCase;
 
     @MockBean
+    protected ExportFirstScoreUseCase exportFirstScoreUseCase;
+
+    @MockBean
+    protected ExportSubjectGradeDetailUseCase exportSubjectGradeDetailUseCase;
+
+    @MockBean
+    protected MergeFormPdfUseCase mergeFormPdfUseCase;
+
+    @MockBean
     protected ExportFirstRoundResultUseCase exportFirstRoundResultUseCase;
 
     @MockBean

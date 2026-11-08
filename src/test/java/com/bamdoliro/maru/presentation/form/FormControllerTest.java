@@ -1,6 +1,7 @@
 package com.bamdoliro.maru.presentation.form;
 
 import com.bamdoliro.maru.domain.auth.exception.AuthorityMismatchException;
+import com.bamdoliro.maru.domain.form.exception.FormNotFoundException;
 import com.bamdoliro.maru.domain.form.domain.Form;
 import com.bamdoliro.maru.domain.form.domain.type.FormStatus;
 import com.bamdoliro.maru.domain.form.domain.type.FormType;
@@ -38,6 +39,8 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class FormControllerTest extends RestDocsTestSupport {
@@ -2175,6 +2178,119 @@ class FormControllerTest extends RestDocsTestSupport {
                 ));
 
         verify(exportFinalPassedFormUseCase, times(1)).execute();
+    }
+
+    @Test
+    void 정상적으로_1차_원서_점수를_다운로드한다() throws Exception {
+        User user = UserFixture.createAdminUser();
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+        given(exportFirstScoreUseCase.execute()).willReturn(new ByteArrayResource("<<file>>".getBytes()));
+
+        mockMvc.perform(get("/forms/xlsx/first-score")
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .accept("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+
+                .andExpect(status().isOk())
+
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION)
+                                        .description("Bearer token")
+                        )
+                ));
+
+        verify(exportFirstScoreUseCase, times(1)).execute();
+    }
+
+    @Test
+    void 정상적으로_합격자_과목별_상세_성적을_다운로드한다() throws Exception {
+        User user = UserFixture.createAdminUser();
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+        given(exportSubjectGradeDetailUseCase.execute()).willReturn(new ByteArrayResource("<<file>>".getBytes()));
+
+        mockMvc.perform(get("/forms/xlsx/subject-grade-detail")
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .accept("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+
+                .andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"export.xlsx\"; filename*=UTF-8''%ED%95%A9%EA%B2%A9%EC%9E%90%EC%84%B1%EC%A0%81%EC%83%81%EC%84%B8.xlsx"))
+
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION)
+                                        .description("Bearer token")
+                        )
+                ));
+
+        verify(exportSubjectGradeDetailUseCase, times(1)).execute();
+    }
+
+    @Test
+    void 정상적으로_선택한_원서_PDF를_합쳐서_다운로드한다() throws Exception {
+        User user = UserFixture.createAdminUser();
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+        given(mergeFormPdfUseCase.execute(List.of(1L, 2L))).willReturn(new ByteArrayResource("<<pdf>>".getBytes()));
+
+        mockMvc.perform(get("/forms/pdf")
+                        .param("id-list", "1,2")
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .accept(MediaType.APPLICATION_PDF))
+
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PDF))
+                .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"forms.pdf\"; filename*=UTF-8''%EC%9B%90%EC%84%9C%EB%AA%A8%EC%9D%8C.pdf"))
+
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION)
+                                        .description("Bearer token")
+                        ),
+                        queryParameters(
+                                parameterWithName("id-list")
+                                        .description("합칠 원서 id 목록 (쉼표로 구분)")
+                        )
+                ));
+
+        verify(mergeFormPdfUseCase, times(1)).execute(List.of(1L, 2L));
+    }
+
+    @Test
+    void 존재하지_않는_원서가_섞여_있으면_원서_PDF를_합칠_수_없다() throws Exception {
+        User user = UserFixture.createAdminUser();
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+        given(mergeFormPdfUseCase.execute(List.of(1L, 999L))).willThrow(new FormNotFoundException());
+
+        mockMvc.perform(get("/forms/pdf")
+                        .param("id-list", "1,999")
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .accept(MediaType.APPLICATION_PDF, MediaType.APPLICATION_JSON))
+
+                .andExpect(status().isNotFound())
+
+                .andDo(restDocs.document());
+    }
+
+    @Test
+    void 어드민이_아니면_원서_PDF를_합칠_수_없다() throws Exception {
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willThrow(new AuthorityMismatchException());
+
+        mockMvc.perform(get("/forms/pdf")
+                        .param("id-list", "1")
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .accept(MediaType.APPLICATION_PDF, MediaType.APPLICATION_JSON))
+
+                .andExpect(status().isUnauthorized())
+
+                .andDo(restDocs.document());
+
+        verify(mergeFormPdfUseCase, never()).execute(any());
     }
 
     @Test

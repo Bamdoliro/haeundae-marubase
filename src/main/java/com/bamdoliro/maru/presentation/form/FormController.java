@@ -16,6 +16,7 @@ import com.bamdoliro.maru.shared.response.SingleCommonResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -54,6 +57,9 @@ public class FormController {
     private final DownloadSecondRoundScoreFormatUseCase downloadSecondRoundScoreFormatUseCase;
     private final UpdateSecondRoundScoreUseCase updateSecondRoundScoreUseCase;
     private final ExportFinalPassedFormUseCase exportFinalPassedFormUseCase;
+    private final ExportFirstScoreUseCase exportFirstScoreUseCase;
+    private final ExportSubjectGradeDetailUseCase exportSubjectGradeDetailUseCase;
+    private final MergeFormPdfUseCase mergeFormPdfUseCase;
     private final ExportFirstRoundResultUseCase exportFirstRoundResultUseCase;
     private final ExportSecondRoundResultUseCase exportSecondRoundResultUseCase;
     private final ExportResultUseCase exportResultUseCase;
@@ -313,6 +319,44 @@ public class FormController {
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
                 .body(exportFinalPassedFormUseCase.execute());
+    }
+
+    @GetMapping("/xlsx/first-score")
+    public ResponseEntity<Resource> exportFirstScore(
+            @AuthenticationPrincipal(authority = Authority.ADMIN) User user
+    ) throws IOException {
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(exportFirstScoreUseCase.execute());
+    }
+
+    @GetMapping("/xlsx/subject-grade-detail")
+    public ResponseEntity<Resource> exportSubjectGradeDetail(
+            @AuthenticationPrincipal(authority = Authority.ADMIN) User user
+    ) throws IOException {
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .header(HttpHeaders.CONTENT_DISPOSITION, attachment("합격자성적상세.xlsx", "export.xlsx"))
+                .body(exportSubjectGradeDetailUseCase.execute());
+    }
+
+    @GetMapping("/pdf")
+    public ResponseEntity<Resource> mergeFormPdf(
+            @AuthenticationPrincipal(authority = Authority.ADMIN) User user,
+            @RequestParam(name = "id-list") List<Long> formIdList
+    ) {
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION, attachment("원서모음.pdf", "forms.pdf"))
+                .body(mergeFormPdfUseCase.execute(formIdList));
+    }
+
+    /**
+     * 한글 파일명을 위해 filename*(UTF-8)을 쓰고, 이를 지원하지 않는 클라이언트를 위해 ASCII filename을 함께 둔다.
+     */
+    private static String attachment(String fileName, String asciiFallback) {
+        String encodedFileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8).replace("+", "%20");
+        return "attachment; filename=\"" + asciiFallback + "\"; filename*=UTF-8''" + encodedFileName;
     }
 
     @GetMapping("/xlsx/first-round")
