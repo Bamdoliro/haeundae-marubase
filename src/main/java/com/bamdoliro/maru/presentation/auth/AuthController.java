@@ -9,6 +9,8 @@ import com.bamdoliro.maru.presentation.auth.dto.response.TokenResponse;
 import com.bamdoliro.maru.shared.auth.AuthenticationPrincipal;
 import com.bamdoliro.maru.shared.response.CommonResponse;
 import com.bamdoliro.maru.shared.response.SingleCommonResponse;
+import com.bamdoliro.maru.shared.ratelimit.RateLimitPolicy;
+import com.bamdoliro.maru.shared.ratelimit.RateLimited;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,7 @@ public class AuthController {
     private final LogOutUseCase logOutUseCase;
 
     @PostMapping
+    @RateLimited(policy = RateLimitPolicy.LOGIN_ACCOUNT, key = "#p0.phoneNumber")
     public SingleCommonResponse<TokenResponse> logIn(@RequestBody @Valid LogInRequest request) {
         return CommonResponse.ok(logInUseCase.execute(request));
     }

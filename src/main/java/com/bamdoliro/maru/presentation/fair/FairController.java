@@ -14,6 +14,8 @@ import com.bamdoliro.maru.shared.auth.Authority;
 import com.bamdoliro.maru.shared.response.CommonResponse;
 import com.bamdoliro.maru.shared.response.ListCommonResponse;
 import com.bamdoliro.maru.shared.response.SingleCommonResponse;
+import com.bamdoliro.maru.shared.ratelimit.RateLimitPolicy;
+import com.bamdoliro.maru.shared.ratelimit.RateLimited;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -68,6 +70,7 @@ public class FairController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/{fair-id}")
+    @RateLimited(policy = RateLimitPolicy.FAIR_APPLICATION_PHONE, key = "#p0 + ':' + #p1.phoneNumber")
     public void attendAdmissionFair(
             @PathVariable(name = "fair-id") Long fairId,
             @RequestBody @Valid AttendAdmissionFairRequest request
