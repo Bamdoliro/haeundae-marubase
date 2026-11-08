@@ -10,11 +10,16 @@ import com.bamdoliro.maru.presentation.auth.dto.response.TokenResponse;
 import com.bamdoliro.maru.shared.fixture.AuthFixture;
 import com.bamdoliro.maru.shared.fixture.UserFixture;
 import com.bamdoliro.maru.shared.util.RestDocsTestSupport;
+import jakarta.servlet.http.Cookie;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.test.web.servlet.ResultMatcher;
+
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -27,13 +32,43 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.options;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class AuthControllerTest extends RestDocsTestSupport {
+
+    @BeforeEach
+    void setUpTokenExpiration() {
+        // 쿠키 만료 시간은 jwt 설정값(1시간, 15일)을 따른다.
+        given(jwtProperties.getAccessExpirationTime()).willReturn(3600000L);
+        given(jwtProperties.getRefreshExpirationTime()).willReturn(1296000000L);
+    }
+
+    /**
+     * Set-Cookie 헤더 중 name으로 시작하는 쿠키가 있고, 공통 속성과 기대 조각을 모두 포함하는지 확인한다.
+     */
+    private static ResultMatcher setCookie(String name, String... expectedParts) {
+        return result -> {
+            List<String> cookies = result.getResponse().getHeaders(HttpHeaders.SET_COOKIE);
+            String cookie = cookies.stream()
+                    .filter(value -> value.startsWith(name + "="))
+                    .findFirst()
+                    .orElseThrow(() -> new AssertionError(name + " 쿠키가 없습니다. Set-Cookie=" + cookies));
+            for (String part : List.of("HttpOnly", "Secure", "SameSite=Strict", "Path=/", "Domain=hhsapply.com")) {
+                assertTrue(cookie.contains(part), name + " 쿠키에 " + part + " 속성이 없습니다: " + cookie);
+            }
+            for (String part : expectedParts) {
+                assertTrue(cookie.contains(part), name + " 쿠키에 " + part + "가 없습니다: " + cookie);
+            }
+        };
+    }
 
     @Test
     void 유저가_로그인한다() throws Exception {
@@ -50,6 +85,11 @@ class AuthControllerTest extends RestDocsTestSupport {
                 )
 
                 .andExpect(status().isOk())
+                // 과도기: 기존 프론트엔드를 위해 바디에도 토큰을 내려준다.
+                .andExpect(jsonPath("$.data.accessToken").value(response.getAccessToken()))
+                .andExpect(jsonPath("$.data.refreshToken").value(response.getRefreshToken()))
+                .andExpect(setCookie("accessToken", "accessToken=" + response.getAccessToken(), "Max-Age=3600"))
+                .andExpect(setCookie("refreshToken", "refreshToken=" + response.getRefreshToken(), "Max-Age=1296000"))
 
                 .andDo(restDocs.document(
                         requestFields(
@@ -127,6 +167,8 @@ class AuthControllerTest extends RestDocsTestSupport {
                 )
 
                 .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.data.accessToken").value(response.getAccessToken()))
+                .andExpect(setCookie("accessToken", "accessToken=" + response.getAccessToken(), "Max-Age=3600"))
 
                 .andDo(restDocs.document(
                         requestHeaders(
@@ -214,6 +256,8 @@ class AuthControllerTest extends RestDocsTestSupport {
                 )
 
                 .andExpect(status().isNoContent())
+                .andExpect(setCookie("accessToken", "accessToken=;", "Max-Age=0"))
+                .andExpect(setCookie("refreshToken", "refreshToken=;", "Max-Age=0"))
 
                 .andDo(restDocs.document(
                         requestHeaders(
@@ -223,5 +267,67 @@ class AuthControllerTest extends RestDocsTestSupport {
                 ));
 
         verify(logOutUseCase, times(1)).execute(user);
+    }
+
+    @Test
+    void 리프레시_토큰_쿠키로_액세스_토큰을_재발급한다() throws Exception {
+        String refreshToken = AuthFixture.createRefreshTokenString();
+        TokenResponse response = TokenResponse.builder().accessToken(AuthFixture.createAccessTokenString()).build();
+        given(refreshTokenUseCase.execute(refreshToken)).willReturn(response);
+
+        mockMvc.perform(patch("/auth")
+                        .cookie(new Cookie("refreshToken", refreshToken))
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.accessToken").value(response.getAccessToken()))
+                .andExpect(setCookie("accessToken", "accessToken=" + response.getAccessToken(), "Max-Age=3600"))
+
+                .andDo(restDocs.document());
+
+        verify(refreshTokenUseCase, times(1)).execute(refreshToken);
+    }
+
+    @Test
+    void 리프레시_토큰_쿠키와_헤더가_모두_있으면_쿠키를_쓴다() throws Exception {
+        String cookieRefreshToken = AuthFixture.createRefreshTokenString();
+        TokenResponse response = TokenResponse.builder().accessToken(AuthFixture.createAccessTokenString()).build();
+        given(refreshTokenUseCase.execute(cookieRefreshToken)).willReturn(response);
+
+        mockMvc.perform(patch("/auth")
+                        .cookie(new Cookie("refreshToken", cookieRefreshToken))
+                        .header("Refresh-Token", "header-refresh-token")
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+
+                .andExpect(status().isOk())
+
+                .andDo(restDocs.document());
+
+        verify(refreshTokenUseCase, times(1)).execute(cookieRefreshToken);
+        verify(refreshTokenUseCase, never()).execute("header-refresh-token");
+    }
+
+    @Test
+    void 허용된_origin의_CORS_요청은_쿠키를_주고받을_수_있다() throws Exception {
+        mockMvc.perform(options("/auth")
+                        .header(HttpHeaders.ORIGIN, "https://hhsapply.com")
+                        .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "POST")
+                )
+
+                .andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "https://hhsapply.com"))
+                .andExpect(header().string(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true"));
+    }
+
+    @Test
+    void 허용되지_않은_origin의_CORS_요청은_거부한다() throws Exception {
+        mockMvc.perform(options("/auth")
+                        .header(HttpHeaders.ORIGIN, "https://evil.example.com")
+                        .header(HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD, "POST")
+                )
+
+                .andExpect(status().isForbidden());
     }
 }

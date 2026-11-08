@@ -7,6 +7,7 @@ import com.bamdoliro.maru.domain.user.service.UserFacade;
 import com.bamdoliro.maru.infrastructure.persistence.user.UpdatePasswordVerificationRepository;
 import com.bamdoliro.maru.presentation.user.dto.request.UpdatePasswordRequest;
 import com.bamdoliro.maru.shared.annotation.UseCase;
+import com.bamdoliro.maru.infrastructure.persistence.auth.TokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,7 @@ public class UpdatePasswordUseCase {
 
     private final UpdatePasswordVerificationRepository updatePasswordVerificationRepository;
     private final UserFacade userFacade;
+    private final TokenRepository tokenRepository;
 
     @Transactional
     public void execute(UpdatePasswordRequest request) {
@@ -23,6 +25,9 @@ public class UpdatePasswordUseCase {
 
         User user = userFacade.getUser(request.getPhoneNumber());
         user.updatePassword(request.getPassword());
+
+        // 비밀번호가 바뀌면 기존 refresh token을 폐기해 다른 기기의 세션이 재발급으로 이어지지 않게 한다.
+        tokenRepository.deleteById(user.getPhoneNumber());
     }
 
     private void validate(UpdatePasswordRequest request) {
