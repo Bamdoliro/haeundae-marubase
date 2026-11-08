@@ -28,6 +28,15 @@ class SearchSchoolServiceTest {
     }
 
     @Test
+    void 광주_학교는_NEIS_통합특별시_지역명으로_검색된다() throws JsonProcessingException {
+        String q = "광주경신";
+        List<SchoolResponse> responseList = searchSchoolService.execute(q);
+        assertEquals(1, responseList.size());
+        assertEquals("광주경신중학교", responseList.get(0).getName());
+        assertEquals("전남광주통합특별시(광주)", responseList.get(0).getLocation());
+    }
+
+    @Test
     void 검색_결과가_많다면_상위_10개까지만_반환한다() throws JsonProcessingException {
         String q = "중학교";
         List<SchoolResponse> responseList = searchSchoolService.execute(q);
