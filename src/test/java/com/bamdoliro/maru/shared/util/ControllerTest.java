@@ -23,6 +23,7 @@ import com.bamdoliro.maru.presentation.schedule.AdminScheduleController;
 import com.bamdoliro.maru.presentation.schedule.ScheduleController;
 import com.bamdoliro.maru.presentation.analysis.AnalysisController;
 import com.bamdoliro.maru.presentation.auth.AuthController;
+import com.bamdoliro.maru.presentation.auth.SessionController;
 import com.bamdoliro.maru.presentation.fair.FairController;
 import com.bamdoliro.maru.presentation.form.DraftFormController;
 import com.bamdoliro.maru.presentation.form.FormController;
@@ -48,6 +49,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @Import(CookieUtil.class)
 @WebMvcTest({UserController.class,
             AuthController.class,
+            SessionController.class,
             SharedController.class,
             SchoolController.class,
             QuestionController.class,

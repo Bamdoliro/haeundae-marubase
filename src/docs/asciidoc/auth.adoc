@@ -76,3 +76,22 @@ include::{snippets}/auth-controller-test/유저가_로그아웃한다/http-reque
 
 ===== 정상 응답
 include::{snippets}/auth-controller-test/유저가_로그아웃한다/http-response.adoc[]
+
+=== 세션 정리
+재발급이나 로그아웃에 실패해 세션이 이미 깨졌을 때, 브라우저에 남은 인증 쿠키(accessToken, refreshToken)를 만료시킵니다.
+인증 없이 호출할 수 있고, 쿠키가 없어도 같은 응답을 내려줍니다. 서버에 저장된 리프레시 토큰은 지우지 않습니다(로그아웃과 다른 점).
+정상 응답은 바디 없는 204 No Content입니다.
+
+==== 요청
+include::{snippets}/session-controller-test/인증_쿠키를_만료시킨다/http-request.adoc[]
+
+==== 응답
+
+===== Response Cookie
+include::{snippets}/session-controller-test/인증_쿠키를_만료시킨다/response-cookies.adoc[]
+
+===== 정상 응답
+include::{snippets}/session-controller-test/인증_쿠키를_만료시킨다/http-response.adoc[]
+
+===== 인증 정보 없이 호출한 경우
+include::{snippets}/session-controller-test/인증_정보가_없어도_인증_쿠키를_만료시킨다/http-response.adoc[]
