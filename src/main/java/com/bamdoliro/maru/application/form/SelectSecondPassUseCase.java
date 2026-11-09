@@ -11,12 +11,28 @@ import com.bamdoliro.maru.shared.constants.FixedNumber;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @UseCase
 public class SelectSecondPassUseCase {
+
+    /**
+     * findFirstPassedSpecialForm의 정렬 순서를 그대로 옮긴 것. 마지막에 id 오름차순을 더해 순서를 고정한다.
+     */
+    private static final Comparator<Form> SECOND_ROUND_ORDER = Comparator
+            .comparing((Form form) -> form.getScore().getSelfDirectedScore() + form.getScore().getPersonalityScore(), Comparator.reverseOrder())
+            .thenComparing(form -> form.getScore().getSubjectGradeScore(), Comparator.reverseOrder())
+            .thenComparing(form -> form.getScore().getThirdGradeSecondSemesterSubjectGradeScore(), Comparator.nullsLast(Comparator.reverseOrder()))
+            .thenComparing(form -> form.getScore().getThirdGradeFirstSemesterSubjectGradeScore(), Comparator.nullsLast(Comparator.reverseOrder()))
+            .thenComparing(form -> form.getScore().getSecondGradeSecondSemesterSubjectGradeScore(), Comparator.nullsLast(Comparator.reverseOrder()))
+            .thenComparing(form -> form.getScore().getSecondGradeFirstSemesterSubjectGradeScore(), Comparator.nullsLast(Comparator.reverseOrder()))
+            .thenComparing(form -> form.getApplicant().getBirthday())
+            .thenComparing(Form::getId);
 
     private final FormRepository formRepository;
     private final CalculateFormScoreService calculateFormScoreService;
@@ -46,8 +62,14 @@ public class SelectSecondPassUseCase {
                 societyDiversityFormList.size()
         );
 
-        processForms(equalOpportunityFormList, quota.equalOpportunityCount(), this::changeToRegularAndCalculateScoreAgain);
-        processForms(societyDiversityFormList, quota.societyDiversityCount(), this::changeToRegularAndCalculateScoreAgain);
+        // 요강: 기회균등전형 우선선발에서 탈락한 지원자는 사회다양성전형 대상자에 포함시켜 전형한다.
+        // 사회다양성에서도 탈락해야 비로소 일반전형으로 전환된다.
+        List<Form> equalOpportunityRejected = selectAndCollectRejected(equalOpportunityFormList, quota.equalOpportunityCount());
+        List<Form> societyDiversityCandidates = Stream.concat(societyDiversityFormList.stream(), equalOpportunityRejected.stream())
+                .sorted(SECOND_ROUND_ORDER)
+                .toList();
+
+        processForms(societyDiversityCandidates, quota.societyDiversityCount(), this::changeToRegularAndCalculateScoreAgain);
 
         formRepository.flush();
         List<Form> regularFormList = formRepository.findFirstPassedRegularForm();
@@ -77,6 +99,24 @@ public class SelectSecondPassUseCase {
                 action.accept(form);
             }
         }
+    }
+
+    /**
+     * processForms와 같은 규칙(정원 안에서 순서대로 합격, 동점자 규칙 없음)으로 합격 처리하고,
+     * 탈락자에게 바로 action을 적용하는 대신 순서를 유지한 채 모아서 돌려준다.
+     */
+    private List<Form> selectAndCollectRejected(List<Form> formList, int count) {
+        List<Form> rejected = new ArrayList<>();
+
+        for (Form form : formList) {
+            if (count > 0) {
+                form.pass();
+                count--;
+            } else {
+                rejected.add(form);
+            }
+        }
+        return rejected;
     }
 
     private void changeToRegularAndCalculateScoreAgain(Form form) {
