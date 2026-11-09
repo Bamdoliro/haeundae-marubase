@@ -29,6 +29,9 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.springframework.restdocs.cookies.CookieDocumentation.cookieWithName;
+import static org.springframework.restdocs.cookies.CookieDocumentation.requestCookies;
+import static org.springframework.restdocs.cookies.CookieDocumentation.responseCookies;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
@@ -38,8 +41,8 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class AuthControllerTest extends RestDocsTestSupport {
@@ -84,10 +87,8 @@ class AuthControllerTest extends RestDocsTestSupport {
                         .content(toJson(request))
                 )
 
-                .andExpect(status().isOk())
-                // 과도기: 기존 프론트엔드를 위해 바디에도 토큰을 내려준다.
-                .andExpect(jsonPath("$.data.accessToken").value(response.getAccessToken()))
-                .andExpect(jsonPath("$.data.refreshToken").value(response.getRefreshToken()))
+                .andExpect(status().isNoContent())
+                .andExpect(content().string(""))
                 .andExpect(setCookie("accessToken", "accessToken=" + response.getAccessToken(), "Max-Age=3600"))
                 .andExpect(setCookie("refreshToken", "refreshToken=" + response.getRefreshToken(), "Max-Age=1296000"))
 
@@ -99,6 +100,12 @@ class AuthControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("password")
                                         .type(JsonFieldType.STRING)
                                         .description("비밀번호")
+                        ),
+                        responseCookies(
+                                cookieWithName("accessToken")
+                                        .description("액세스 토큰 (HttpOnly, 1시간)"),
+                                cookieWithName("refreshToken")
+                                        .description("리프레시 토큰 (HttpOnly, 15일)")
                         )
                 ));
     }
@@ -163,19 +170,25 @@ class AuthControllerTest extends RestDocsTestSupport {
         mockMvc.perform(patch("/auth")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Refresh-Token", refreshToken)
+                        .cookie(new Cookie("refreshToken", refreshToken))
                 )
 
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("$.data.accessToken").value(response.getAccessToken()))
+                .andExpect(status().isNoContent())
+                .andExpect(content().string(""))
                 .andExpect(setCookie("accessToken", "accessToken=" + response.getAccessToken(), "Max-Age=3600"))
 
                 .andDo(restDocs.document(
-                        requestHeaders(
-                                headerWithName("Refresh-Token")
+                        requestCookies(
+                                cookieWithName("refreshToken")
                                         .description("리프레시 토큰")
+                        ),
+                        responseCookies(
+                                cookieWithName("accessToken")
+                                        .description("새로 발급한 액세스 토큰 (HttpOnly, 1시간)")
                         )
                 ));
+
+        verify(refreshTokenUseCase, times(1)).execute(refreshToken);
     }
 
     @Test
@@ -186,7 +199,7 @@ class AuthControllerTest extends RestDocsTestSupport {
         mockMvc.perform(patch("/auth")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Refresh-Token", expiredRefreshToken)
+                        .cookie(new Cookie("refreshToken", expiredRefreshToken))
                 )
 
                 .andExpect(status().isUnauthorized())
@@ -202,7 +215,7 @@ class AuthControllerTest extends RestDocsTestSupport {
         mockMvc.perform(patch("/auth")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Refresh-Token", accessToken)
+                        .cookie(new Cookie("refreshToken", accessToken))
                 )
 
                 .andExpect(status().isUnauthorized())
@@ -233,7 +246,7 @@ class AuthControllerTest extends RestDocsTestSupport {
         mockMvc.perform(patch("/auth")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("Refresh-Token", accessToken)
+                        .cookie(new Cookie("refreshToken", accessToken))
                 )
 
                 .andExpect(status().isUnauthorized())
@@ -267,46 +280,6 @@ class AuthControllerTest extends RestDocsTestSupport {
                 ));
 
         verify(logOutUseCase, times(1)).execute(user);
-    }
-
-    @Test
-    void 리프레시_토큰_쿠키로_액세스_토큰을_재발급한다() throws Exception {
-        String refreshToken = AuthFixture.createRefreshTokenString();
-        TokenResponse response = TokenResponse.builder().accessToken(AuthFixture.createAccessTokenString()).build();
-        given(refreshTokenUseCase.execute(refreshToken)).willReturn(response);
-
-        mockMvc.perform(patch("/auth")
-                        .cookie(new Cookie("refreshToken", refreshToken))
-                        .accept(MediaType.APPLICATION_JSON)
-                )
-
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.accessToken").value(response.getAccessToken()))
-                .andExpect(setCookie("accessToken", "accessToken=" + response.getAccessToken(), "Max-Age=3600"))
-
-                .andDo(restDocs.document());
-
-        verify(refreshTokenUseCase, times(1)).execute(refreshToken);
-    }
-
-    @Test
-    void 리프레시_토큰_쿠키와_헤더가_모두_있으면_쿠키를_쓴다() throws Exception {
-        String cookieRefreshToken = AuthFixture.createRefreshTokenString();
-        TokenResponse response = TokenResponse.builder().accessToken(AuthFixture.createAccessTokenString()).build();
-        given(refreshTokenUseCase.execute(cookieRefreshToken)).willReturn(response);
-
-        mockMvc.perform(patch("/auth")
-                        .cookie(new Cookie("refreshToken", cookieRefreshToken))
-                        .header("Refresh-Token", "header-refresh-token")
-                        .accept(MediaType.APPLICATION_JSON)
-                )
-
-                .andExpect(status().isOk())
-
-                .andDo(restDocs.document());
-
-        verify(refreshTokenUseCase, times(1)).execute(cookieRefreshToken);
-        verify(refreshTokenUseCase, never()).execute("header-refresh-token");
     }
 
     @Test

@@ -53,7 +53,7 @@ class RateLimitWebTest extends ControllerTest {
         mockMvc.perform(post("/auth")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(toJson(request)))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
         verify(rateLimitService, times(1)).consume(RateLimitPolicy.LOGIN_ACCOUNT, "01012345678");
     }
