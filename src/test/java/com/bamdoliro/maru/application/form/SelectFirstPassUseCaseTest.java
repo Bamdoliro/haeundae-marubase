@@ -20,6 +20,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -28,6 +29,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(DatabaseClearExtension.class)
 @SpringBootTest
 class SelectFirstPassUseCaseTest {
+
+    /**
+     * 픽스처의 주민등록번호, 성적, 전형 유형을 매번 같게 만들어 실행 결과를 재현 가능하게 한다.
+     * 검증 내용은 특정 분포의 숫자가 아니라 선발 인원이므로 시드 값 자체에는 의미가 없다.
+     */
+    private static final long FIXTURE_SEED = 20261109L;
 
     @Autowired
     private SelectFirstPassUseCase selectFirstPassUseCase;
@@ -46,11 +53,12 @@ class SelectFirstPassUseCaseTest {
 
     @BeforeEach
     void setUp() {
+        Random random = new Random(FIXTURE_SEED);
         List<User> userList = userRepository.saveAll(
-                UserFixture.generateUserList(FixedNumber.TOTAL * 2)
+                UserFixture.generateUserList(FixedNumber.TOTAL * 2, random)
         );
-        List<Form> formList = FormFixture.generateBusanFormList(userList.subList(0, userList.size() / 2));
-        formList.addAll(FormFixture.generateOtherRegionFormList(userList.subList(userList.size() / 2, userList.size())));
+        List<Form> formList = FormFixture.generateBusanFormList(userList.subList(0, userList.size() / 2), random);
+        formList.addAll(FormFixture.generateOtherRegionFormList(userList.subList(userList.size() / 2, userList.size()), random));
         formList.forEach(form -> {
             assignExaminationNumberService.execute(form);
             form.approve();

@@ -161,12 +161,16 @@ public class FormFixture {
     }
 
     public static Form createRandomBusanForm(User user) {
+        return createRandomBusanForm(user, new Random());
+    }
+
+    public static Form createRandomBusanForm(User user, Random random) {
         Form form =  new Form(
                 new Applicant(
                         "김밤돌",
                         new PhoneNumber("01085852525"),
                         LocalDate.of(2005, 4, 15),
-                        "070605-" + (3000000 + new Random().nextInt(9000000)),
+                        "070605-" + (3000000 + random.nextInt(9000000)),
                         Gender.FEMALE,
                         "s.nananu049@gmail.com"
                 ),
@@ -194,40 +198,40 @@ public class FormFixture {
                 new Grade(
                         new SubjectList(
                                 List.of(
-                                        new Subject(2, 1, "국어", randomAchievementLevel()),
-                                        new Subject(2, 1, "역사", randomAchievementLevel()),
-                                        new Subject(2, 1, "수학", randomAchievementLevel()),
-                                        new Subject(2, 1, "과학", randomAchievementLevel()),
-                                        new Subject(2, 1, "영어", randomAchievementLevel()),
+                                        new Subject(2, 1, "국어", randomAchievementLevel(random)),
+                                        new Subject(2, 1, "역사", randomAchievementLevel(random)),
+                                        new Subject(2, 1, "수학", randomAchievementLevel(random)),
+                                        new Subject(2, 1, "과학", randomAchievementLevel(random)),
+                                        new Subject(2, 1, "영어", randomAchievementLevel(random)),
 
-                                        new Subject(2, 2, "국어", randomAchievementLevel()),
-                                        new Subject(2, 2, "역사", randomAchievementLevel()),
-                                        new Subject(2, 2, "수학", randomAchievementLevel()),
-                                        new Subject(2, 2, "과학", randomAchievementLevel()),
-                                        new Subject(2, 2, "영어", randomAchievementLevel()),
+                                        new Subject(2, 2, "국어", randomAchievementLevel(random)),
+                                        new Subject(2, 2, "역사", randomAchievementLevel(random)),
+                                        new Subject(2, 2, "수학", randomAchievementLevel(random)),
+                                        new Subject(2, 2, "과학", randomAchievementLevel(random)),
+                                        new Subject(2, 2, "영어", randomAchievementLevel(random)),
 
-                                        new Subject(3, 1, "국어", randomAchievementLevel()),
-                                        new Subject(3, 1, "사회", randomAchievementLevel()),
-                                        new Subject(3, 1, "수학", randomAchievementLevel()),
-                                        new Subject(3, 1, "과학", randomAchievementLevel()),
-                                        new Subject(3, 1, "영어", randomAchievementLevel()),
+                                        new Subject(3, 1, "국어", randomAchievementLevel(random)),
+                                        new Subject(3, 1, "사회", randomAchievementLevel(random)),
+                                        new Subject(3, 1, "수학", randomAchievementLevel(random)),
+                                        new Subject(3, 1, "과학", randomAchievementLevel(random)),
+                                        new Subject(3, 1, "영어", randomAchievementLevel(random)),
 
-                                        new Subject(3, 2, "국어", randomAchievementLevel()),
-                                        new Subject(3, 2, "사회", randomAchievementLevel()),
-                                        new Subject(3, 2, "수학", randomAchievementLevel()),
-                                        new Subject(3, 2, "과학", randomAchievementLevel()),
-                                        new Subject(3, 2, "영어", randomAchievementLevel())
+                                        new Subject(3, 2, "국어", randomAchievementLevel(random)),
+                                        new Subject(3, 2, "사회", randomAchievementLevel(random)),
+                                        new Subject(3, 2, "수학", randomAchievementLevel(random)),
+                                        new Subject(3, 2, "과학", randomAchievementLevel(random)),
+                                        new Subject(3, 2, "영어", randomAchievementLevel(random))
                                 )),
-                        new Attendance(randomNumber(0, 5), randomNumber(0, 5), randomNumber(0, 5), randomNumber(0, 5)),
-                        new Attendance(randomNumber(0, 3), randomNumber(0, 3), randomNumber(0, 3), randomNumber(0, 3)),
-                        new Attendance(randomNumber(0, 2), randomNumber(0, 2), randomNumber(0, 2), randomNumber(0, 2))
+                        new Attendance(randomNumber(random, 0, 5), randomNumber(random, 0, 5), randomNumber(random, 0, 5), randomNumber(random, 0, 5)),
+                        new Attendance(randomNumber(random, 0, 3), randomNumber(random, 0, 3), randomNumber(random, 0, 3), randomNumber(random, 0, 3)),
+                        new Attendance(randomNumber(random, 0, 2), randomNumber(random, 0, 2), randomNumber(random, 0, 2), randomNumber(random, 0, 2))
                 ),
                 new Document(
                         "하이난김밤돌",
                         "공부열심히할게용",
                         "왕"
                 ),
-                randomFormType(),
+                randomFormType(random),
                 user
         );
 
@@ -237,12 +241,16 @@ public class FormFixture {
     }
 
     public static Form createRandomOtherRegionForm(User user) {
+        return createRandomOtherRegionForm(user, new Random());
+    }
+
+    public static Form createRandomOtherRegionForm(User user, Random random) {
         Form form = new Form(
                 new Applicant(
                         "김밤돌",
                         new PhoneNumber("01085852525"),
                         LocalDate.of(2005, 4, 15),
-                        "070605-" + (3000000 + new Random().nextInt(9000000)),
+                        "070605-" + (3000000 + random.nextInt(9000000)),
                         Gender.FEMALE,
                         "s.nananu049@gmail.com"
                 ),
@@ -270,40 +278,40 @@ public class FormFixture {
         new Grade(
                 new SubjectList(
                         List.of(
-                                new Subject(2, 1, "국어", randomAchievementLevel()),
-                                new Subject(2, 1, "역사", randomAchievementLevel()),
-                                new Subject(2, 1, "수학", randomAchievementLevel()),
-                                new Subject(2, 1, "과학", randomAchievementLevel()),
-                                new Subject(2, 1, "영어", randomAchievementLevel()),
+                                new Subject(2, 1, "국어", randomAchievementLevel(random)),
+                                new Subject(2, 1, "역사", randomAchievementLevel(random)),
+                                new Subject(2, 1, "수학", randomAchievementLevel(random)),
+                                new Subject(2, 1, "과학", randomAchievementLevel(random)),
+                                new Subject(2, 1, "영어", randomAchievementLevel(random)),
 
-                                new Subject(2, 2, "국어", randomAchievementLevel()),
-                                new Subject(2, 2, "역사", randomAchievementLevel()),
-                                new Subject(2, 2, "수학", randomAchievementLevel()),
-                                new Subject(2, 2, "과학", randomAchievementLevel()),
-                                new Subject(2, 2, "영어", randomAchievementLevel()),
+                                new Subject(2, 2, "국어", randomAchievementLevel(random)),
+                                new Subject(2, 2, "역사", randomAchievementLevel(random)),
+                                new Subject(2, 2, "수학", randomAchievementLevel(random)),
+                                new Subject(2, 2, "과학", randomAchievementLevel(random)),
+                                new Subject(2, 2, "영어", randomAchievementLevel(random)),
 
-                                new Subject(3, 1, "국어", randomAchievementLevel()),
-                                new Subject(3, 1, "사회", randomAchievementLevel()),
-                                new Subject(3, 1, "수학", randomAchievementLevel()),
-                                new Subject(3, 1, "과학", randomAchievementLevel()),
-                                new Subject(3, 1, "영어", randomAchievementLevel()),
+                                new Subject(3, 1, "국어", randomAchievementLevel(random)),
+                                new Subject(3, 1, "사회", randomAchievementLevel(random)),
+                                new Subject(3, 1, "수학", randomAchievementLevel(random)),
+                                new Subject(3, 1, "과학", randomAchievementLevel(random)),
+                                new Subject(3, 1, "영어", randomAchievementLevel(random)),
 
-                                new Subject(3, 2, "국어", randomAchievementLevel()),
-                                new Subject(3, 2, "사회", randomAchievementLevel()),
-                                new Subject(3, 2, "수학", randomAchievementLevel()),
-                                new Subject(3, 2, "과학", randomAchievementLevel()),
-                                new Subject(3, 2, "영어", randomAchievementLevel())
+                                new Subject(3, 2, "국어", randomAchievementLevel(random)),
+                                new Subject(3, 2, "사회", randomAchievementLevel(random)),
+                                new Subject(3, 2, "수학", randomAchievementLevel(random)),
+                                new Subject(3, 2, "과학", randomAchievementLevel(random)),
+                                new Subject(3, 2, "영어", randomAchievementLevel(random))
                         )),
-                new Attendance(randomNumber(0, 5), randomNumber(0, 5), randomNumber(0, 5), randomNumber(0, 5)),
-                new Attendance(randomNumber(0, 3), randomNumber(0, 3), randomNumber(0, 3), randomNumber(0, 3)),
-                new Attendance(randomNumber(0, 2), randomNumber(0, 2), randomNumber(0, 2), randomNumber(0, 2))
+                new Attendance(randomNumber(random, 0, 5), randomNumber(random, 0, 5), randomNumber(random, 0, 5), randomNumber(random, 0, 5)),
+                new Attendance(randomNumber(random, 0, 3), randomNumber(random, 0, 3), randomNumber(random, 0, 3), randomNumber(random, 0, 3)),
+                new Attendance(randomNumber(random, 0, 2), randomNumber(random, 0, 2), randomNumber(random, 0, 2), randomNumber(random, 0, 2))
         ),
                 new Document(
                         "하이난김밤돌",
                         "공부열심히할게용",
                         "왕"
                 ),
-                randomFormType(),
+                randomFormType(random),
                 user
         );
 
@@ -369,8 +377,12 @@ public class FormFixture {
 
 
     private static AchievementLevel randomAchievementLevel() {
+        return randomAchievementLevel(new Random());
+    }
+
+    private static AchievementLevel randomAchievementLevel(Random random) {
         AchievementLevel[] values = AchievementLevel.values();
-        return values[new Random().nextInt(values.length)];
+        return values[random.nextInt(values.length)];
     }
 
     private static AchievementLevel random3AchievementLevel() {
@@ -378,9 +390,9 @@ public class FormFixture {
         return values[new Random().nextInt(values.length)];
     }
 
-    private static FormType randomFormType() {
+    private static FormType randomFormType(Random random) {
         FormType[] values = {FormType.REGULAR, FormType.REGULAR, FormType.REGULAR, FormType.REGULAR, FormType.ONE_PARENT, FormType.MULTI_CHILDREN};
-        return values[new Random().nextInt(values.length)];
+        return values[random.nextInt(values.length)];
     }
 
     public static Form createQualificationExaminationForm(FormType type) {
@@ -654,17 +666,26 @@ public class FormFixture {
     }
 
     public static List<Form> generateBusanFormList(List<User> userList) {
+        return generateBusanFormList(userList, new Random());
+    }
+
+    /**
+     * 시드를 고정한 Random을 넘기면 같은 원서 목록(주민등록번호, 성적, 출결, 전형)이 재현된다.
+     */
+    public static List<Form> generateBusanFormList(List<User> userList, Random random) {
         return userList.stream()
-                .map(FormFixture::createRandomBusanForm)
+                .map(user -> createRandomBusanForm(user, random))
                 .collect(Collectors.toList());
     }
 
-
     public static List<Form> generateOtherRegionFormList(List<User> userList) {
-        return userList.stream()
-                .map(FormFixture::createRandomOtherRegionForm)
-                .collect(Collectors.toList());
+        return generateOtherRegionFormList(userList, new Random());
+    }
 
+    public static List<Form> generateOtherRegionFormList(List<User> userList, Random random) {
+        return userList.stream()
+                .map(user -> createRandomOtherRegionForm(user, random))
+                .collect(Collectors.toList());
     }
     public static FormUrlVo createFormUrlVo() {
         return new FormUrlVo(
