@@ -16,6 +16,7 @@ public enum FormErrorProperty implements ErrorProperty {
     CANNOT_UPDATE_NOT_REJECTED_FORM(HttpStatus.CONFLICT, "반려된 원서만 수정할 수 있습니다."),
     INVALID_FORM_STATUS(HttpStatus.CONFLICT, "원서 상태가 유효하지 않습니다."),
     INVALID_FILE(HttpStatus.BAD_REQUEST, "잘못된 파일입니다: %s"),
+    INVALID_FORM_RESULT_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 합불 처리 요청입니다: %s"),
     MISSING_TOTAL_SCORE(HttpStatus.CONFLICT, "최종 점수가 입력되지 않은 원서가 존재합니다."),
     OUT_OF_APPLICATION_FORM_PERIOD(HttpStatus.FORBIDDEN, "지금은 원서 접수 기간이 아닙니다."),
     OUT_OF_ADMISSION_AND_PLEDGE_PERIOD(HttpStatus.FORBIDDEN, "지금은 입학 등록원 및 서약서 제출 기간이 아닙니다."),
