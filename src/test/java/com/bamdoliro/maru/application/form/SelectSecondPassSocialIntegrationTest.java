@@ -134,6 +134,57 @@ class SelectSecondPassSocialIntegrationTest {
         assertEquals(36, countPassed(equalOpportunity) + countPassed(societyDiversity));
     }
 
+    @Test
+    void 사회통합전형이_10명_미달이면_일반전형_정원은_미달_인원의_절반인_5명만_늘어난다() {
+        // 사회통합 1차 합격자 26명 -> 미달 10명, 일반전형 144 + 5 = 149명 (기존 방식이면 154명)
+        givenSpecialForms(createForms(FormType.NATIONAL_BASIC_LIVING, 13), createForms(FormType.MULTICULTURAL, 13));
+        List<Form> regular = givenRegularForms(200);
+
+        selectSecondPassUseCase.execute();
+
+        assertEquals(149, countPassed(regular));
+    }
+
+    @Test
+    void 사회통합전형_미달_인원이_홀수면_절반을_버림한_인원만_이월된다() {
+        // 사회통합 1차 합격자 29명 -> 미달 7명, 일반전형 144 + 3 = 147명
+        givenSpecialForms(createForms(FormType.NATIONAL_BASIC_LIVING, 15), createForms(FormType.MULTICULTURAL, 14));
+        List<Form> regular = givenRegularForms(200);
+
+        selectSecondPassUseCase.execute();
+
+        assertEquals(147, countPassed(regular));
+    }
+
+    @Test
+    void 사회통합전형_미달이_없으면_일반전형_정원은_그대로다() {
+        givenSpecialForms(createForms(FormType.NATIONAL_BASIC_LIVING, 30), createForms(FormType.MULTICULTURAL, 30));
+        List<Form> regular = givenRegularForms(200);
+
+        selectSecondPassUseCase.execute();
+
+        assertEquals(144, countPassed(regular));
+    }
+
+    @Test
+    void 사회통합전형이_미달이어도_사회통합_지원자는_모두_합격한다() {
+        List<Form> equalOpportunity = createForms(FormType.NATIONAL_BASIC_LIVING, 13);
+        List<Form> societyDiversity = createForms(FormType.MULTICULTURAL, 13);
+        givenSpecialForms(equalOpportunity, societyDiversity);
+        givenRegularForms(200);
+
+        selectSecondPassUseCase.execute();
+
+        assertEquals(13, countPassed(equalOpportunity));
+        assertEquals(13, countPassed(societyDiversity));
+    }
+
+    private List<Form> givenRegularForms(int size) {
+        List<Form> regular = createForms(FormType.REGULAR, size, 150.0);
+        given(formRepository.findFirstPassedRegularForm()).willReturn(regular);
+        return regular;
+    }
+
     private void givenSpecialForms(List<Form> equalOpportunity, List<Form> societyDiversity) {
         List<Form> special = new ArrayList<>(equalOpportunity);
         special.addAll(societyDiversity);
