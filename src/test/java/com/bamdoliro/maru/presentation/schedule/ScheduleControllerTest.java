@@ -17,7 +17,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ScheduleControllerTest extends RestDocsTestSupport {
 
     static ScheduleResponse createResponse() {
-        AdmissionSchedule schedule = ScheduleFixture.createSchedule(2027, true);
+        return createResponse(ScheduleFixture.createSchedule(2027, true));
+    }
+
+    static ScheduleResponse createResponse(AdmissionSchedule schedule) {
         ReflectionTestUtils.setField(schedule, "id", 1L);
         ReflectionTestUtils.setField(schedule, "version", 0L);
         return new ScheduleResponse(schedule);
@@ -36,6 +39,22 @@ class ScheduleControllerTest extends RestDocsTestSupport {
                 .andExpect(jsonPath("$.data.applicationFormStart").value("2026-10-20T09:00:00"))
                 .andExpect(jsonPath("$.data.visitSubmissionAt").value("2026-10-27T09:00:00"))
                 .andExpect(jsonPath("$.data.attendanceStandardDate").value("2026-10-01"))
+
+                .andDo(restDocs.document());
+    }
+
+    @Test
+    void 현재_입학_일정을_조회하면_점검_시간도_함께_반환한다() throws Exception {
+        given(queryCurrentScheduleUseCase.execute())
+                .willReturn(createResponse(ScheduleFixture.createScheduleWithMaintenance(2027, true)));
+
+        mockMvc.perform(get("/schedules/current")
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.maintenanceStart").value("2026-10-25T00:00:00"))
+                .andExpect(jsonPath("$.data.maintenanceEnd").value("2026-10-25T06:00:00"))
 
                 .andDo(restDocs.document());
     }

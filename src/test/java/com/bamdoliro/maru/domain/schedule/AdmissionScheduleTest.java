@@ -12,6 +12,7 @@ import java.util.function.UnaryOperator;
 import static com.bamdoliro.maru.shared.fixture.ScheduleFixture.*;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class AdmissionScheduleTest {
@@ -109,8 +110,63 @@ class AdmissionScheduleTest {
                 ANNOUNCEMENT_OF_FINAL_PASS,
                 REGISTRATION_START,
                 REGISTRATION_END,
-                LocalDate.of(2026, 10, 1)
+                LocalDate.of(2026, 10, 1),
+                null,
+                null
         ));
         assertEquals(APPLICATION_FORM_END, schedule.getApplicationFormEnd());
+    }
+
+    @Test
+    void 점검_시간이_없어도_일정을_만든다() {
+        AdmissionSchedule schedule = assertDoesNotThrow(() -> validBuilder().build());
+        assertNull(schedule.getMaintenanceStart());
+        assertNull(schedule.getMaintenanceEnd());
+    }
+
+    @Test
+    void 점검_시작과_종료가_모두_있으면_일정을_만든다() {
+        AdmissionSchedule schedule = assertDoesNotThrow(() -> validBuilder()
+                .maintenanceStart(MAINTENANCE_START)
+                .maintenanceEnd(MAINTENANCE_END)
+                .build());
+        assertEquals(MAINTENANCE_START, schedule.getMaintenanceStart());
+        assertEquals(MAINTENANCE_END, schedule.getMaintenanceEnd());
+    }
+
+    @Test
+    void 점검_시작과_종료_중_하나만_있으면_에러가_발생한다() {
+        assertInvalid(builder -> builder.maintenanceStart(MAINTENANCE_START));
+        assertInvalid(builder -> builder.maintenanceEnd(MAINTENANCE_END));
+    }
+
+    @Test
+    void 점검_시작이_종료보다_늦으면_에러가_발생한다() {
+        assertInvalid(builder -> builder.maintenanceStart(MAINTENANCE_END).maintenanceEnd(MAINTENANCE_START));
+        assertInvalid(builder -> builder.maintenanceStart(MAINTENANCE_START).maintenanceEnd(MAINTENANCE_START));
+    }
+
+    @Test
+    void 수정할_때_점검_시간을_반영한다() {
+        AdmissionSchedule schedule = ScheduleFixture.createSchedule(2027, true);
+
+        schedule.update(
+                2027,
+                APPLICATION_FORM_START,
+                VISIT_SUBMISSION_AT,
+                APPLICATION_FORM_END,
+                ANNOUNCEMENT_OF_FIRST_PASS,
+                INTERVIEW_START,
+                INTERVIEW_END,
+                ANNOUNCEMENT_OF_FINAL_PASS,
+                REGISTRATION_START,
+                REGISTRATION_END,
+                ATTENDANCE_STANDARD_DATE,
+                MAINTENANCE_START,
+                MAINTENANCE_END
+        );
+
+        assertEquals(MAINTENANCE_START, schedule.getMaintenanceStart());
+        assertEquals(MAINTENANCE_END, schedule.getMaintenanceEnd());
     }
 }

@@ -23,6 +23,8 @@ public class ScheduleResponse {
     private final LocalDateTime registrationStart;
     private final LocalDateTime registrationEnd;
     private final LocalDate attendanceStandardDate;
+    private final LocalDateTime maintenanceStart;
+    private final LocalDateTime maintenanceEnd;
     private final LocalDateTime updatedAt;
 
     public ScheduleResponse(AdmissionSchedule schedule) {
@@ -40,6 +42,8 @@ public class ScheduleResponse {
         this.registrationStart = schedule.getRegistrationStart();
         this.registrationEnd = schedule.getRegistrationEnd();
         this.attendanceStandardDate = schedule.getAttendanceStandardDate();
+        this.maintenanceStart = schedule.getMaintenanceStart();
+        this.maintenanceEnd = schedule.getMaintenanceEnd();
         this.updatedAt = schedule.getUpdatedAt();
     }
 }

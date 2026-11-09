@@ -112,7 +112,11 @@ class AdminScheduleControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("announcementOfFinalPass").type(JsonFieldType.STRING).description("최종 합격 발표"),
                                 fieldWithPath("registrationStart").type(JsonFieldType.STRING).description("입학 등록 시작"),
                                 fieldWithPath("registrationEnd").type(JsonFieldType.STRING).description("입학 등록 마감"),
-                                fieldWithPath("attendanceStandardDate").type(JsonFieldType.STRING).description("출결 기준일 (yyyy-MM-dd)")
+                                fieldWithPath("attendanceStandardDate").type(JsonFieldType.STRING).description("출결 기준일 (yyyy-MM-dd)"),
+                                fieldWithPath("maintenanceStart").type(JsonFieldType.STRING).optional()
+                                        .description("점검 시작 (선택, 점검 종료와 함께 보내거나 둘 다 생략)"),
+                                fieldWithPath("maintenanceEnd").type(JsonFieldType.STRING).optional()
+                                        .description("점검 종료 (선택, 점검 시작보다 늦어야 함)")
                         )
                 ));
 

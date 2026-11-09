@@ -48,6 +48,8 @@ public class CreateScheduleUseCase {
                 .registrationStart(request.getRegistrationStart())
                 .registrationEnd(request.getRegistrationEnd())
                 .attendanceStandardDate(request.getAttendanceStandardDate())
+                .maintenanceStart(request.getMaintenanceStart())
+                .maintenanceEnd(request.getMaintenanceEnd())
                 .build();
     }
 }

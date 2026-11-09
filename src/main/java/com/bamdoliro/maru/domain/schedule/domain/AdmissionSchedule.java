@@ -79,6 +79,14 @@ public class AdmissionSchedule extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDate attendanceStandardDate;
 
+    // 점검 시작 (선택값, 점검을 잡지 않으면 시작/종료 모두 null)
+    @Column(nullable = true)
+    private LocalDateTime maintenanceStart;
+
+    // 점검 종료 (선택값)
+    @Column(nullable = true)
+    private LocalDateTime maintenanceEnd;
+
     @Version
     private Long version;
 
@@ -95,7 +103,9 @@ public class AdmissionSchedule extends BaseTimeEntity {
             LocalDateTime announcementOfFinalPass,
             LocalDateTime registrationStart,
             LocalDateTime registrationEnd,
-            LocalDate attendanceStandardDate
+            LocalDate attendanceStandardDate,
+            LocalDateTime maintenanceStart,
+            LocalDateTime maintenanceEnd
     ) {
         this.active = active;
         apply(
@@ -109,7 +119,9 @@ public class AdmissionSchedule extends BaseTimeEntity {
                 announcementOfFinalPass,
                 registrationStart,
                 registrationEnd,
-                attendanceStandardDate
+                attendanceStandardDate,
+                maintenanceStart,
+                maintenanceEnd
         );
     }
 
@@ -124,7 +136,9 @@ public class AdmissionSchedule extends BaseTimeEntity {
             LocalDateTime announcementOfFinalPass,
             LocalDateTime registrationStart,
             LocalDateTime registrationEnd,
-            LocalDate attendanceStandardDate
+            LocalDate attendanceStandardDate,
+            LocalDateTime maintenanceStart,
+            LocalDateTime maintenanceEnd
     ) {
         apply(
                 admissionYear,
@@ -137,7 +151,9 @@ public class AdmissionSchedule extends BaseTimeEntity {
                 announcementOfFinalPass,
                 registrationStart,
                 registrationEnd,
-                attendanceStandardDate
+                attendanceStandardDate,
+                maintenanceStart,
+                maintenanceEnd
         );
     }
 
@@ -160,7 +176,9 @@ public class AdmissionSchedule extends BaseTimeEntity {
             LocalDateTime announcementOfFinalPass,
             LocalDateTime registrationStart,
             LocalDateTime registrationEnd,
-            LocalDate attendanceStandardDate
+            LocalDate attendanceStandardDate,
+            LocalDateTime maintenanceStart,
+            LocalDateTime maintenanceEnd
     ) {
         validate(
                 admissionYear,
@@ -173,7 +191,9 @@ public class AdmissionSchedule extends BaseTimeEntity {
                 announcementOfFinalPass,
                 registrationStart,
                 registrationEnd,
-                attendanceStandardDate
+                attendanceStandardDate,
+                maintenanceStart,
+                maintenanceEnd
         );
         this.admissionYear = admissionYear;
         this.applicationFormStart = applicationFormStart;
@@ -186,6 +206,8 @@ public class AdmissionSchedule extends BaseTimeEntity {
         this.registrationStart = registrationStart;
         this.registrationEnd = registrationEnd;
         this.attendanceStandardDate = attendanceStandardDate;
+        this.maintenanceStart = maintenanceStart;
+        this.maintenanceEnd = maintenanceEnd;
     }
 
     /**
@@ -193,6 +215,7 @@ public class AdmissionSchedule extends BaseTimeEntity {
      * 원서 접수 시작 <= 방문 원서 접수 < 원서 접수 마감 < 1차 합격 발표 < 면접 시작 < 면접 종료
      * < 최종 합격 발표 < 입학 등록 시작 < 입학 등록 마감
      * 출결 기준일은 원서 접수 마감일 이전(같은 날 포함)이어야 한다.
+     * 점검 시작/종료는 선택값으로, 둘 다 없거나 둘 다 있으면서 점검 시작 < 점검 종료여야 한다.
      */
     private static void validate(
             Integer admissionYear,
@@ -205,7 +228,9 @@ public class AdmissionSchedule extends BaseTimeEntity {
             LocalDateTime announcementOfFinalPass,
             LocalDateTime registrationStart,
             LocalDateTime registrationEnd,
-            LocalDate attendanceStandardDate
+            LocalDate attendanceStandardDate,
+            LocalDateTime maintenanceStart,
+            LocalDateTime maintenanceEnd
     ) {
         boolean hasNull = !allNotNull(
                 admissionYear,
@@ -235,6 +260,15 @@ public class AdmissionSchedule extends BaseTimeEntity {
                 || attendanceStandardDate.isAfter(applicationFormEnd.toLocalDate());
 
         if (invalid) {
+            throw new InvalidSchedulePeriodException();
+        }
+
+        // 점검 시간은 선택값이라 필수값 검사와 시간 순서 체인에 넣지 않는다.
+        // 둘 다 없거나, 둘 다 있으면서 시작이 종료보다 앞서야 한다.
+        boolean invalidMaintenance = Objects.isNull(maintenanceStart) != Objects.isNull(maintenanceEnd)
+                || (Objects.nonNull(maintenanceStart) && !maintenanceStart.isBefore(maintenanceEnd));
+
+        if (invalidMaintenance) {
             throw new InvalidSchedulePeriodException();
         }
     }

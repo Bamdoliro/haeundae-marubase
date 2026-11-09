@@ -50,4 +50,9 @@ public class ScheduleRequest {
 
     @NotNull(message = "필수값입니다.")
     private LocalDate attendanceStandardDate;
+
+    // 점검 시간(선택값). 점검을 잡지 않으면 둘 다 null로 보낸다.
+    private LocalDateTime maintenanceStart;
+
+    private LocalDateTime maintenanceEnd;
 }
