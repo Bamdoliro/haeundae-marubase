@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,6 +38,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(DatabaseClearExtension.class)
 @SpringBootTest
 class ExportFirstRoundResultUseCaseTest {
+
+    /**
+     * 픽스처의 주민등록번호, 성적, 전형 유형을 매번 같게 만들어 실행 결과를 재현 가능하게 한다.
+     * 검증 내용은 특정 분포의 숫자가 아니라 엑셀 구성이므로 시드 값 자체에는 의미가 없다.
+     */
+    private static final long FIXTURE_SEED = 20261109L;
+
+    private Random random;
 
     @Autowired
     private ExportFirstRoundResultUseCase exportFirstRoundResultUseCase;
@@ -58,10 +67,11 @@ class ExportFirstRoundResultUseCaseTest {
 
     @BeforeEach
     void setUp() {
+        random = new Random(FIXTURE_SEED);
         List<User> userList = userRepository.saveAll(
-                UserFixture.generateUserList(FixedNumber.TOTAL * 2)
+                UserFixture.generateUserList(FixedNumber.TOTAL * 2, random)
         );
-        List<Form> formList = FormFixture.generateBusanFormList(userList);
+        List<Form> formList = FormFixture.generateBusanFormList(userList, random);
         formList.forEach(form -> {
             assignExaminationNumberService.execute(form);
             form.assignInterviewNumber(String.valueOf(form.getExaminationNumber()));
@@ -122,8 +132,8 @@ class ExportFirstRoundResultUseCaseTest {
 
     @Test
     void 정원_외_전형_지원자가_있으면_정원_외_전형_시트를_추가한다() throws IOException {
-        List<User> userList = userRepository.saveAll(UserFixture.generateUserList(2));
-        List<Form> supernumeraryFormList = FormFixture.generateBusanFormList(userList);
+        List<User> userList = userRepository.saveAll(UserFixture.generateUserList(2, random));
+        List<Form> supernumeraryFormList = FormFixture.generateBusanFormList(userList, random);
         for (int i = 0; i < supernumeraryFormList.size(); i++) {
             Form form = supernumeraryFormList.get(i);
             form.update(form.getApplicant(), form.getParent(), form.getEducation(), form.getGrade(), form.getDocument(), FormType.SPECIAL_ADMISSION);

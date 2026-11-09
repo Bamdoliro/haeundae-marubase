@@ -8,6 +8,7 @@ import com.bamdoliro.maru.shared.util.RandomCodeUtil;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
+import java.util.Random;
 import java.util.stream.IntStream;
 
 import static com.bamdoliro.maru.shared.util.RandomUtil.randomPhoneNumber;
@@ -50,5 +51,22 @@ public class UserFixture {
         return IntStream.range(0, size)
                 .mapToObj(i -> new User(RandomCodeUtil.generate(11), "김밤돌" + i, "비밀번호", Authority.USER))
                 .toList();
+    }
+
+    /**
+     * 시드를 고정한 Random을 넘기면 같은 사용자 목록이 재현된다.
+     */
+    public static List<User> generateUserList(int size, Random random) {
+        return IntStream.range(0, size)
+                .mapToObj(i -> new User(randomDigits(random, 11), "김밤돌" + i, "비밀번호", Authority.USER))
+                .toList();
+    }
+
+    private static String randomDigits(Random random, int count) {
+        StringBuilder digits = new StringBuilder(count);
+        for (int i = 0; i < count; i++) {
+            digits.append(random.nextInt(10));
+        }
+        return digits.toString();
     }
 }
