@@ -42,7 +42,9 @@ public class UpdateScheduleUseCase {
                 request.getAnnouncementOfFinalPass(),
                 request.getRegistrationStart(),
                 request.getRegistrationEnd(),
-                request.getAttendanceStandardDate()
+                request.getAttendanceStandardDate(),
+                request.getMaintenanceStart(),
+                request.getMaintenanceEnd()
         );
 
         try {

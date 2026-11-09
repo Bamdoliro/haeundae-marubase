@@ -21,8 +21,26 @@ public class ScheduleFixture {
     public static final LocalDateTime REGISTRATION_START = LocalDateTime.of(2027, 1, 5, 9, 0);
     public static final LocalDateTime REGISTRATION_END = LocalDateTime.of(2027, 1, 8, 17, 0);
     public static final LocalDate ATTENDANCE_STANDARD_DATE = LocalDate.of(2026, 10, 1);
+    public static final LocalDateTime MAINTENANCE_START = LocalDateTime.of(2026, 10, 25, 0, 0);
+    public static final LocalDateTime MAINTENANCE_END = LocalDateTime.of(2026, 10, 25, 6, 0);
 
     public static AdmissionSchedule createSchedule(int admissionYear, boolean active) {
+        return createSchedule(admissionYear, active, null, null);
+    }
+
+    /**
+     * 점검 시간이 잡혀 있는 일정.
+     */
+    public static AdmissionSchedule createScheduleWithMaintenance(int admissionYear, boolean active) {
+        return createSchedule(admissionYear, active, MAINTENANCE_START, MAINTENANCE_END);
+    }
+
+    private static AdmissionSchedule createSchedule(
+            int admissionYear,
+            boolean active,
+            LocalDateTime maintenanceStart,
+            LocalDateTime maintenanceEnd
+    ) {
         return AdmissionSchedule.builder()
                 .admissionYear(admissionYear)
                 .active(active)
@@ -36,6 +54,8 @@ public class ScheduleFixture {
                 .registrationStart(REGISTRATION_START)
                 .registrationEnd(REGISTRATION_END)
                 .attendanceStandardDate(ATTENDANCE_STANDARD_DATE)
+                .maintenanceStart(maintenanceStart)
+                .maintenanceEnd(maintenanceEnd)
                 .build();
     }
 
@@ -59,7 +79,9 @@ public class ScheduleFixture {
                 ANNOUNCEMENT_OF_FINAL_PASS,
                 REGISTRATION_START,
                 registrationEnd,
-                ATTENDANCE_STANDARD_DATE
+                ATTENDANCE_STANDARD_DATE,
+                null,
+                null
         );
     }
 
@@ -83,7 +105,9 @@ public class ScheduleFixture {
                 ANNOUNCEMENT_OF_FINAL_PASS,
                 REGISTRATION_START,
                 REGISTRATION_END,
-                ATTENDANCE_STANDARD_DATE
+                ATTENDANCE_STANDARD_DATE,
+                null,
+                null
         );
     }
 }
