@@ -3,7 +3,6 @@ package com.bamdoliro.maru.application.user;
 import com.bamdoliro.maru.domain.user.domain.SignUpVerification;
 import com.bamdoliro.maru.domain.user.domain.User;
 import com.bamdoliro.maru.domain.user.domain.type.Authority;
-import com.bamdoliro.maru.domain.user.exception.SignUpTemporarilyUnavailableException;
 import com.bamdoliro.maru.domain.user.exception.UserAlreadyExistsException;
 import com.bamdoliro.maru.domain.user.exception.VerifyingHasFailedException;
 import com.bamdoliro.maru.infrastructure.persistence.user.SignUpVerificationRepository;
@@ -22,19 +21,16 @@ public class SignUpUserUseCase {
 
     @Transactional
     public void execute(SignUpUserRequest request) {
-        // TODO: 회원가입 임시 중단. 원인 조치 후 다시 활성화할 것.
-        throw new SignUpTemporarilyUnavailableException();
+        validate(request);
 
-//        validate(request);
-//
-//        userRepository.save(
-//                User.builder()
-//                        .phoneNumber(request.getPhoneNumber())
-//                        .name(request.getName())
-//                        .password(request.getPassword())
-//                        .authority(Authority.USER)
-//                        .build()
-//        );
+        userRepository.save(
+                User.builder()
+                        .phoneNumber(request.getPhoneNumber())
+                        .name(request.getName())
+                        .password(request.getPassword())
+                        .authority(Authority.USER)
+                        .build()
+        );
     }
 
     private void validate(SignUpUserRequest request) {
