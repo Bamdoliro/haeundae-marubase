@@ -9,12 +9,22 @@ import com.bamdoliro.maru.shared.constants.FixedNumber;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @UseCase
 public class SelectFirstPassUseCase {
+
+    /**
+     * findApprovedSpecialForm과 같은 순서: 1차 점수 내림차순, 동점이면 id 오름차순.
+     */
+    private static final Comparator<Form> FIRST_ROUND_ORDER = Comparator
+            .comparing((Form form) -> form.getScore().getFirstRoundScore(), Comparator.reverseOrder())
+            .thenComparing(Form::getId);
 
     private final FormRepository formRepository;
     private final CalculateFormScoreService calculateFormScoreService;
@@ -49,8 +59,14 @@ public class SelectFirstPassUseCase {
                 societyDiversityFormList.size()
         );
 
-        processForms(equalOpportunityFormList, quota.equalOpportunityCount(), this::changeToRegularAndCalculateGradeAgain);
-        processForms(societyDiversityFormList, quota.societyDiversityCount(), this::changeToRegularAndCalculateGradeAgain);
+        // 요강: 기회균등전형 우선선발에서 탈락한 지원자는 사회다양성전형 대상자에 포함시켜 전형한다.
+        // 사회다양성에서도 탈락해야 비로소 일반전형으로 전환된다.
+        List<Form> equalOpportunityRejected = selectAndCollectRejected(equalOpportunityFormList, quota.equalOpportunityCount());
+        List<Form> societyDiversityCandidates = Stream.concat(societyDiversityFormList.stream(), equalOpportunityRejected.stream())
+                .sorted(FIRST_ROUND_ORDER)
+                .toList();
+
+        processForms(societyDiversityCandidates, quota.societyDiversityCount(), this::changeToRegularAndCalculateGradeAgain);
 
         formRepository.flush();
         List<Form> regularFormList = formRepository.findApprovedRegularForm()
@@ -93,6 +109,34 @@ public class SelectFirstPassUseCase {
                 action.accept(form);
             }
         }
+    }
+
+    /**
+     * processForms와 같은 규칙(정원 안 + 마지막 합격자와 동점자 전원 합격)으로 1차 합격 처리하고,
+     * 탈락자에게 바로 action을 적용하는 대신 순서를 유지한 채 모아서 돌려준다.
+     */
+    private List<Form> selectAndCollectRejected(List<Form> formList, int count) {
+        if (formList.isEmpty()) {
+            return List.of();
+        }
+        if (count <= 0) {
+            return new ArrayList<>(formList);
+        }
+
+        Double lastScore = formList.get(Math.min(count, formList.size()) - 1).getScore().getFirstRoundScore();
+        List<Form> rejected = new ArrayList<>();
+
+        for (Form form : formList) {
+            if (count > 0) {
+                form.firstPass();
+                count--;
+            } else if (form.getScore().getFirstRoundScore().equals(lastScore)) {
+                form.firstPass();
+            } else {
+                rejected.add(form);
+            }
+        }
+        return rejected;
     }
 
     private void changeToRegularAndCalculateGradeAgain(Form form) {
