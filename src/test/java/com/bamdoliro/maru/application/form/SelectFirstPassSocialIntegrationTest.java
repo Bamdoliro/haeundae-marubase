@@ -156,6 +156,60 @@ class SelectFirstPassSocialIntegrationTest {
         assertEquals(27, countFirstPassed(societyDiversity));
     }
 
+    @Test
+    void 사회통합전형이_10명_미달이면_일반전형_정원은_미달_인원의_절반인_5명만_늘어난다() {
+        // 사회통합 지원자 26명 -> 미달 10명, 일반전형 이월 5명
+        // 일반전형: (144 + 5) x 1.5 = 223.5 -> 224명 (미달분 전체를 이월하던 기존 방식이면 (144 + 10) x 1.5 = 231명)
+        givenSpecialForms(createForms(FormType.NATIONAL_BASIC_LIVING, 13), createForms(FormType.MULTICULTURAL, 13));
+        List<Form> regular = givenRegularForms(300);
+
+        selectFirstPassUseCase.execute();
+
+        assertEquals(224, countFirstPassed(regular));
+    }
+
+    @Test
+    void 사회통합전형_미달_인원이_홀수면_절반을_버림한_인원만_이월된다() {
+        // 사회통합 지원자 29명 -> 미달 7명, 일반전형 이월 3명
+        // 일반전형: (144 + 3) x 1.5 = 220.5 -> 221명
+        givenSpecialForms(createForms(FormType.NATIONAL_BASIC_LIVING, 15), createForms(FormType.MULTICULTURAL, 14));
+        List<Form> regular = givenRegularForms(300);
+
+        selectFirstPassUseCase.execute();
+
+        assertEquals(221, countFirstPassed(regular));
+    }
+
+    @Test
+    void 사회통합전형_미달이_없으면_일반전형_정원은_그대로다() {
+        // 일반전형: 144 x 1.5 = 216명
+        givenSpecialForms(createForms(FormType.NATIONAL_BASIC_LIVING, 40), createForms(FormType.MULTICULTURAL, 40));
+        List<Form> regular = givenRegularForms(300);
+
+        selectFirstPassUseCase.execute();
+
+        assertEquals(216, countFirstPassed(regular));
+    }
+
+    @Test
+    void 사회통합전형이_미달이어도_사회통합_지원자는_모두_합격한다() {
+        List<Form> equalOpportunity = createForms(FormType.NATIONAL_BASIC_LIVING, 13);
+        List<Form> societyDiversity = createForms(FormType.MULTICULTURAL, 13);
+        givenSpecialForms(equalOpportunity, societyDiversity);
+        givenRegularForms(300);
+
+        selectFirstPassUseCase.execute();
+
+        assertEquals(13, countFirstPassed(equalOpportunity));
+        assertEquals(13, countFirstPassed(societyDiversity));
+    }
+
+    private List<Form> givenRegularForms(int size) {
+        List<Form> regular = createForms(FormType.REGULAR, size, 200.0);
+        given(formRepository.findApprovedRegularForm()).willReturn(regular);
+        return regular;
+    }
+
     private void givenSpecialForms(List<Form> equalOpportunity, List<Form> societyDiversity) {
         List<Form> special = new ArrayList<>(equalOpportunity);
         special.addAll(societyDiversity);

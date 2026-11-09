@@ -52,8 +52,11 @@ public class SelectSecondPassUseCase {
 
         if (specialFormList.size() < FixedNumber.SPECIAL) {
             int gap = FixedNumber.SPECIAL - specialFormList.size();
-            regularCount += gap;
-            socialIntegrationCount -= gap;
+            // 요강: 사회통합전형 미달 시 지원 미달 인원의 50% 범위에서 일반전형으로 충원 가능.
+            // 50%를 넘지 않도록 버림하고, 나머지는 어느 전형으로도 충원하지 않는다.
+            int carryToRegular = gap / 2;
+            regularCount += carryToRegular;
+            socialIntegrationCount -= carryToRegular;
         }
 
         SocialIntegrationQuota quota = SocialIntegrationQuota.of(
