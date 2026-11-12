@@ -1,5 +1,6 @@
 package com.bamdoliro.maru.application.schedule;
 
+import com.bamdoliro.maru.application.schedule.event.AdmissionScheduleChangedEvent;
 import com.bamdoliro.maru.domain.schedule.domain.AdmissionSchedule;
 import com.bamdoliro.maru.domain.schedule.exception.ScheduleAlreadyExistsException;
 import com.bamdoliro.maru.domain.schedule.exception.ScheduleNotFoundException;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -33,6 +35,9 @@ class UpdateScheduleUseCaseTest {
     @Mock
     private AdmissionScheduleRepository admissionScheduleRepository;
 
+    @Mock
+    private ApplicationEventPublisher eventPublisher;
+
     @Test
     void 현재_일정을_수정한다() {
         // 저장 전 엔티티의 version은 null이다.
@@ -42,6 +47,7 @@ class UpdateScheduleUseCaseTest {
         updateScheduleUseCase.execute(ScheduleFixture.createRequest(2027, null));
 
         verify(admissionScheduleRepository).saveAndFlush(schedule);
+        verify(eventPublisher).publishEvent(any(AdmissionScheduleChangedEvent.class));
     }
 
     @Test
@@ -63,6 +69,7 @@ class UpdateScheduleUseCaseTest {
 
         assertThrows(ScheduleVersionConflictException.class,
                 () -> updateScheduleUseCase.execute(ScheduleFixture.createRequest(2027, null)));
+        verify(eventPublisher, never()).publishEvent(any());
     }
 
     @Test

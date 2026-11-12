@@ -20,8 +20,6 @@ public class Schedule {
     public static final LocalDateTime ADMISSION_AND_PLEDGE_START = LocalDateTime.of(2027, 1, 5, 0, 0);
     public static final LocalDateTime ADMISSION_AND_PLEDGE_END = LocalDateTime.of(2027, 1, 7, 23, 59);
 
-    public static final String SELECT_FIRST_PASS_CRON = "0 20 21 9 12 ?";
-
     // 서버가 어느 타임존에서 뜨든 전형 일정은 한국 시간으로 판단한다
     public static final String ZONE_ID = "Asia/Seoul";
     public static final ZoneId ZONE = ZoneId.of(ZONE_ID);

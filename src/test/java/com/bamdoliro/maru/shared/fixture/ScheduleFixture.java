@@ -14,6 +14,7 @@ public class ScheduleFixture {
     public static final LocalDateTime APPLICATION_FORM_START = LocalDateTime.of(2026, 10, 20, 9, 0);
     public static final LocalDateTime VISIT_SUBMISSION_AT = LocalDateTime.of(2026, 10, 27, 9, 0);
     public static final LocalDateTime APPLICATION_FORM_END = LocalDateTime.of(2026, 10, 30, 17, 0);
+    public static final LocalDateTime SELECT_FIRST_PASS_AT = LocalDateTime.of(2026, 12, 9, 21, 20);
     public static final LocalDateTime ANNOUNCEMENT_OF_FIRST_PASS = LocalDateTime.of(2026, 12, 11, 15, 0);
     public static final LocalDateTime INTERVIEW_START = LocalDateTime.of(2026, 12, 15, 9, 0);
     public static final LocalDateTime INTERVIEW_END = LocalDateTime.of(2026, 12, 15, 17, 0);
@@ -47,6 +48,7 @@ public class ScheduleFixture {
                 .applicationFormStart(APPLICATION_FORM_START)
                 .visitSubmissionAt(VISIT_SUBMISSION_AT)
                 .applicationFormEnd(APPLICATION_FORM_END)
+                .selectFirstPassAt(SELECT_FIRST_PASS_AT)
                 .announcementOfFirstPass(ANNOUNCEMENT_OF_FIRST_PASS)
                 .interviewStart(INTERVIEW_START)
                 .interviewEnd(INTERVIEW_END)
@@ -73,6 +75,7 @@ public class ScheduleFixture {
                 APPLICATION_FORM_START,
                 VISIT_SUBMISSION_AT,
                 APPLICATION_FORM_END,
+                SELECT_FIRST_PASS_AT,
                 ANNOUNCEMENT_OF_FIRST_PASS,
                 INTERVIEW_START,
                 INTERVIEW_END,
@@ -99,6 +102,7 @@ public class ScheduleFixture {
                 APPLICATION_FORM_END,
                 VISIT_SUBMISSION_AT,
                 APPLICATION_FORM_START,
+                SELECT_FIRST_PASS_AT,
                 ANNOUNCEMENT_OF_FIRST_PASS,
                 INTERVIEW_START,
                 INTERVIEW_END,

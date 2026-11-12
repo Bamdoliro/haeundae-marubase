@@ -51,6 +51,12 @@ public class AdmissionSchedule extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDateTime applicationFormEnd;
 
+    // 1차 합격자 선발 실행 시각. 이 시각에 AdmissionScheduleTaskScheduler가 1차 선발을 돌린다.
+    // 이미 저장된 일정 행이 있는 DB에서 ddl-auto: update로 NOT NULL 컬럼을 바로 추가하면 실패하므로
+    // 컬럼은 nullable로 두고, 값이 반드시 있어야 한다는 검증은 validate()에서 한다.
+    @Column(nullable = true)
+    private LocalDateTime selectFirstPassAt;
+
     // 1차 합격 발표
     @Column(nullable = false)
     private LocalDateTime announcementOfFirstPass;
@@ -97,6 +103,7 @@ public class AdmissionSchedule extends BaseTimeEntity {
             LocalDateTime applicationFormStart,
             LocalDateTime visitSubmissionAt,
             LocalDateTime applicationFormEnd,
+            LocalDateTime selectFirstPassAt,
             LocalDateTime announcementOfFirstPass,
             LocalDateTime interviewStart,
             LocalDateTime interviewEnd,
@@ -113,6 +120,7 @@ public class AdmissionSchedule extends BaseTimeEntity {
                 applicationFormStart,
                 visitSubmissionAt,
                 applicationFormEnd,
+                selectFirstPassAt,
                 announcementOfFirstPass,
                 interviewStart,
                 interviewEnd,
@@ -130,6 +138,7 @@ public class AdmissionSchedule extends BaseTimeEntity {
             LocalDateTime applicationFormStart,
             LocalDateTime visitSubmissionAt,
             LocalDateTime applicationFormEnd,
+            LocalDateTime selectFirstPassAt,
             LocalDateTime announcementOfFirstPass,
             LocalDateTime interviewStart,
             LocalDateTime interviewEnd,
@@ -145,6 +154,7 @@ public class AdmissionSchedule extends BaseTimeEntity {
                 applicationFormStart,
                 visitSubmissionAt,
                 applicationFormEnd,
+                selectFirstPassAt,
                 announcementOfFirstPass,
                 interviewStart,
                 interviewEnd,
@@ -170,6 +180,7 @@ public class AdmissionSchedule extends BaseTimeEntity {
             LocalDateTime applicationFormStart,
             LocalDateTime visitSubmissionAt,
             LocalDateTime applicationFormEnd,
+            LocalDateTime selectFirstPassAt,
             LocalDateTime announcementOfFirstPass,
             LocalDateTime interviewStart,
             LocalDateTime interviewEnd,
@@ -185,6 +196,7 @@ public class AdmissionSchedule extends BaseTimeEntity {
                 applicationFormStart,
                 visitSubmissionAt,
                 applicationFormEnd,
+                selectFirstPassAt,
                 announcementOfFirstPass,
                 interviewStart,
                 interviewEnd,
@@ -199,6 +211,7 @@ public class AdmissionSchedule extends BaseTimeEntity {
         this.applicationFormStart = applicationFormStart;
         this.visitSubmissionAt = visitSubmissionAt;
         this.applicationFormEnd = applicationFormEnd;
+        this.selectFirstPassAt = selectFirstPassAt;
         this.announcementOfFirstPass = announcementOfFirstPass;
         this.interviewStart = interviewStart;
         this.interviewEnd = interviewEnd;
@@ -212,7 +225,7 @@ public class AdmissionSchedule extends BaseTimeEntity {
 
     /**
      * 시간 순서:
-     * 원서 접수 시작 <= 방문 원서 접수 < 원서 접수 마감 < 1차 합격 발표 < 면접 시작 < 면접 종료
+     * 원서 접수 시작 <= 방문 원서 접수 < 원서 접수 마감 < 1차 합격자 선발 <= 1차 합격 발표 < 면접 시작 < 면접 종료
      * < 최종 합격 발표 < 입학 등록 시작 < 입학 등록 마감
      * 출결 기준일은 원서 접수 마감일 이전(같은 날 포함)이어야 한다.
      * 점검 시작/종료는 선택값으로, 둘 다 없거나 둘 다 있으면서 점검 시작 < 점검 종료여야 한다.
@@ -222,6 +235,7 @@ public class AdmissionSchedule extends BaseTimeEntity {
             LocalDateTime applicationFormStart,
             LocalDateTime visitSubmissionAt,
             LocalDateTime applicationFormEnd,
+            LocalDateTime selectFirstPassAt,
             LocalDateTime announcementOfFirstPass,
             LocalDateTime interviewStart,
             LocalDateTime interviewEnd,
@@ -237,6 +251,7 @@ public class AdmissionSchedule extends BaseTimeEntity {
                 applicationFormStart,
                 visitSubmissionAt,
                 applicationFormEnd,
+                selectFirstPassAt,
                 announcementOfFirstPass,
                 interviewStart,
                 interviewEnd,
@@ -251,7 +266,8 @@ public class AdmissionSchedule extends BaseTimeEntity {
 
         boolean invalid = visitSubmissionAt.isBefore(applicationFormStart)
                 || !visitSubmissionAt.isBefore(applicationFormEnd)
-                || !applicationFormEnd.isBefore(announcementOfFirstPass)
+                || !applicationFormEnd.isBefore(selectFirstPassAt)
+                || selectFirstPassAt.isAfter(announcementOfFirstPass)
                 || !announcementOfFirstPass.isBefore(interviewStart)
                 || !interviewStart.isBefore(interviewEnd)
                 || !interviewEnd.isBefore(announcementOfFinalPass)

@@ -30,6 +30,10 @@ public class ScheduleRequest {
     @NotNull(message = "필수값입니다.")
     private LocalDateTime applicationFormEnd;
 
+    // 1차 합격자 선발 실행 시각. 원서 접수 마감보다 늦고 1차 합격 발표보다 이르거나 같아야 한다.
+    @NotNull(message = "필수값입니다.")
+    private LocalDateTime selectFirstPassAt;
+
     @NotNull(message = "필수값입니다.")
     private LocalDateTime announcementOfFirstPass;
 

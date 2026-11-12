@@ -1,5 +1,6 @@
 package com.bamdoliro.maru.application.schedule;
 
+import com.bamdoliro.maru.application.schedule.event.AdmissionScheduleChangedEvent;
 import com.bamdoliro.maru.domain.schedule.domain.AdmissionSchedule;
 import com.bamdoliro.maru.domain.schedule.exception.InvalidSchedulePeriodException;
 import com.bamdoliro.maru.domain.schedule.exception.ScheduleAlreadyExistsException;
@@ -11,6 +12,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.Optional;
 
@@ -31,6 +33,9 @@ class CreateScheduleUseCaseTest {
     @Mock
     private AdmissionScheduleRepository admissionScheduleRepository;
 
+    @Mock
+    private ApplicationEventPublisher eventPublisher;
+
     @Test
     void 일정을_등록하면_활성_일정이_되고_기존_활성_일정은_비활성이_된다() {
         AdmissionSchedule previous = ScheduleFixture.createSchedule(2026, true);
@@ -45,6 +50,7 @@ class CreateScheduleUseCaseTest {
         ArgumentCaptor<AdmissionSchedule> captor = ArgumentCaptor.forClass(AdmissionSchedule.class);
         verify(admissionScheduleRepository).save(captor.capture());
         assertTrue(captor.getValue().isActive());
+        verify(eventPublisher).publishEvent(any(AdmissionScheduleChangedEvent.class));
     }
 
     @Test
@@ -64,5 +70,6 @@ class CreateScheduleUseCaseTest {
                 () -> createScheduleUseCase.execute(ScheduleFixture.createInvalidOrderRequest(2027)));
         verify(admissionScheduleRepository, never()).findByActiveTrue();
         verify(admissionScheduleRepository, never()).save(any());
+        verify(eventPublisher, never()).publishEvent(any());
     }
 }
