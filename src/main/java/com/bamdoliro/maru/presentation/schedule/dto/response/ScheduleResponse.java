@@ -23,6 +23,8 @@ public class ScheduleResponse {
     private final LocalDateTime announcementOfFinalPass;
     private final LocalDateTime registrationStart;
     private final LocalDateTime registrationEnd;
+    private final LocalDateTime admissionAndPledgeStart;
+    private final LocalDateTime admissionAndPledgeEnd;
     private final LocalDate attendanceStandardDate;
     private final LocalDateTime maintenanceStart;
     private final LocalDateTime maintenanceEnd;
@@ -43,6 +45,8 @@ public class ScheduleResponse {
         this.announcementOfFinalPass = schedule.getAnnouncementOfFinalPass();
         this.registrationStart = schedule.getRegistrationStart();
         this.registrationEnd = schedule.getRegistrationEnd();
+        this.admissionAndPledgeStart = schedule.getAdmissionAndPledgeStart();
+        this.admissionAndPledgeEnd = schedule.getAdmissionAndPledgeEnd();
         this.attendanceStandardDate = schedule.getAttendanceStandardDate();
         this.maintenanceStart = schedule.getMaintenanceStart();
         this.maintenanceEnd = schedule.getMaintenanceEnd();

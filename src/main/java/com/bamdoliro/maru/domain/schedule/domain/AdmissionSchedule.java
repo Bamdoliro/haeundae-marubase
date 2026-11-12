@@ -81,6 +81,16 @@ public class AdmissionSchedule extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDateTime registrationEnd;
 
+    // 입학 등록원 및 서약서 제출 시작. 입학 등록 기간 안에 있어야 한다.
+    // selectFirstPassAt과 같은 이유(ddl-auto: update로 기존 행에 NOT NULL 추가 불가)로 컬럼은 nullable,
+    // 필수 여부는 validate()에서 검사한다.
+    @Column(nullable = true)
+    private LocalDateTime admissionAndPledgeStart;
+
+    // 입학 등록원 및 서약서 제출 마감
+    @Column(nullable = true)
+    private LocalDateTime admissionAndPledgeEnd;
+
     // 출결 기준일 (이 날까지의 출결을 반영)
     @Column(nullable = false)
     private LocalDate attendanceStandardDate;
@@ -110,6 +120,8 @@ public class AdmissionSchedule extends BaseTimeEntity {
             LocalDateTime announcementOfFinalPass,
             LocalDateTime registrationStart,
             LocalDateTime registrationEnd,
+            LocalDateTime admissionAndPledgeStart,
+            LocalDateTime admissionAndPledgeEnd,
             LocalDate attendanceStandardDate,
             LocalDateTime maintenanceStart,
             LocalDateTime maintenanceEnd
@@ -127,6 +139,8 @@ public class AdmissionSchedule extends BaseTimeEntity {
                 announcementOfFinalPass,
                 registrationStart,
                 registrationEnd,
+                admissionAndPledgeStart,
+                admissionAndPledgeEnd,
                 attendanceStandardDate,
                 maintenanceStart,
                 maintenanceEnd
@@ -145,6 +159,8 @@ public class AdmissionSchedule extends BaseTimeEntity {
             LocalDateTime announcementOfFinalPass,
             LocalDateTime registrationStart,
             LocalDateTime registrationEnd,
+            LocalDateTime admissionAndPledgeStart,
+            LocalDateTime admissionAndPledgeEnd,
             LocalDate attendanceStandardDate,
             LocalDateTime maintenanceStart,
             LocalDateTime maintenanceEnd
@@ -161,6 +177,8 @@ public class AdmissionSchedule extends BaseTimeEntity {
                 announcementOfFinalPass,
                 registrationStart,
                 registrationEnd,
+                admissionAndPledgeStart,
+                admissionAndPledgeEnd,
                 attendanceStandardDate,
                 maintenanceStart,
                 maintenanceEnd
@@ -187,6 +205,8 @@ public class AdmissionSchedule extends BaseTimeEntity {
             LocalDateTime announcementOfFinalPass,
             LocalDateTime registrationStart,
             LocalDateTime registrationEnd,
+            LocalDateTime admissionAndPledgeStart,
+            LocalDateTime admissionAndPledgeEnd,
             LocalDate attendanceStandardDate,
             LocalDateTime maintenanceStart,
             LocalDateTime maintenanceEnd
@@ -203,6 +223,8 @@ public class AdmissionSchedule extends BaseTimeEntity {
                 announcementOfFinalPass,
                 registrationStart,
                 registrationEnd,
+                admissionAndPledgeStart,
+                admissionAndPledgeEnd,
                 attendanceStandardDate,
                 maintenanceStart,
                 maintenanceEnd
@@ -218,6 +240,8 @@ public class AdmissionSchedule extends BaseTimeEntity {
         this.announcementOfFinalPass = announcementOfFinalPass;
         this.registrationStart = registrationStart;
         this.registrationEnd = registrationEnd;
+        this.admissionAndPledgeStart = admissionAndPledgeStart;
+        this.admissionAndPledgeEnd = admissionAndPledgeEnd;
         this.attendanceStandardDate = attendanceStandardDate;
         this.maintenanceStart = maintenanceStart;
         this.maintenanceEnd = maintenanceEnd;
@@ -227,6 +251,7 @@ public class AdmissionSchedule extends BaseTimeEntity {
      * 시간 순서:
      * 원서 접수 시작 <= 방문 원서 접수 < 원서 접수 마감 < 1차 합격자 선발 <= 1차 합격 발표 < 면접 시작 < 면접 종료
      * < 최종 합격 발표 < 입학 등록 시작 < 입학 등록 마감
+     * 입학 등록원/서약서 제출 기간: 입학 등록 시작 <= 제출 시작 < 제출 마감 <= 입학 등록 마감
      * 출결 기준일은 원서 접수 마감일 이전(같은 날 포함)이어야 한다.
      * 점검 시작/종료는 선택값으로, 둘 다 없거나 둘 다 있으면서 점검 시작 < 점검 종료여야 한다.
      */
@@ -242,6 +267,8 @@ public class AdmissionSchedule extends BaseTimeEntity {
             LocalDateTime announcementOfFinalPass,
             LocalDateTime registrationStart,
             LocalDateTime registrationEnd,
+            LocalDateTime admissionAndPledgeStart,
+            LocalDateTime admissionAndPledgeEnd,
             LocalDate attendanceStandardDate,
             LocalDateTime maintenanceStart,
             LocalDateTime maintenanceEnd
@@ -258,6 +285,8 @@ public class AdmissionSchedule extends BaseTimeEntity {
                 announcementOfFinalPass,
                 registrationStart,
                 registrationEnd,
+                admissionAndPledgeStart,
+                admissionAndPledgeEnd,
                 attendanceStandardDate
         );
         if (hasNull) {
@@ -273,6 +302,9 @@ public class AdmissionSchedule extends BaseTimeEntity {
                 || !interviewEnd.isBefore(announcementOfFinalPass)
                 || !announcementOfFinalPass.isBefore(registrationStart)
                 || !registrationStart.isBefore(registrationEnd)
+                || admissionAndPledgeStart.isBefore(registrationStart)
+                || !admissionAndPledgeStart.isBefore(admissionAndPledgeEnd)
+                || admissionAndPledgeEnd.isAfter(registrationEnd)
                 || attendanceStandardDate.isAfter(applicationFormEnd.toLocalDate());
 
         if (invalid) {

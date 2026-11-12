@@ -6,6 +6,8 @@ import com.bamdoliro.maru.domain.form.domain.value.Subject;
 import com.bamdoliro.maru.domain.form.domain.value.SubjectMap;
 import com.bamdoliro.maru.domain.form.service.FormFacade;
 import com.bamdoliro.maru.domain.user.domain.User;
+import com.bamdoliro.maru.domain.schedule.domain.AdmissionSchedule;
+import com.bamdoliro.maru.domain.schedule.service.AdmissionScheduleFacade;
 import com.bamdoliro.maru.infrastructure.pdf.GeneratePdfService;
 import com.bamdoliro.maru.infrastructure.pdf.MergePdfService;
 import com.bamdoliro.maru.infrastructure.s3.FileService;
@@ -36,9 +38,11 @@ public class ExportFormUseCase {
     private final GeneratePdfService generatePdfService;
     private final MergePdfService mergePdfService;
     private final FileService fileService;
+    private final AdmissionScheduleFacade admissionScheduleFacade;
 
     public ByteArrayResource execute(User user) {
         Form form = formFacade.getForm(user);
+        AdmissionSchedule schedule = admissionScheduleFacade.getCurrentSchedule();
 
         SubjectMap subjectMap = form.getGrade().getSubjectList().getSubjectMap();
         // 신분증 사진이 S3에 없으면 presigned URL이 null이라, null을 허용하지 않는 Map.of 대신 HashMap을 쓴다
@@ -49,8 +53,8 @@ public class ExportFormUseCase {
         formMap.put("grade31", subjectMap.getSubjectListOf(3, 1));
         formMap.put("grade32", subjectMap.getSubjectListOf(3, 2));
         formMap.put("subjectList", getSubjectList(form));
-        formMap.put("year", Schedule.getAdmissionYear());
-        formMap.put("applicationDeadline", Schedule.toShortLocaleString(Schedule.END));
+        formMap.put("year", schedule.getAdmissionYear());
+        formMap.put("applicationDeadline", Schedule.toShortLocaleString(schedule.getApplicationFormEnd()));
         formMap.put("identificationPictureUri", fileService.getDownloadPresignedUrl(FolderConstant.IDENTIFICATION_PICTURE, user.getUuid().toString()));
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PdfDocument mergedDocument = new PdfDocument(new PdfWriter(outputStream));

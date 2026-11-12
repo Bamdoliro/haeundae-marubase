@@ -4,6 +4,8 @@ import com.bamdoliro.maru.domain.form.domain.Form;
 import com.bamdoliro.maru.domain.form.exception.InvalidFormStatusException;
 import com.bamdoliro.maru.domain.form.service.FormFacade;
 import com.bamdoliro.maru.domain.user.domain.User;
+import com.bamdoliro.maru.domain.schedule.domain.AdmissionSchedule;
+import com.bamdoliro.maru.domain.schedule.service.AdmissionScheduleFacade;
 import com.bamdoliro.maru.infrastructure.pdf.GeneratePdfService;
 import com.bamdoliro.maru.infrastructure.s3.FileService;
 import com.bamdoliro.maru.infrastructure.s3.constants.FolderConstant;
@@ -26,19 +28,21 @@ public class GenerateProofOfApplicationUseCase {
     private final ProcessTemplateService processTemplateService;
     private final GeneratePdfService generatePdfService;
     private final FileService fileService;
+    private final AdmissionScheduleFacade admissionScheduleFacade;
 
     public ByteArrayResource execute(User user) {
         Form form = formFacade.getForm(user);
         validateFormStatus(form);
+        AdmissionSchedule schedule = admissionScheduleFacade.getCurrentSchedule();
 
         // 신분증 사진이 S3에 없으면 presigned URL이 null이라, null을 허용하지 않는 Map.of/Map.ofEntries 대신 HashMap을 쓴다
         Map<String, Object> formMap = new HashMap<>();
         formMap.put("form", form);
-        formMap.put("year", Schedule.getAdmissionYear());
-        formMap.put("announcement_of_first_pass", Schedule.toLocaleString(Schedule.ANNOUNCEMENT_OF_FIRST_PASS));
+        formMap.put("year", schedule.getAdmissionYear());
+        formMap.put("announcement_of_first_pass", Schedule.toLocaleString(schedule.getAnnouncementOfFirstPass()));
         formMap.put("identificationPictureUri", fileService.getDownloadPresignedUrl(FolderConstant.IDENTIFICATION_PICTURE, user.getUuid().toString()));
-        formMap.put("start", Schedule.toLocaleString(Schedule.START));
-        formMap.put("end", Schedule.toLocaleString(Schedule.END));
+        formMap.put("start", Schedule.toLocaleString(schedule.getApplicationFormStart()));
+        formMap.put("end", Schedule.toLocaleString(schedule.getApplicationFormEnd()));
         String html = processTemplateService.execute(Templates.PROOF_OF_APPLICATION, formMap);
         ByteArrayOutputStream outputStream = generatePdfService.execute(html);
 

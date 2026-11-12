@@ -127,6 +127,8 @@ class AdmissionScheduleTaskSchedulerIntegrationTest {
                 announcementOfFirstPass.plusDays(2),
                 announcementOfFirstPass.plusDays(3),
                 announcementOfFirstPass.plusDays(4),
+                announcementOfFirstPass.plusDays(3),
+                announcementOfFirstPass.plusDays(4),
                 applicationFormStart.toLocalDate(),
                 null,
                 null

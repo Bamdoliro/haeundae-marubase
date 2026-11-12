@@ -5,10 +5,11 @@ import com.bamdoliro.maru.domain.form.domain.type.FormType;
 import com.bamdoliro.maru.domain.form.domain.type.GraduationType;
 import com.bamdoliro.maru.domain.form.domain.value.School;
 import com.bamdoliro.maru.domain.form.domain.value.Subject;
+import com.bamdoliro.maru.domain.schedule.domain.AdmissionSchedule;
+import com.bamdoliro.maru.domain.schedule.service.AdmissionScheduleFacade;
 import com.bamdoliro.maru.infrastructure.persistence.form.FormRepository;
 import com.bamdoliro.maru.infrastructure.xlsx.XlsxService;
 import com.bamdoliro.maru.shared.annotation.UseCase;
-import com.bamdoliro.maru.shared.constants.Schedule;
 import com.bamdoliro.maru.shared.util.MathUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -60,6 +61,7 @@ public class ExportFirstRoundResultUseCase {
 
     private final FormRepository formRepository;
     private final XlsxService xlsxService;
+    private final AdmissionScheduleFacade admissionScheduleFacade;
 
     @Transactional(readOnly = true)
     public Resource execute() throws IOException {
@@ -68,6 +70,7 @@ public class ExportFirstRoundResultUseCase {
                 .sorted(Comparator.comparing(Form::getExaminationNumber))
                 .toList();
 
+        AdmissionSchedule schedule = admissionScheduleFacade.getCurrentSchedule();
         Workbook workbook = xlsxService.openTemplate("1차전형결과");
         Styles styles = new Styles(workbook);
 
@@ -84,7 +87,7 @@ public class ExportFirstRoundResultUseCase {
         List<Form> firstPassedFormList = formList.stream()
                 .filter(form -> Boolean.TRUE.equals(form.isFirstPassed()))
                 .toList();
-        writeContactSheet(workbook.getSheetAt(CONTACT_SHEET), styles, firstPassedFormList);
+        writeContactSheet(workbook.getSheetAt(CONTACT_SHEET), styles, firstPassedFormList, schedule.getAdmissionYear());
 
         writeGradeSheet(workbook.getSheetAt(REGULAR_SHEET), styles, filter(formList, FormType::isRegular));
         writeGradeSheet(workbook.getSheetAt(EQUAL_OPPORTUNITY_SHEET), styles, filter(formList, FormType::isEqualOpportunity));
@@ -104,9 +107,9 @@ public class ExportFirstRoundResultUseCase {
 
     // ---------------------------------------------------------------- 시트1: 1차 합격자 인적사항(연락처)
 
-    private void writeContactSheet(Sheet sheet, Styles styles, List<Form> formList) {
+    private void writeContactSheet(Sheet sheet, Styles styles, List<Form> formList, int admissionYear) {
         // 제목 서식은 템플릿 그대로 두고, 연도만 입학 일정 기준으로 맞춘다.
-        replaceText(sheet, 0, 0, Schedule.getAdmissionYear() + "학년도 1차 합격자 인적사항(연락처)");
+        replaceText(sheet, 0, 0, admissionYear + "학년도 1차 합격자 인적사항(연락처)");
 
         int rowIndex = CONTACT_DATA_FIRST_ROW;
         for (Form form : formList) {

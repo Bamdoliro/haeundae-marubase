@@ -1,6 +1,8 @@
 package com.bamdoliro.maru.application.form;
 
 import com.bamdoliro.maru.domain.form.domain.Form;
+import com.bamdoliro.maru.domain.schedule.domain.AdmissionSchedule;
+import com.bamdoliro.maru.domain.schedule.service.AdmissionScheduleFacade;
 import com.bamdoliro.maru.infrastructure.pdf.GeneratePdfService;
 import com.bamdoliro.maru.infrastructure.pdf.MergePdfService;
 import com.bamdoliro.maru.infrastructure.persistence.form.FormRepository;
@@ -8,7 +10,6 @@ import com.bamdoliro.maru.infrastructure.s3.FileService;
 import com.bamdoliro.maru.infrastructure.thymeleaf.ProcessTemplateService;
 import com.bamdoliro.maru.infrastructure.thymeleaf.Templates;
 import com.bamdoliro.maru.shared.annotation.UseCase;
-import com.bamdoliro.maru.shared.constants.Schedule;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.utils.PdfMerger;
@@ -28,9 +29,11 @@ public class ExportAllDocumentsUseCase {
     private final GeneratePdfService generatePdfService;
     private final MergePdfService mergePdfService;
     private final FileService fileService;
+    private final AdmissionScheduleFacade admissionScheduleFacade;
 
     public ByteArrayResource execute() {
         List<Form> forms = formRepository.findAll();
+        AdmissionSchedule schedule = admissionScheduleFacade.getCurrentSchedule();
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try (PdfDocument mergedDocument = new PdfDocument(new PdfWriter(outputStream))) {
@@ -39,7 +42,7 @@ public class ExportAllDocumentsUseCase {
             for(Form form : forms) {
                 Map<String, Object> documentMap = Map.of(
                         "form", form,
-                        "year", Schedule.getAdmissionYear()
+                        "year", schedule.getAdmissionYear()
                 );
 
                 String html1 = processTemplateService.execute(Templates.DOCUMENT_ONE, documentMap);

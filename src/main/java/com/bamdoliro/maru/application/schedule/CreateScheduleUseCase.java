@@ -55,6 +55,8 @@ public class CreateScheduleUseCase {
                 .announcementOfFinalPass(request.getAnnouncementOfFinalPass())
                 .registrationStart(request.getRegistrationStart())
                 .registrationEnd(request.getRegistrationEnd())
+                .admissionAndPledgeStart(request.getAdmissionAndPledgeStart())
+                .admissionAndPledgeEnd(request.getAdmissionAndPledgeEnd())
                 .attendanceStandardDate(request.getAttendanceStandardDate())
                 .maintenanceStart(request.getMaintenanceStart())
                 .maintenanceEnd(request.getMaintenanceEnd())

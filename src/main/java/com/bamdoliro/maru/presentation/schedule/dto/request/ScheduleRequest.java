@@ -52,6 +52,13 @@ public class ScheduleRequest {
     @NotNull(message = "필수값입니다.")
     private LocalDateTime registrationEnd;
 
+    // 입학 등록원 및 서약서 제출 기간. 입학 등록 기간 안에 있어야 한다.
+    @NotNull(message = "필수값입니다.")
+    private LocalDateTime admissionAndPledgeStart;
+
+    @NotNull(message = "필수값입니다.")
+    private LocalDateTime admissionAndPledgeEnd;
+
     @NotNull(message = "필수값입니다.")
     private LocalDate attendanceStandardDate;
 

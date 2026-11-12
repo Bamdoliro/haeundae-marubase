@@ -6,10 +6,12 @@ import com.bamdoliro.maru.domain.form.service.AssignExaminationNumberService;
 import com.bamdoliro.maru.domain.form.service.CalculateFormScoreService;
 import com.bamdoliro.maru.domain.user.domain.User;
 import com.bamdoliro.maru.infrastructure.persistence.form.FormRepository;
+import com.bamdoliro.maru.infrastructure.persistence.schedule.AdmissionScheduleRepository;
 import com.bamdoliro.maru.infrastructure.persistence.user.UserRepository;
 import com.bamdoliro.maru.shared.config.DatabaseClearExtension;
 import com.bamdoliro.maru.shared.constants.FixedNumber;
 import com.bamdoliro.maru.shared.fixture.FormFixture;
+import com.bamdoliro.maru.shared.fixture.ScheduleFixture;
 import com.bamdoliro.maru.shared.fixture.UserFixture;
 import com.bamdoliro.maru.shared.util.SaveFileUtil;
 import org.apache.poi.ss.usermodel.Row;
@@ -51,6 +53,9 @@ class ExportFirstRoundResultUseCaseTest {
     private ExportFirstRoundResultUseCase exportFirstRoundResultUseCase;
 
     @Autowired
+    private AdmissionScheduleRepository admissionScheduleRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -67,6 +72,7 @@ class ExportFirstRoundResultUseCaseTest {
 
     @BeforeEach
     void setUp() {
+        admissionScheduleRepository.save(ScheduleFixture.createSchedule(2031, true));
         random = new Random(FIXTURE_SEED);
         List<User> userList = userRepository.saveAll(
                 UserFixture.generateUserList(FixedNumber.TOTAL * 2, random)
@@ -101,7 +107,8 @@ class ExportFirstRoundResultUseCaseTest {
             assertEquals("일반전형 1단계 성적", workbook.getSheetAt(1).getSheetName());
             assertEquals("기회균등전형 1단계 성적", workbook.getSheetAt(2).getSheetName());
             assertEquals("사회통합전형 1단계 성적", workbook.getSheetAt(3).getSheetName());
-            assertEquals("2027학년도 1차 합격자 인적사항(연락처)", workbook.getSheetAt(0).getRow(0).getCell(0).getStringCellValue());
+            // 학년도는 활성 입학 일정(2031)에서 가져온다.
+            assertEquals("2031학년도 1차 합격자 인적사항(연락처)", workbook.getSheetAt(0).getRow(0).getCell(0).getStringCellValue());
 
             // 시트1에는 1차 합격자만 들어간다
             Sheet contactSheet = workbook.getSheetAt(0);

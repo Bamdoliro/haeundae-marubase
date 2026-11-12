@@ -4,6 +4,7 @@ import com.bamdoliro.maru.domain.form.domain.Form;
 import com.bamdoliro.maru.domain.form.service.CalculateFormScoreService;
 import com.bamdoliro.maru.domain.user.domain.User;
 import com.bamdoliro.maru.infrastructure.persistence.form.FormRepository;
+import com.bamdoliro.maru.infrastructure.persistence.schedule.AdmissionScheduleRepository;
 import com.bamdoliro.maru.infrastructure.persistence.user.UserRepository;
 import com.bamdoliro.maru.infrastructure.s3.FileService;
 import com.bamdoliro.maru.infrastructure.s3.constants.FolderConstant;
@@ -11,9 +12,11 @@ import com.bamdoliro.maru.infrastructure.s3.dto.request.FileMetadata;
 import com.bamdoliro.maru.infrastructure.s3.validator.DefaultFileValidator;
 import com.bamdoliro.maru.shared.config.DatabaseClearExtension;
 import com.bamdoliro.maru.shared.fixture.FormFixture;
+import com.bamdoliro.maru.shared.fixture.ScheduleFixture;
 import com.bamdoliro.maru.shared.fixture.UserFixture;
 import com.bamdoliro.maru.shared.util.SaveFileUtil;
 import com.bamdoliro.maru.shared.util.UploadImageUtil;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +38,9 @@ public class GenerateProofOfApplicationUseCaseSpringBootTest {
     private GenerateProofOfApplicationUseCase generateProofOfApplicationUseCase;
 
     @Autowired
+    private AdmissionScheduleRepository admissionScheduleRepository;
+
+    @Autowired
     private FormRepository formRepository;
 
     @Autowired
@@ -44,6 +50,11 @@ public class GenerateProofOfApplicationUseCaseSpringBootTest {
     private FileService fileService;
     @Autowired
     private CalculateFormScoreService calculateFormScoreService;
+
+    @BeforeEach
+    void setUp() {
+        admissionScheduleRepository.save(ScheduleFixture.createSchedule(2027, true));
+    }
 
     @Test
     void 접수증을_저장한다() throws IOException {
