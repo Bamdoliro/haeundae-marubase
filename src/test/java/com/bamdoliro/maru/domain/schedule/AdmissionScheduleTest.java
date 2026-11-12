@@ -31,6 +31,8 @@ class AdmissionScheduleTest {
                 .announcementOfFinalPass(ANNOUNCEMENT_OF_FINAL_PASS)
                 .registrationStart(REGISTRATION_START)
                 .registrationEnd(REGISTRATION_END)
+                .admissionAndPledgeStart(ADMISSION_AND_PLEDGE_START)
+                .admissionAndPledgeEnd(ADMISSION_AND_PLEDGE_END)
                 .attendanceStandardDate(ATTENDANCE_STANDARD_DATE);
     }
 
@@ -112,6 +114,27 @@ class AdmissionScheduleTest {
     }
 
     @Test
+    void 입학_등록원_제출_기간이_없으면_에러가_발생한다() {
+        assertInvalid(builder -> builder.admissionAndPledgeStart(null));
+        assertInvalid(builder -> builder.admissionAndPledgeEnd(null));
+    }
+
+    @Test
+    void 입학_등록원_제출_기간은_입학_등록_기간_안에_있어야_한다() {
+        assertInvalid(builder -> builder.admissionAndPledgeStart(REGISTRATION_START.minusMinutes(1)));
+        assertInvalid(builder -> builder.admissionAndPledgeEnd(REGISTRATION_END.plusMinutes(1)));
+        assertInvalid(builder -> builder.admissionAndPledgeStart(ADMISSION_AND_PLEDGE_END));
+    }
+
+    @Test
+    void 입학_등록원_제출_기간이_입학_등록_기간과_같아도_된다() {
+        assertDoesNotThrow(() -> validBuilder()
+                .admissionAndPledgeStart(REGISTRATION_START)
+                .admissionAndPledgeEnd(REGISTRATION_END)
+                .build());
+    }
+
+    @Test
     void 출결_기준일이_원서_접수_마감일보다_늦으면_에러가_발생한다() {
         assertInvalid(builder -> builder.attendanceStandardDate(APPLICATION_FORM_END.toLocalDate().plusDays(1)));
     }
@@ -133,6 +156,8 @@ class AdmissionScheduleTest {
                 ANNOUNCEMENT_OF_FINAL_PASS,
                 REGISTRATION_START,
                 REGISTRATION_END,
+                ADMISSION_AND_PLEDGE_START,
+                ADMISSION_AND_PLEDGE_END,
                 LocalDate.of(2026, 10, 1),
                 null,
                 null
@@ -185,6 +210,8 @@ class AdmissionScheduleTest {
                 ANNOUNCEMENT_OF_FINAL_PASS,
                 REGISTRATION_START,
                 REGISTRATION_END,
+                ADMISSION_AND_PLEDGE_START,
+                ADMISSION_AND_PLEDGE_END,
                 ATTENDANCE_STANDARD_DATE,
                 MAINTENANCE_START,
                 MAINTENANCE_END

@@ -21,6 +21,8 @@ public class ScheduleFixture {
     public static final LocalDateTime ANNOUNCEMENT_OF_FINAL_PASS = LocalDateTime.of(2026, 12, 24, 12, 0);
     public static final LocalDateTime REGISTRATION_START = LocalDateTime.of(2027, 1, 5, 9, 0);
     public static final LocalDateTime REGISTRATION_END = LocalDateTime.of(2027, 1, 8, 17, 0);
+    public static final LocalDateTime ADMISSION_AND_PLEDGE_START = LocalDateTime.of(2027, 1, 5, 9, 0);
+    public static final LocalDateTime ADMISSION_AND_PLEDGE_END = LocalDateTime.of(2027, 1, 7, 23, 59);
     public static final LocalDate ATTENDANCE_STANDARD_DATE = LocalDate.of(2026, 10, 1);
     public static final LocalDateTime MAINTENANCE_START = LocalDateTime.of(2026, 10, 25, 0, 0);
     public static final LocalDateTime MAINTENANCE_END = LocalDateTime.of(2026, 10, 25, 6, 0);
@@ -55,6 +57,8 @@ public class ScheduleFixture {
                 .announcementOfFinalPass(ANNOUNCEMENT_OF_FINAL_PASS)
                 .registrationStart(REGISTRATION_START)
                 .registrationEnd(REGISTRATION_END)
+                .admissionAndPledgeStart(ADMISSION_AND_PLEDGE_START)
+                .admissionAndPledgeEnd(ADMISSION_AND_PLEDGE_END)
                 .attendanceStandardDate(ATTENDANCE_STANDARD_DATE)
                 .maintenanceStart(maintenanceStart)
                 .maintenanceEnd(maintenanceEnd)
@@ -82,6 +86,8 @@ public class ScheduleFixture {
                 ANNOUNCEMENT_OF_FINAL_PASS,
                 REGISTRATION_START,
                 registrationEnd,
+                ADMISSION_AND_PLEDGE_START,
+                ADMISSION_AND_PLEDGE_END,
                 ATTENDANCE_STANDARD_DATE,
                 null,
                 null
@@ -109,6 +115,8 @@ public class ScheduleFixture {
                 ANNOUNCEMENT_OF_FINAL_PASS,
                 REGISTRATION_START,
                 REGISTRATION_END,
+                ADMISSION_AND_PLEDGE_START,
+                ADMISSION_AND_PLEDGE_END,
                 ATTENDANCE_STANDARD_DATE,
                 null,
                 null

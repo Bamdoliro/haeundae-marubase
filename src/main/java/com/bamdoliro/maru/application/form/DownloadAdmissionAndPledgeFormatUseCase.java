@@ -4,12 +4,13 @@ import com.bamdoliro.maru.domain.form.domain.Form;
 import com.bamdoliro.maru.domain.form.exception.InvalidFormStatusException;
 import com.bamdoliro.maru.domain.form.service.FormFacade;
 import com.bamdoliro.maru.domain.user.domain.User;
+import com.bamdoliro.maru.domain.schedule.domain.AdmissionSchedule;
+import com.bamdoliro.maru.domain.schedule.service.AdmissionScheduleFacade;
 import com.bamdoliro.maru.infrastructure.pdf.GeneratePdfService;
 import com.bamdoliro.maru.infrastructure.pdf.MergePdfService;
 import com.bamdoliro.maru.infrastructure.thymeleaf.ProcessTemplateService;
 import com.bamdoliro.maru.infrastructure.thymeleaf.Templates;
 import com.bamdoliro.maru.shared.annotation.UseCase;
-import com.bamdoliro.maru.shared.constants.Schedule;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.utils.PdfMerger;
@@ -28,14 +29,16 @@ public class DownloadAdmissionAndPledgeFormatUseCase {
     private final FormFacade formFacade;
     private final ProcessTemplateService processTemplateService;
     private final GeneratePdfService generatePdfService;
+    private final AdmissionScheduleFacade admissionScheduleFacade;
 
     public ByteArrayResource execute(User user) {
         Form form = formFacade.getForm(user);
         validate(form);
+        AdmissionSchedule schedule = admissionScheduleFacade.getCurrentSchedule();
 
         Map<String, Object> formMap = Map.of(
                 "form", form,
-                "year", Schedule.getAdmissionYear()
+                "year", schedule.getAdmissionYear()
         );
 
         List<String> templates = List.of(

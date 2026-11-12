@@ -47,6 +47,8 @@ public class UpdateScheduleUseCase {
                 request.getAnnouncementOfFinalPass(),
                 request.getRegistrationStart(),
                 request.getRegistrationEnd(),
+                request.getAdmissionAndPledgeStart(),
+                request.getAdmissionAndPledgeEnd(),
                 request.getAttendanceStandardDate(),
                 request.getMaintenanceStart(),
                 request.getMaintenanceEnd()

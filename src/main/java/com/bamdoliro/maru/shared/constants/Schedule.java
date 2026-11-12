@@ -10,26 +10,12 @@ import java.util.Locale;
 @UtilityClass
 public class Schedule {
 
-    public static final LocalDateTime START = LocalDateTime.of(2026, 10, 25, 0, 0);
-    public static final LocalDateTime END = LocalDateTime.of(2026, 11, 30, 23, 59);
-    public static final LocalDateTime ANNOUNCEMENT_OF_FIRST_PASS = LocalDateTime.of(2026, 12, 11, 15, 0);
-    public static final LocalDateTime ANNOUNCEMENT_OF_SECOND_PASS = LocalDateTime.of(2026, 12, 24, 12, 0);
-    public static final LocalDateTime DEPTH_INTERVIEW = LocalDateTime.of(2026, 12, 15, 9, 0);
-    public static final LocalDateTime ENTRANCE_REGISTRATION_PERIOD_START = LocalDateTime.of(2027, 1, 5, 0, 0);
-    public static final LocalDateTime ENTRANCE_REGISTRATION_PERIOD_END = LocalDateTime.of(2027, 1, 8, 0, 0);
-    public static final LocalDateTime ADMISSION_AND_PLEDGE_START = LocalDateTime.of(2027, 1, 5, 0, 0);
-    public static final LocalDateTime ADMISSION_AND_PLEDGE_END = LocalDateTime.of(2027, 1, 7, 23, 59);
-
     // 서버가 어느 타임존에서 뜨든 전형 일정은 한국 시간으로 판단한다
     public static final String ZONE_ID = "Asia/Seoul";
     public static final ZoneId ZONE = ZoneId.of(ZONE_ID);
 
     public static LocalDateTime now() {
         return LocalDateTime.now(ZONE);
-    }
-
-    public static int getAdmissionYear() {
-        return START.plusYears(1L).getYear();
     }
 
     public String toLocaleString(LocalDateTime datetime) {

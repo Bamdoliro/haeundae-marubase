@@ -5,11 +5,15 @@ import com.bamdoliro.maru.domain.form.domain.type.FormType;
 import com.bamdoliro.maru.domain.form.exception.FormNotFoundException;
 import com.bamdoliro.maru.domain.form.exception.InvalidFormStatusException;
 import com.bamdoliro.maru.domain.form.service.FormFacade;
+import com.bamdoliro.maru.domain.schedule.domain.AdmissionSchedule;
+import com.bamdoliro.maru.domain.schedule.service.AdmissionScheduleFacade;
 import com.bamdoliro.maru.domain.user.domain.User;
 import com.bamdoliro.maru.infrastructure.pdf.GeneratePdfService;
 import com.bamdoliro.maru.infrastructure.s3.FileService;
 import com.bamdoliro.maru.infrastructure.thymeleaf.ProcessTemplateService;
+import com.bamdoliro.maru.shared.constants.Schedule;
 import com.bamdoliro.maru.shared.fixture.FormFixture;
+import com.bamdoliro.maru.shared.fixture.ScheduleFixture;
 import com.bamdoliro.maru.shared.fixture.SharedFixture;
 import com.bamdoliro.maru.shared.fixture.UserFixture;
 import org.junit.jupiter.api.Test;
@@ -22,10 +26,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.io.ByteArrayOutputStream;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.BDDMockito.given;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.*;
 
@@ -35,6 +40,9 @@ public class GenerateProofOfApplicationUseCaseTest {
 
     @InjectMocks
     private GenerateProofOfApplicationUseCase generateProofOfApplicationUseCase;
+
+    @Mock
+    private AdmissionScheduleFacade admissionScheduleFacade;
 
     @Mock
     private FormFacade formFacade;
@@ -55,6 +63,7 @@ public class GenerateProofOfApplicationUseCaseTest {
         Form form = FormFixture.createForm(FormType.MULTI_CHILDREN);
         form.submit();
         given(formFacade.getForm(user)).willReturn(form);
+        given(admissionScheduleFacade.getCurrentSchedule()).willReturn(ScheduleFixture.createSchedule(2027, true));
         given(processTemplateService.execute(any(String.class), anyMap())).willReturn("html");
         given(fileService.getDownloadPresignedUrl(any(String.class), any(String.class))).willReturn(SharedFixture.createIdentificationPictureUrlResponse().getDownloadUrl());
         given(generatePdfService.execute(any(String.class))).willReturn(new ByteArrayOutputStream());
@@ -106,6 +115,7 @@ public class GenerateProofOfApplicationUseCaseTest {
         Form form = FormFixture.createForm(FormType.MULTI_CHILDREN);
         form.submit();
         given(formFacade.getForm(user)).willReturn(form);
+        given(admissionScheduleFacade.getCurrentSchedule()).willReturn(ScheduleFixture.createSchedule(2027, true));
         given(processTemplateService.execute(any(String.class), anyMap())).willReturn("html");
         given(fileService.getDownloadPresignedUrl(any(String.class), any(String.class))).willReturn(null);
         given(generatePdfService.execute(any(String.class))).willReturn(new ByteArrayOutputStream());
@@ -123,5 +133,31 @@ public class GenerateProofOfApplicationUseCaseTest {
         Map<String, Object> formMap = formMapCaptor.getValue();
         assertTrue(formMap.containsKey("identificationPictureUri"));
         assertNull(formMap.get("identificationPictureUri"));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    void 접수증에_DB_입학_일정_값을_넣는다() {
+        // given
+        User user = UserFixture.createUser();
+        Form form = FormFixture.createForm(FormType.MULTI_CHILDREN);
+        form.submit();
+        given(formFacade.getForm(user)).willReturn(form);
+        AdmissionSchedule schedule = ScheduleFixture.createSchedule(2031, true);
+        given(admissionScheduleFacade.getCurrentSchedule()).willReturn(schedule);
+        given(processTemplateService.execute(any(String.class), anyMap())).willReturn("html");
+        given(generatePdfService.execute(any(String.class))).willReturn(new ByteArrayOutputStream());
+
+        // when
+        generateProofOfApplicationUseCase.execute(user);
+
+        // then
+        ArgumentCaptor<Map<String, Object>> formMapCaptor = ArgumentCaptor.forClass(Map.class);
+        verify(processTemplateService).execute(any(String.class), formMapCaptor.capture());
+        Map<String, Object> formMap = formMapCaptor.getValue();
+        assertEquals(2031, formMap.get("year"));
+        assertEquals(Schedule.toLocaleString(ScheduleFixture.ANNOUNCEMENT_OF_FIRST_PASS), formMap.get("announcement_of_first_pass"));
+        assertEquals(Schedule.toLocaleString(ScheduleFixture.APPLICATION_FORM_START), formMap.get("start"));
+        assertEquals(Schedule.toLocaleString(ScheduleFixture.APPLICATION_FORM_END), formMap.get("end"));
     }
 }

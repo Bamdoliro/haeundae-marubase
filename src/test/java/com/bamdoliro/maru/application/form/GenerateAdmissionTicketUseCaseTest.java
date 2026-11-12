@@ -5,11 +5,15 @@ import com.bamdoliro.maru.domain.form.domain.type.FormType;
 import com.bamdoliro.maru.domain.form.exception.FormNotFoundException;
 import com.bamdoliro.maru.domain.form.exception.InvalidFormStatusException;
 import com.bamdoliro.maru.domain.form.service.FormFacade;
+import com.bamdoliro.maru.domain.schedule.domain.AdmissionSchedule;
+import com.bamdoliro.maru.domain.schedule.service.AdmissionScheduleFacade;
 import com.bamdoliro.maru.domain.user.domain.User;
 import com.bamdoliro.maru.infrastructure.pdf.GeneratePdfService;
 import com.bamdoliro.maru.infrastructure.s3.FileService;
 import com.bamdoliro.maru.infrastructure.thymeleaf.ProcessTemplateService;
+import com.bamdoliro.maru.shared.constants.Schedule;
 import com.bamdoliro.maru.shared.fixture.FormFixture;
+import com.bamdoliro.maru.shared.fixture.ScheduleFixture;
 import com.bamdoliro.maru.shared.fixture.SharedFixture;
 import com.bamdoliro.maru.shared.fixture.UserFixture;
 import org.junit.jupiter.api.Test;
@@ -22,12 +26,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.io.ByteArrayOutputStream;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.BDDMockito.given;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Mockito.*;
 
@@ -36,6 +41,9 @@ class GenerateAdmissionTicketUseCaseTest {
 
     @InjectMocks
     private GenerateAdmissionTicketUseCase generateAdmissionTicketUseCase;
+
+    @Mock
+    private AdmissionScheduleFacade admissionScheduleFacade;
 
     @Mock
     private FormFacade formFacade;
@@ -57,6 +65,7 @@ class GenerateAdmissionTicketUseCaseTest {
         form.firstPass();
 
         given(formFacade.getForm(user)).willReturn(form);
+        given(admissionScheduleFacade.getCurrentSchedule()).willReturn(ScheduleFixture.createSchedule(2027, true));
         given(processTemplateService.execute(any(String.class), anyMap())).willReturn("html");
         given(fileService.getDownloadPresignedUrl(any(String.class), any(String.class))).willReturn(SharedFixture.createIdentificationPictureUrlResponse().getDownloadUrl());
         given(generatePdfService.execute(any(String.class))).willReturn(new ByteArrayOutputStream());
@@ -110,6 +119,7 @@ class GenerateAdmissionTicketUseCaseTest {
         form.firstPass();
 
         given(formFacade.getForm(user)).willReturn(form);
+        given(admissionScheduleFacade.getCurrentSchedule()).willReturn(ScheduleFixture.createSchedule(2027, true));
         given(processTemplateService.execute(any(String.class), anyMap())).willReturn("html");
         given(fileService.getDownloadPresignedUrl(any(String.class), any(String.class))).willReturn(null);
         given(generatePdfService.execute(any(String.class))).willReturn(new ByteArrayOutputStream());
@@ -127,5 +137,31 @@ class GenerateAdmissionTicketUseCaseTest {
         Map<String, Object> formMap = formMapCaptor.getValue();
         assertTrue(formMap.containsKey("identificationPictureUri"));
         assertNull(formMap.get("identificationPictureUri"));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    void 수험표에_DB_입학_일정_값을_넣는다() {
+        // given
+        User user = UserFixture.createUser();
+        Form form = FormFixture.createForm(FormType.MULTI_CHILDREN);
+        form.firstPass();
+        given(formFacade.getForm(user)).willReturn(form);
+        AdmissionSchedule schedule = ScheduleFixture.createSchedule(2031, true);
+        given(admissionScheduleFacade.getCurrentSchedule()).willReturn(schedule);
+        given(processTemplateService.execute(any(String.class), anyMap())).willReturn("html");
+        given(generatePdfService.execute(any(String.class))).willReturn(new ByteArrayOutputStream());
+
+        // when
+        generateAdmissionTicketUseCase.execute(user);
+
+        // then
+        ArgumentCaptor<Map<String, Object>> formMapCaptor = ArgumentCaptor.forClass(Map.class);
+        verify(processTemplateService).execute(any(String.class), formMapCaptor.capture());
+        Map<String, Object> formMap = formMapCaptor.getValue();
+        assertEquals(2031, formMap.get("year"));
+        assertEquals(Schedule.toLocaleString(ScheduleFixture.INTERVIEW_START), formMap.get("depthInterview"));
+        assertEquals(Schedule.toLocaleString(ScheduleFixture.ANNOUNCEMENT_OF_FINAL_PASS), formMap.get("announcementOfSecondPass"));
+        assertEquals(Schedule.toLocaleString(ScheduleFixture.REGISTRATION_START, ScheduleFixture.REGISTRATION_END), formMap.get("entranceRegistrationTime"));
     }
 }
