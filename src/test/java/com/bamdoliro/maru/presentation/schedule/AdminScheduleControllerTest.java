@@ -106,6 +106,7 @@ class AdminScheduleControllerTest extends RestDocsTestSupport {
                                 fieldWithPath("applicationFormStart").type(JsonFieldType.STRING).description("원서 접수 시작"),
                                 fieldWithPath("visitSubmissionAt").type(JsonFieldType.STRING).description("방문 원서 접수 시작"),
                                 fieldWithPath("applicationFormEnd").type(JsonFieldType.STRING).description("원서 접수 마감"),
+                                fieldWithPath("selectFirstPassAt").type(JsonFieldType.STRING).description("1차 합격자 선발 실행 시각 (원서 접수 마감 < 선발 <= 1차 합격 발표)"),
                                 fieldWithPath("announcementOfFirstPass").type(JsonFieldType.STRING).description("1차 합격 발표"),
                                 fieldWithPath("interviewStart").type(JsonFieldType.STRING).description("2차 면접 시작"),
                                 fieldWithPath("interviewEnd").type(JsonFieldType.STRING).description("2차 면접 종료"),

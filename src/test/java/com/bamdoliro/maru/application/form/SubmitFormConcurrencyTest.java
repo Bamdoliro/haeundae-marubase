@@ -8,15 +8,18 @@ import com.bamdoliro.maru.domain.user.domain.User;
 import com.bamdoliro.maru.infrastructure.persistence.form.FormRepository;
 import com.bamdoliro.maru.infrastructure.persistence.user.UserRepository;
 import com.bamdoliro.maru.presentation.form.dto.request.SubmitFormRequest;
+import com.bamdoliro.maru.infrastructure.persistence.schedule.AdmissionScheduleRepository;
 import com.bamdoliro.maru.shared.config.DatabaseClearExtension;
-import com.bamdoliro.maru.shared.constants.Schedule;
+import com.bamdoliro.maru.shared.config.FixedClockConfig;
+import com.bamdoliro.maru.shared.fixture.ScheduleFixture;
 import com.bamdoliro.maru.shared.fixture.FormFixture;
 import com.bamdoliro.maru.shared.fixture.UserFixture;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.MockedStatic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
@@ -41,8 +44,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.CALLS_REAL_METHODS;
-import static org.mockito.Mockito.mockStatic;
 
 /**
  * H2에는 pg_advisory_xact_lock이 없으므로, 같은 의미(트랜잭션이 끝날 때 해제, 같은 트랜잭션에서 재진입 가능)의
@@ -50,6 +51,7 @@ import static org.mockito.Mockito.mockStatic;
  */
 @ActiveProfiles("test")
 @ExtendWith(DatabaseClearExtension.class)
+@Import(FixedClockConfig.class)
 @SpringBootTest
 class SubmitFormConcurrencyTest {
 
@@ -60,7 +62,15 @@ class SubmitFormConcurrencyTest {
     private UserRepository userRepository;
 
     @Autowired
+    private AdmissionScheduleRepository admissionScheduleRepository;
+
+    @Autowired
     private FormRepository formRepository;
+
+    @BeforeEach
+    void setUp() {
+        admissionScheduleRepository.save(ScheduleFixture.createSchedule(2027, true));
+    }
 
     @Test
     void 같은_전형으로_동시에_제출해도_수험번호가_중복되지_않는다() throws Exception {
@@ -95,10 +105,9 @@ class SubmitFormConcurrencyTest {
     }
 
     private Void submit(User user, SubmitFormRequest request) {
-        // 원서 접수 기간 검사는 Schedule.now()를, 제출 로그는 현재 HTTP 요청을 쓰므로 작업 스레드마다 직접 준비한다.
+        // 제출 로그는 현재 HTTP 요청을 쓰므로 작업 스레드마다 직접 준비한다. 원서 접수 기간은 FixedClockConfig 시각과 활성 일정으로 판단한다.
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(new MockHttpServletRequest()));
-        try (MockedStatic<Schedule> schedule = mockStatic(Schedule.class, CALLS_REAL_METHODS)) {
-            schedule.when(Schedule::now).thenReturn(Schedule.START.plusDays(1));
+        try {
             submitFormUseCase.execute(user, request);
         } finally {
             RequestContextHolder.resetRequestAttributes();

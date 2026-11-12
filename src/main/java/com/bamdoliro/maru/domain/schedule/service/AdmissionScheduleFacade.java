@@ -17,6 +17,11 @@ public class AdmissionScheduleFacade {
                 .orElseThrow(ScheduleNotFoundException::new);
     }
 
+    public AdmissionSchedule getSchedule(Long id) {
+        return admissionScheduleRepository.findById(id)
+                .orElseThrow(ScheduleNotFoundException::new);
+    }
+
     public AdmissionSchedule getSchedule(Integer admissionYear) {
         return admissionScheduleRepository.findByAdmissionYear(admissionYear)
                 .orElseThrow(ScheduleNotFoundException::new);

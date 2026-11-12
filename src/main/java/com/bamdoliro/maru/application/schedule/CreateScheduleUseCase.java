@@ -1,5 +1,6 @@
 package com.bamdoliro.maru.application.schedule;
 
+import com.bamdoliro.maru.application.schedule.event.AdmissionScheduleChangedEvent;
 import com.bamdoliro.maru.domain.schedule.domain.AdmissionSchedule;
 import com.bamdoliro.maru.domain.schedule.exception.ScheduleAlreadyExistsException;
 import com.bamdoliro.maru.infrastructure.persistence.schedule.AdmissionScheduleRepository;
@@ -7,16 +8,19 @@ import com.bamdoliro.maru.presentation.schedule.dto.request.ScheduleRequest;
 import com.bamdoliro.maru.shared.annotation.UseCase;
 import com.bamdoliro.maru.shared.response.IdResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 새 학년도 일정을 등록하고 활성 일정으로 지정한다. 기존 활성 일정은 비활성으로 바꾼다.
+ * 커밋 후 AdmissionScheduleTaskScheduler가 새 일정의 1차 선발 시각으로 다시 예약하도록 이벤트를 발행한다.
  */
 @RequiredArgsConstructor
 @UseCase
 public class CreateScheduleUseCase {
 
     private final AdmissionScheduleRepository admissionScheduleRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public IdResponse execute(ScheduleRequest request) {
@@ -31,7 +35,10 @@ public class CreateScheduleUseCase {
             admissionScheduleRepository.saveAndFlush(current);
         });
 
-        return new IdResponse(admissionScheduleRepository.save(schedule).getId());
+        AdmissionSchedule saved = admissionScheduleRepository.save(schedule);
+        eventPublisher.publishEvent(new AdmissionScheduleChangedEvent(saved.getId()));
+
+        return new IdResponse(saved.getId());
     }
 
     private AdmissionSchedule createSchedule(ScheduleRequest request) {
@@ -41,6 +48,7 @@ public class CreateScheduleUseCase {
                 .applicationFormStart(request.getApplicationFormStart())
                 .visitSubmissionAt(request.getVisitSubmissionAt())
                 .applicationFormEnd(request.getApplicationFormEnd())
+                .selectFirstPassAt(request.getSelectFirstPassAt())
                 .announcementOfFirstPass(request.getAnnouncementOfFirstPass())
                 .interviewStart(request.getInterviewStart())
                 .interviewEnd(request.getInterviewEnd())

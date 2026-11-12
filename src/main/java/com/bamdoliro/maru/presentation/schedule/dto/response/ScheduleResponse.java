@@ -16,6 +16,7 @@ public class ScheduleResponse {
     private final LocalDateTime applicationFormStart;
     private final LocalDateTime visitSubmissionAt;
     private final LocalDateTime applicationFormEnd;
+    private final LocalDateTime selectFirstPassAt;
     private final LocalDateTime announcementOfFirstPass;
     private final LocalDateTime interviewStart;
     private final LocalDateTime interviewEnd;
@@ -35,6 +36,7 @@ public class ScheduleResponse {
         this.applicationFormStart = schedule.getApplicationFormStart();
         this.visitSubmissionAt = schedule.getVisitSubmissionAt();
         this.applicationFormEnd = schedule.getApplicationFormEnd();
+        this.selectFirstPassAt = schedule.getSelectFirstPassAt();
         this.announcementOfFirstPass = schedule.getAnnouncementOfFirstPass();
         this.interviewStart = schedule.getInterviewStart();
         this.interviewEnd = schedule.getInterviewEnd();

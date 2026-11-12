@@ -24,6 +24,7 @@ class AdmissionScheduleTest {
                 .applicationFormStart(APPLICATION_FORM_START)
                 .visitSubmissionAt(VISIT_SUBMISSION_AT)
                 .applicationFormEnd(APPLICATION_FORM_END)
+                .selectFirstPassAt(SELECT_FIRST_PASS_AT)
                 .announcementOfFirstPass(ANNOUNCEMENT_OF_FIRST_PASS)
                 .interviewStart(INTERVIEW_START)
                 .interviewEnd(INTERVIEW_END)
@@ -77,6 +78,27 @@ class AdmissionScheduleTest {
     }
 
     @Test
+    void 일차_합격자_선발_시각이_없으면_에러가_발생한다() {
+        assertInvalid(builder -> builder.selectFirstPassAt(null));
+    }
+
+    @Test
+    void 일차_합격자_선발은_원서_접수_마감보다_늦어야_한다() {
+        assertInvalid(builder -> builder.selectFirstPassAt(APPLICATION_FORM_END));
+        assertInvalid(builder -> builder.selectFirstPassAt(APPLICATION_FORM_END.minusMinutes(1)));
+    }
+
+    @Test
+    void 일차_합격자_선발은_일차_합격_발표보다_늦으면_에러가_발생한다() {
+        assertInvalid(builder -> builder.selectFirstPassAt(ANNOUNCEMENT_OF_FIRST_PASS.plusMinutes(1)));
+    }
+
+    @Test
+    void 일차_합격자_선발이_일차_합격_발표와_같아도_된다() {
+        assertDoesNotThrow(() -> validBuilder().selectFirstPassAt(ANNOUNCEMENT_OF_FIRST_PASS).build());
+    }
+
+    @Test
     void 면접_일정이_발표_순서와_맞지_않으면_에러가_발생한다() {
         assertInvalid(builder -> builder.interviewStart(ANNOUNCEMENT_OF_FIRST_PASS.minusHours(1)));
         assertInvalid(builder -> builder.interviewEnd(INTERVIEW_START));
@@ -104,6 +126,7 @@ class AdmissionScheduleTest {
                 APPLICATION_FORM_START,
                 VISIT_SUBMISSION_AT,
                 wrongEnd,
+                SELECT_FIRST_PASS_AT,
                 ANNOUNCEMENT_OF_FIRST_PASS,
                 INTERVIEW_START,
                 INTERVIEW_END,
@@ -155,6 +178,7 @@ class AdmissionScheduleTest {
                 APPLICATION_FORM_START,
                 VISIT_SUBMISSION_AT,
                 APPLICATION_FORM_END,
+                SELECT_FIRST_PASS_AT,
                 ANNOUNCEMENT_OF_FIRST_PASS,
                 INTERVIEW_START,
                 INTERVIEW_END,

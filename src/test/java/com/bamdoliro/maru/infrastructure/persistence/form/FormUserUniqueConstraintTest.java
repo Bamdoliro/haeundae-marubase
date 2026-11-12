@@ -8,16 +8,19 @@ import com.bamdoliro.maru.domain.form.domain.value.Score;
 import com.bamdoliro.maru.domain.user.domain.User;
 import com.bamdoliro.maru.infrastructure.persistence.user.UserRepository;
 import com.bamdoliro.maru.presentation.form.dto.request.SubmitFormRequest;
+import com.bamdoliro.maru.infrastructure.persistence.schedule.AdmissionScheduleRepository;
 import com.bamdoliro.maru.shared.config.DatabaseClearExtension;
-import com.bamdoliro.maru.shared.constants.Schedule;
+import com.bamdoliro.maru.shared.config.FixedClockConfig;
+import com.bamdoliro.maru.shared.fixture.ScheduleFixture;
 import com.bamdoliro.maru.shared.fixture.FormFixture;
 import com.bamdoliro.maru.shared.fixture.UserFixture;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.MockedStatic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -31,15 +34,14 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.CALLS_REAL_METHODS;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mockStatic;
 
 /**
  * tbl_form.user_id 유니크 제약을 애플리케이션 검사 없이 DB 수준에서 직접 확인한다.
  */
 @ActiveProfiles("test")
 @ExtendWith(DatabaseClearExtension.class)
+@Import(FixedClockConfig.class)
 @SpringBootTest
 class FormUserUniqueConstraintTest {
 
@@ -50,7 +52,15 @@ class FormUserUniqueConstraintTest {
     private UserRepository userRepository;
 
     @Autowired
+    private AdmissionScheduleRepository admissionScheduleRepository;
+
+    @Autowired
     private SubmitFormUseCase submitFormUseCase;
+
+    @BeforeEach
+    void setUp() {
+        admissionScheduleRepository.save(ScheduleFixture.createSchedule(2027, true));
+    }
 
     @AfterEach
     void tearDown() {
@@ -100,10 +110,7 @@ class FormUserUniqueConstraintTest {
 
     private void submit(User user, SubmitFormRequest request) {
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(new MockHttpServletRequest()));
-        try (MockedStatic<Schedule> schedule = mockStatic(Schedule.class, CALLS_REAL_METHODS)) {
-            schedule.when(Schedule::now).thenReturn(Schedule.START.plusDays(1));
-            submitFormUseCase.execute(user, request);
-        }
+        submitFormUseCase.execute(user, request);
     }
 
     private SubmitFormRequest requestWithRegistrationNumber(String registrationNumber) {
