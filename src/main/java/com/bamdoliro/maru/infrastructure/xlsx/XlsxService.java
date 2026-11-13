@@ -47,6 +47,13 @@ public class XlsxService {
         return style;
     }
 
+    public CellStyle createWrapTextCellStyle(Workbook workbook) {
+        CellStyle style = createDefaultCellStyle(workbook);
+        style.setAlignment(HorizontalAlignment.LEFT);
+        style.setWrapText(true);
+        return style;
+    }
+
     public CellStyle createDateCellStyle(Workbook workbook) {
         CreationHelper createHelper = workbook.getCreationHelper();
         short format = createHelper.createDataFormat().getFormat("yyyy년 mm월 dd일");

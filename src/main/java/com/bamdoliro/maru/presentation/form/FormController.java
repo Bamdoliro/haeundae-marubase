@@ -71,6 +71,7 @@ public class FormController {
     private final GenerateAllAdmissionTicketUseCase generateAllAdmissionTicketUseCase;
     private final QueryAdmissionAndPledgeUseCase queryAdmissionAndPledgeUseCase;
     private final ExportAllDocumentsUseCase exportAllDocumentsUseCase;
+    private final ExportAllPersonalStatementSheetUseCase exportAllPersonalStatementSheetUseCase;
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
@@ -207,6 +208,15 @@ public class FormController {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(exportAllDocumentsUseCase.execute());
+    }
+
+    @GetMapping("/documents/export/personal-statement-sheet")
+    public ResponseEntity<Resource> exportPersonalStatementSheet(
+            @AuthenticationPrincipal(authority = Authority.ADMIN) User user
+    ) throws IOException {
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(exportAllPersonalStatementSheetUseCase.execute());
     }
 
     @GetMapping( "/admission-and-pledge")

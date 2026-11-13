@@ -20,6 +20,10 @@ public class XlsxGenerator {
     private final XlsxService xlsxService;
 
     public Resource execute(String templateName, List<Form> formList, List<Function<Form, Object>> columnList, List<String> styleList) throws IOException {
+        return execute(templateName, formList, columnList, styleList, XlsxConstant.FIRST_ROW_INDEX_WITH_TITLE);
+    }
+
+    public Resource execute(String templateName, List<Form> formList, List<Function<Form, Object>> columnList, List<String> styleList, int firstRowIndex) throws IOException {
         Workbook workbook = xlsxService.openTemplate(templateName);
         Sheet sheet = workbook.getSheetAt(0);
 
@@ -27,12 +31,13 @@ public class XlsxGenerator {
                 "default", xlsxService.createDefaultCellStyle(workbook),
                 "right", xlsxService.createRightCellStyle(workbook),
                 "empty", xlsxService.createEmptyCellStyle(workbook),
-                "date", xlsxService.createDateCellStyle(workbook)
+                "date", xlsxService.createDateCellStyle(workbook),
+                "wrap", xlsxService.createWrapTextCellStyle(workbook)
         );
 
         for (int index = 0; index < formList.size(); index++) {
             Form form = formList.get(index);
-            Row row = sheet.createRow(index + XlsxConstant.FIRST_ROW_INDEX_WITH_TITLE);
+            Row row = sheet.createRow(index + firstRowIndex);
             int columnIndex = 0;
 
             for (Function<Form, Object> column : columnList) {

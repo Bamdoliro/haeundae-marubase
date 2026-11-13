@@ -1661,6 +1661,38 @@ class FormControllerTest extends RestDocsTestSupport {
     }
 
     @Test
+    void 모든_자기소개서를_xlsx로_다운받는다() throws Exception {
+        User user = UserFixture.createAdminUser();
+        MockMultipartFile file = new MockMultipartFile(
+                "자기소개서",
+                "자기소개서.xlsx",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "<<file>>".getBytes()
+        );
+
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+        given(exportAllPersonalStatementSheetUseCase.execute()).willReturn(new ByteArrayResource(file.getBytes()));
+
+        mockMvc.perform(get("/forms/documents/export/personal-statement-sheet")
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .accept("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                )
+
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION)
+                                        .description("Bearer token")
+                        )
+                ));
+
+        verify(exportAllPersonalStatementSheetUseCase, times(1)).execute();
+    }
+
+    @Test
     void 원서를_pdf로_다운받을_때_원서를_작성하지_않았다면_에러가_발생한다() throws Exception {
         User user = UserFixture.createUser();
 
