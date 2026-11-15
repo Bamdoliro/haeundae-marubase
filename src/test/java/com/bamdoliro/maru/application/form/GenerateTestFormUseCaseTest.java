@@ -94,7 +94,7 @@ class GenerateTestFormUseCaseTest {
         userCaptor.getAllValues().forEach(user -> assertTrue(user.isTestData()));
         List<Form> forms = formCaptor.getAllValues();
         forms.forEach(form -> {
-            assertEquals(FormStatus.FINAL_SUBMITTED, form.getStatus());
+            assertEquals(FormStatus.APPROVED, form.getStatus());
             assertTrue(form.getPayment());
             assertNotNull(form.getExaminationNumber());
             assertNotNull(form.getScore());
