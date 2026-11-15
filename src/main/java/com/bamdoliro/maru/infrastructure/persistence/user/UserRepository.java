@@ -3,6 +3,7 @@ package com.bamdoliro.maru.infrastructure.persistence.user;
 import com.bamdoliro.maru.domain.user.domain.User;
 import com.bamdoliro.maru.domain.user.domain.type.Authority;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -18,4 +19,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT f.user.id FROM Form f WHERE f.user.id IN :userIds")
     List<Long> findUserIdsWithForm(@Param("userIds") List<Long> userIds);
+
+    @Modifying
+    @Query("DELETE FROM User u WHERE u.isTestData = true")
+    int deleteAllTestData();
 }

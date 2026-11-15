@@ -4,6 +4,7 @@ import com.bamdoliro.maru.domain.form.domain.Form;
 import com.bamdoliro.maru.domain.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface FormRepository extends JpaRepository<Form, Long>, FormRepositoryCustom {
@@ -13,4 +14,6 @@ public interface FormRepository extends JpaRepository<Form, Long>, FormRepositor
     Optional<Form> findByExaminationNumber(Long examinationNumber);
 
     boolean existsByApplicant_RegistrationNumber(String registrationNumber);
+
+    List<Form> findAllByUser_IsTestDataTrue();
 }

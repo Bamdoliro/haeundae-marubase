@@ -152,6 +152,12 @@ public abstract class ControllerTest {
     protected ExportAllPersonalStatementSheetUseCase exportAllPersonalStatementSheetUseCase;
 
     @MockBean
+    protected GenerateTestFormUseCase generateTestFormUseCase;
+
+    @MockBean
+    protected DeleteTestFormUseCase deleteTestFormUseCase;
+
+    @MockBean
     protected QueryAllFormUseCase queryAllFormUseCase;
 
     @MockBean

@@ -15,6 +15,9 @@ import com.bamdoliro.maru.infrastructure.s3.exception.MediaTypeMismatchException
 import com.bamdoliro.maru.presentation.form.dto.request.*;
 import com.bamdoliro.maru.presentation.form.dto.response.FormResultResponse;
 import com.bamdoliro.maru.presentation.form.dto.response.FormSimpleResponse;
+import com.bamdoliro.maru.presentation.form.dto.response.DeleteTestFormResponse;
+import com.bamdoliro.maru.presentation.form.dto.response.GenerateTestFormResponse;
+import com.bamdoliro.maru.presentation.form.dto.response.TestFormCountResponse;
 import com.bamdoliro.maru.shared.fixture.AuthFixture;
 import com.bamdoliro.maru.shared.fixture.FormFixture;
 import com.bamdoliro.maru.shared.fixture.SharedFixture;
@@ -2802,5 +2805,96 @@ class FormControllerTest extends RestDocsTestSupport {
                 .andDo(restDocs.document());
 
         verify(assignInterviewNumberUseCase, times(1)).execute(any(AssignInterviewNumberListRequest.class));
+    }
+
+    @Test
+    void 전형별로_테스트_원서를_생성한다() throws Exception {
+        User user = UserFixture.createAdminUser();
+        GenerateTestFormRequest request = new GenerateTestFormRequest(List.of(
+                new TestFormCountRequest(FormType.REGULAR, 10),
+                new TestFormCountRequest(FormType.ONE_PARENT, 3)
+        ));
+
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+        given(generateTestFormUseCase.execute(any(GenerateTestFormRequest.class))).willReturn(new GenerateTestFormResponse(
+                13,
+                List.of(
+                        new TestFormCountResponse(FormType.REGULAR, 10),
+                        new TestFormCountResponse(FormType.ONE_PARENT, 3)
+                )
+        ));
+
+        mockMvc.perform(post("/forms/test-data")
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(request)))
+
+                .andExpect(status().isCreated())
+
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION)
+                                        .description("Bearer token")
+                        ),
+                        requestFields(
+                                fieldWithPath("formList[]")
+                                        .type(JsonFieldType.ARRAY)
+                                        .description("생성할 전형별 개수 목록 (같은 전형이 여러 번 오면 개수를 합산)"),
+                                fieldWithPath("formList[].type")
+                                        .type(JsonFieldType.STRING)
+                                        .description("<<form-type,원서 유형>>"),
+                                fieldWithPath("formList[].count")
+                                        .type(JsonFieldType.NUMBER)
+                                        .description("생성할 원서 개수 (1 이상 500 이하)")
+                        )
+                ));
+
+        verify(generateTestFormUseCase, times(1)).execute(any(GenerateTestFormRequest.class));
+    }
+
+    @Test
+    void 테스트_원서를_생성할_때_개수가_범위를_벗어나면_에러가_발생한다() throws Exception {
+        User user = UserFixture.createAdminUser();
+        GenerateTestFormRequest request = new GenerateTestFormRequest(List.of(
+                new TestFormCountRequest(FormType.REGULAR, TestFormCountRequest.MAX_COUNT + 1)
+        ));
+
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+
+        mockMvc.perform(post("/forms/test-data")
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJson(request)))
+
+                .andExpect(status().isBadRequest())
+
+                .andDo(restDocs.document());
+
+        verify(generateTestFormUseCase, never()).execute(any(GenerateTestFormRequest.class));
+    }
+
+    @Test
+    void 테스트_원서와_유저를_삭제한다() throws Exception {
+        User user = UserFixture.createAdminUser();
+
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+        given(deleteTestFormUseCase.execute()).willReturn(new DeleteTestFormResponse(13, 13, 2));
+
+        mockMvc.perform(delete("/forms/test-data")
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader()))
+
+                .andExpect(status().isOk())
+
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION)
+                                        .description("Bearer token")
+                        )
+                ));
+
+        verify(deleteTestFormUseCase, times(1)).execute();
     }
 }
