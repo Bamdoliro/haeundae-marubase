@@ -3,6 +3,7 @@ package com.bamdoliro.maru.application.form;
 import com.bamdoliro.maru.domain.form.domain.Form;
 import com.bamdoliro.maru.domain.form.domain.type.FormType;
 import com.bamdoliro.maru.domain.form.exception.TestDataUniqueValueExhaustedException;
+import com.bamdoliro.maru.domain.form.service.AssignExaminationNumberService;
 import com.bamdoliro.maru.domain.form.service.CalculateFormScoreService;
 import com.bamdoliro.maru.domain.form.service.RandomFormGenerator;
 import com.bamdoliro.maru.domain.form.service.RandomFormGenerator.TestApplicant;
@@ -31,7 +32,7 @@ import java.util.function.Supplier;
 /**
  * 원서 접수 테스트용 원서를 전형별로 지정한 개수만큼 만든다.
  * 회원가입(SignUpUserUseCase)을 거치지 않고 유저를 바로 저장하므로 인증 문자 등 SMS는 보내지 않는다.
- * 원서는 최종 제출 + 전형료 납부 상태로 만들고, 수험번호는 비워둔다.
+ * 원서는 최종 제출 + 전형료 납부 상태로 만들고, 수험번호는 실제 제출과 같은 AssignExaminationNumberService로 전형별 구간 안에서 받는다.
  */
 @RequiredArgsConstructor
 @UseCase
@@ -43,6 +44,7 @@ public class GenerateTestFormUseCase {
     private final FormRepository formRepository;
     private final RandomFormGenerator randomFormGenerator;
     private final CalculateFormScoreService calculateFormScoreService;
+    private final AssignExaminationNumberService assignExaminationNumberService;
 
     @Transactional
     public GenerateTestFormResponse execute(GenerateTestFormRequest request) {
@@ -84,6 +86,7 @@ public class GenerateTestFormUseCase {
 
         Form form = randomFormGenerator.generate(user, type, applicant, phoneNumber, registrationNumber);
         calculateFormScoreService.execute(form);
+        assignExaminationNumberService.execute(form);
         form.submit();
         form.payFee();
         formRepository.save(form);

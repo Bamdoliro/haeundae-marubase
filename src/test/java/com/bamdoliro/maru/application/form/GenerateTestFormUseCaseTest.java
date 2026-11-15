@@ -4,6 +4,7 @@ import com.bamdoliro.maru.domain.form.domain.Form;
 import com.bamdoliro.maru.domain.form.domain.type.FormStatus;
 import com.bamdoliro.maru.domain.form.domain.type.FormType;
 import com.bamdoliro.maru.domain.form.exception.TestDataUniqueValueExhaustedException;
+import com.bamdoliro.maru.domain.form.service.AssignExaminationNumberService;
 import com.bamdoliro.maru.domain.form.service.CalculateFormScoreService;
 import com.bamdoliro.maru.domain.form.service.RandomFormGenerator;
 import com.bamdoliro.maru.domain.user.domain.User;
@@ -22,15 +23,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willAnswer;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -45,6 +47,9 @@ class GenerateTestFormUseCaseTest {
     @Mock
     private FormRepository formRepository;
 
+    @Mock
+    private AssignExaminationNumberService assignExaminationNumberService;
+
     private RandomFormGenerator randomFormGenerator;
 
     private GenerateTestFormUseCase useCase;
@@ -52,13 +57,18 @@ class GenerateTestFormUseCaseTest {
     @BeforeEach
     void setUp() {
         randomFormGenerator = spy(new RandomFormGenerator(new Random(7)));
-        useCase = new GenerateTestFormUseCase(userRepository, formRepository, randomFormGenerator, new CalculateFormScoreService());
+        useCase = new GenerateTestFormUseCase(userRepository, formRepository, randomFormGenerator, new CalculateFormScoreService(), assignExaminationNumberService);
     }
 
     @Test
     void 전형별로_지정한_개수만큼_최종제출_납부완료_상태의_테스트_원서를_만든다() {
         // given
         given(userRepository.save(any(User.class))).willAnswer(invocation -> invocation.getArgument(0));
+        AtomicLong nextExaminationNumber = new AtomicLong(111001L);
+        willAnswer(invocation -> {
+            invocation.<Form>getArgument(0).assignExaminationNumber(nextExaminationNumber.getAndIncrement());
+            return null;
+        }).given(assignExaminationNumberService).execute(any(Form.class));
         GenerateTestFormRequest request = new GenerateTestFormRequest(List.of(
                 new TestFormCountRequest(FormType.REGULAR, 3),
                 new TestFormCountRequest(FormType.ONE_PARENT, 2),
@@ -86,12 +96,14 @@ class GenerateTestFormUseCaseTest {
         forms.forEach(form -> {
             assertEquals(FormStatus.FINAL_SUBMITTED, form.getStatus());
             assertTrue(form.getPayment());
-            assertNull(form.getExaminationNumber());
+            assertNotNull(form.getExaminationNumber());
             assertNotNull(form.getScore());
             assertTrue(form.getUser().isTestData());
         });
         assertEquals(6, forms.stream().map(form -> form.getApplicant().getRegistrationNumber()).distinct().count());
         assertEquals(6, forms.stream().map(form -> form.getUser().getPhoneNumber()).distinct().count());
+        assertEquals(6, forms.stream().map(Form::getExaminationNumber).distinct().count());
+        verify(assignExaminationNumberService, times(6)).execute(any(Form.class));
     }
 
     @Test
@@ -139,5 +151,6 @@ class GenerateTestFormUseCaseTest {
         verify(userRepository, times(GenerateTestFormUseCase.MAX_UNIQUE_VALUE_ATTEMPTS)).existsByPhoneNumber(anyString());
         verify(userRepository, never()).save(any(User.class));
         verify(formRepository, never()).save(any(Form.class));
+        verify(assignExaminationNumberService, never()).execute(any(Form.class));
     }
 }
