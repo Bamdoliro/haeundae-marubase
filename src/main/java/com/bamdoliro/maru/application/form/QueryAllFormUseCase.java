@@ -33,7 +33,7 @@ public class QueryAllFormUseCase {
                 case "form-id" -> formList.sort(Comparator.comparing(Form::getId));
             }
         } else {
-            formList.sort(Comparator.comparing(Form::getExaminationNumber));
+            formList.sort(Comparator.comparing(Form::getExaminationNumber, Comparator.nullsLast(Comparator.naturalOrder())));
         }
 
         return formList.stream()

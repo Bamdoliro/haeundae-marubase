@@ -17,6 +17,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -194,5 +195,26 @@ class QueryAllFormUseCaseTest {
         assertEquals(1, returnedFormList.size());
 
         verify(formRepository, times(1)).findByStatus(null);
+    }
+
+    @Test
+    void 수험번호가_없는_원서가_섞여_있어도_기본_조회는_수험번호_순으로_정렬하고_없는_원서는_뒤에_둔다() {
+        // given
+        Form second = FormFixture.createForm(FormType.REGULAR);
+        second.assignExaminationNumber(111002L);
+        Form noNumber = FormFixture.createForm(FormType.REGULAR);
+        Form first = FormFixture.createForm(FormType.REGULAR);
+        first.assignExaminationNumber(111001L);
+
+        given(formRepository.findByStatus(null)).willReturn(List.of(second, noNumber, first));
+
+        // when
+        List<FormSimpleResponse> returnedFormList = queryAllFormUseCase.execute(null, null, null);
+
+        // then
+        assertEquals(3, returnedFormList.size());
+        assertEquals(111001L, returnedFormList.get(0).getExaminationNumber());
+        assertEquals(111002L, returnedFormList.get(1).getExaminationNumber());
+        assertNull(returnedFormList.get(2).getExaminationNumber());
     }
 }

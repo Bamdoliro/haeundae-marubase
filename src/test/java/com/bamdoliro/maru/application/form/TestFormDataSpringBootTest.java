@@ -34,7 +34,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verifyNoInteractions;
 
@@ -85,10 +85,28 @@ class TestFormDataSpringBootTest {
         forms.forEach(form -> {
             assertEquals(FormStatus.FINAL_SUBMITTED, form.getStatus());
             assertTrue(form.getPayment());
-            assertNull(form.getExaminationNumber());
+            assertNotNull(form.getExaminationNumber());
         });
+        // 실제 제출과 같은 전형별 구간: 일반 111001~, 사회통합 213001~
+        assertEquals(List.of(111001L, 111002L, 111003L, 111004L, 111005L), examinationNumbersOf(forms, FormType.REGULAR));
+        assertEquals(List.of(213001L, 213002L, 213003L), examinationNumbersOf(forms, FormType.MULTICULTURAL));
         assertEquals(8, userRepository.findAll().stream().filter(User::isTestData).count());
         verifyNoInteractions(sendMessageService);
+    }
+
+    @Test
+    void 실제_지원자가_이미_받은_수험번호_다음_번호부터_받는다() {
+        User realUser = userRepository.save(UserFixture.createUser());
+        Form realForm = FormFixture.createForm(FormType.REGULAR);
+        ReflectionTestUtils.setField(realForm, "user", realUser);
+        realForm.assignExaminationNumber(111007L);
+        formRepository.save(realForm);
+
+        generateTestFormUseCase.execute(new GenerateTestFormRequest(List.of(
+                new TestFormCountRequest(FormType.REGULAR, 2)
+        )));
+
+        assertEquals(List.of(111008L, 111009L), examinationNumbersOf(formRepository.findAllByUser_IsTestDataTrue(), FormType.REGULAR));
     }
 
     @Test
@@ -141,5 +159,13 @@ class TestFormDataSpringBootTest {
         assertEquals(0, response.getDeletedUserCount());
         assertEquals(0, response.getDeletedLogCount());
         assertTrue(userRepository.existsById(realUser.getId()));
+    }
+
+    private static List<Long> examinationNumbersOf(List<Form> forms, FormType type) {
+        return forms.stream()
+                .filter(form -> form.getType() == type)
+                .map(Form::getExaminationNumber)
+                .sorted()
+                .toList();
     }
 }
