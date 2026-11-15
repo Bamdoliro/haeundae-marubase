@@ -895,3 +895,47 @@ include::{snippets}/form-controller-test/면접번호를_일괄_지정한다/htt
 
 ===== 원서가 없는 경우
 include::{snippets}/form-controller-test/면접번호를_지정할_때_원서가_없으면_에러가_발생한다/http-response.adoc[]
+
+=== 테스트 원서 생성
+어드민은 원서 접수 테스트를 위해 전형별로 지정한 개수만큼 랜덤 원서를 생성할 수 있습니다.
+
+* 원서마다 테스트용 유저(isTestData = true)를 함께 생성하며, 회원가입을 거치지 않으므로 문자는 발송되지 않습니다.
+* 생성된 원서는 최종 제출 + 전형료 납부 상태이며, 수험번호는 비어 있습니다.
+* 전화번호는 실제로 개통되지 않는 010-0XXX-XXXX 형식, 주민등록번호는 기존 데이터와 겹치지 않게 생성합니다.
+
+==== 요청 형식
+
+===== Request Header
+include::{snippets}/form-controller-test/전형별로_테스트_원서를_생성한다/request-headers.adoc[]
+
+===== Request Body
+include::{snippets}/form-controller-test/전형별로_테스트_원서를_생성한다/request-fields.adoc[]
+
+==== 요청
+include::{snippets}/form-controller-test/전형별로_테스트_원서를_생성한다/http-request.adoc[]
+
+==== 응답
+
+===== 정상 응답
+include::{snippets}/form-controller-test/전형별로_테스트_원서를_생성한다/http-response.adoc[]
+
+===== 개수가 1 미만이거나 500을 넘는 경우
+include::{snippets}/form-controller-test/테스트_원서를_생성할_때_개수가_범위를_벗어나면_에러가_발생한다/http-response.adoc[]
+
+=== 테스트 원서 삭제
+어드민은 테스트 원서 생성으로 만든 원서와 유저(isTestData = true)만 골라 삭제할 수 있습니다. 실제 지원자 데이터는 삭제되지 않습니다.
+
+* 테스트 원서/유저를 참조하는 로그(원서 조회, 상태 변경, 수정, 제출 로그)도 함께 삭제됩니다.
+
+==== 요청 형식
+
+===== Request Header
+include::{snippets}/form-controller-test/테스트_원서와_유저를_삭제한다/request-headers.adoc[]
+
+==== 요청
+include::{snippets}/form-controller-test/테스트_원서와_유저를_삭제한다/http-request.adoc[]
+
+==== 응답
+
+===== 정상 응답
+include::{snippets}/form-controller-test/테스트_원서와_유저를_삭제한다/http-response.adoc[]

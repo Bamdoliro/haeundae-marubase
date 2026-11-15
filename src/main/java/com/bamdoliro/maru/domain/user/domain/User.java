@@ -42,13 +42,36 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false, length = 10)
     private Authority authority;
 
-    @Builder
+    /**
+     * 관리자가 원서 접수 테스트용으로 생성한 유저인지 여부. 실제 지원자는 항상 false.
+     * ddl-auto: update로 기존 행이 있는 테이블에 NOT NULL 컬럼을 추가하려면 DB 기본값이 필요해 columnDefinition을 둔다.
+     */
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean isTestData;
+
     public User(String phoneNumber, String name, String password, Authority authority) {
+        this(phoneNumber, name, password, authority, false);
+    }
+
+    @Builder
+    public User(String phoneNumber, String name, String password, Authority authority, boolean isTestData) {
+        this(phoneNumber, name, new Password(PasswordUtil.encode(password)), authority, isTestData);
+    }
+
+    private User(String phoneNumber, String name, Password password, Authority authority, boolean isTestData) {
         this.uuid = UUID.randomUUID();
         this.phoneNumber = phoneNumber;
         this.name = name;
-        this.password = new Password(PasswordUtil.encode(password));
+        this.password = password;
         this.authority = authority;
+        this.isTestData = isTestData;
+    }
+
+    /**
+     * 테스트 원서용 유저를 만든다. 대량 생성 시 BCrypt 인코딩을 유저마다 반복하지 않도록 미리 인코딩한 비밀번호를 받는다.
+     */
+    public static User createTestData(String phoneNumber, String name, Password encodedPassword) {
+        return new User(phoneNumber, name, encodedPassword, Authority.USER, true);
     }
 
     public boolean isAdmin() {

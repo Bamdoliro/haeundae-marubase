@@ -72,6 +72,8 @@ public class FormController {
     private final QueryAdmissionAndPledgeUseCase queryAdmissionAndPledgeUseCase;
     private final ExportAllDocumentsUseCase exportAllDocumentsUseCase;
     private final ExportAllPersonalStatementSheetUseCase exportAllPersonalStatementSheetUseCase;
+    private final GenerateTestFormUseCase generateTestFormUseCase;
+    private final DeleteTestFormUseCase deleteTestFormUseCase;
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
@@ -452,5 +454,25 @@ public class FormController {
             @RequestBody @Valid AssignInterviewNumberListRequest request
     ) {
         assignInterviewNumberUseCase.execute(request);
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/test-data")
+    public SingleCommonResponse<GenerateTestFormResponse> generateTestForm(
+            @AuthenticationPrincipal(authority = Authority.ADMIN) User user,
+            @RequestBody @Valid GenerateTestFormRequest request
+    ) {
+        return SingleCommonResponse.ok(
+                generateTestFormUseCase.execute(request)
+        );
+    }
+
+    @DeleteMapping("/test-data")
+    public SingleCommonResponse<DeleteTestFormResponse> deleteTestForm(
+            @AuthenticationPrincipal(authority = Authority.ADMIN) User user
+    ) {
+        return SingleCommonResponse.ok(
+                deleteTestFormUseCase.execute()
+        );
     }
 }

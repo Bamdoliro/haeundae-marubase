@@ -20,7 +20,8 @@ public enum FormErrorProperty implements ErrorProperty {
     MISSING_TOTAL_SCORE(HttpStatus.CONFLICT, "최종 점수가 입력되지 않은 원서가 존재합니다."),
     OUT_OF_APPLICATION_FORM_PERIOD(HttpStatus.FORBIDDEN, "지금은 원서 접수 기간이 아닙니다."),
     OUT_OF_ADMISSION_AND_PLEDGE_PERIOD(HttpStatus.FORBIDDEN, "지금은 입학 등록원 및 서약서 제출 기간이 아닙니다."),
-    EXAMINATION_NUMBER_EXHAUSTED(HttpStatus.INTERNAL_SERVER_ERROR, "부여할 수 있는 수험번호가 없습니다.")
+    EXAMINATION_NUMBER_EXHAUSTED(HttpStatus.INTERNAL_SERVER_ERROR, "부여할 수 있는 수험번호가 없습니다."),
+    TEST_DATA_UNIQUE_VALUE_EXHAUSTED(HttpStatus.INTERNAL_SERVER_ERROR, "테스트 데이터에 쓸 중복되지 않는 값을 만들지 못했습니다. 다시 시도해주세요.")
     ;
 
     private final HttpStatus status;
