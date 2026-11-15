@@ -83,7 +83,7 @@ class TestFormDataSpringBootTest {
         assertEquals(5, forms.stream().filter(form -> form.getType() == FormType.REGULAR).count());
         assertEquals(3, forms.stream().filter(form -> form.getType() == FormType.MULTICULTURAL).count());
         forms.forEach(form -> {
-            assertEquals(FormStatus.FINAL_SUBMITTED, form.getStatus());
+            assertEquals(FormStatus.APPROVED, form.getStatus());
             assertTrue(form.getPayment());
             assertNotNull(form.getExaminationNumber());
         });
