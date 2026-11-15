@@ -64,6 +64,30 @@ jobs:
         if [ "$DEPLOYMENT_ID" != "None" ]; then
           echo "Stopping previous deployment: $DEPLOYMENT_ID"
           aws deploy stop-deployment --deployment-id $DEPLOYMENT_ID --region ap-northeast-2
+
+          # stop-deployment는 비동기라 배포가 실제 종료 상태가 되어 슬롯이 풀릴 때까지 기다린다.
+          MAX_ATTEMPTS=30
+          INTERVAL_SECONDS=3
+          for ATTEMPT in $(seq 1 $MAX_ATTEMPTS); do
+            STATUS=$(aws deploy get-deployment \
+              --deployment-id $DEPLOYMENT_ID \
+              --query "deploymentInfo.status" --output text \
+              --region ap-northeast-2)
+            echo "Previous deployment status: $STATUS ($ATTEMPT/$MAX_ATTEMPTS)"
+
+            case "$STATUS" in
+              Stopped|Succeeded|Failed)
+                echo "Previous deployment finished: $STATUS"
+                break
+                ;;
+            esac
+
+            if [ "$ATTEMPT" -eq "$MAX_ATTEMPTS" ]; then
+              echo "Timed out waiting for previous deployment to stop (last status: $STATUS). Proceeding to deploy."
+              break
+            fi
+            sleep $INTERVAL_SECONDS
+          done
         else
           echo "No active deployment found"
         fi
@@ -73,9 +97,25 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: |
-        aws deploy create-deployment \
-        --application-name haemaru \
-        --deployment-group-name haemaru-deploy-group \
-        --file-exists-behavior OVERWRITE \
-        --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=haemaru.zip \
-        --region ap-northeast-2
+        # 이전 배포가 아직 정리되지 않아 DeploymentLimitExceededException이 나면 잠시 기다렸다가 재시도한다.
+        MAX_ATTEMPTS=3
+        RETRY_DELAY_SECONDS=10
+        for ATTEMPT in $(seq 1 $MAX_ATTEMPTS); do
+          if OUTPUT=$(aws deploy create-deployment \
+            --application-name haemaru \
+            --deployment-group-name haemaru-deploy-group \
+            --file-exists-behavior OVERWRITE \
+            --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=haemaru.zip \
+            --region ap-northeast-2 2>&1); then
+            echo "$OUTPUT"
+            exit 0
+          fi
+
+          echo "$OUTPUT"
+          if echo "$OUTPUT" | grep -q "DeploymentLimitExceededException" && [ "$ATTEMPT" -lt "$MAX_ATTEMPTS" ]; then
+            echo "Active deployment still exists. Retrying in ${RETRY_DELAY_SECONDS}s ($ATTEMPT/$MAX_ATTEMPTS)"
+            sleep $RETRY_DELAY_SECONDS
+          else
+            exit 1
+          fi
+        done
