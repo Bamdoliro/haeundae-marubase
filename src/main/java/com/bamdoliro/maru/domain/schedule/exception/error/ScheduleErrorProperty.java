@@ -12,7 +12,8 @@ public enum ScheduleErrorProperty implements ErrorProperty {
     SCHEDULE_ALREADY_EXISTS(HttpStatus.CONFLICT, "해당 학년도의 입학 일정이 이미 존재합니다."),
     INVALID_SCHEDULE_PERIOD(HttpStatus.BAD_REQUEST, "입학 일정의 시간 순서가 올바르지 않습니다."),
     SCHEDULE_VERSION_CONFLICT(HttpStatus.CONFLICT, "다른 관리자가 일정을 수정했습니다. 새로고침 후 다시 시도해주세요."),
-    FIRST_PASS_ALREADY_EXECUTED(HttpStatus.CONFLICT, "이미 1차 합격자 선발이 실행된 일정입니다.");
+    FIRST_PASS_ALREADY_EXECUTED(HttpStatus.CONFLICT, "이미 1차 합격자 선발이 실행된 일정입니다."),
+    FIRST_PASS_SCHEDULE_CHANGED(HttpStatus.CONFLICT, "1차 합격자 선발 시각이 변경되어 이전 예약은 실행하지 않습니다.");
 
     private final HttpStatus status;
     private final String message;

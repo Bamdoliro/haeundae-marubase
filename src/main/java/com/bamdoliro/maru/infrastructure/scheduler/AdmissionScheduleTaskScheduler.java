@@ -4,6 +4,7 @@ import com.bamdoliro.maru.application.schedule.ExecuteFirstPassSelectionUseCase;
 import com.bamdoliro.maru.application.schedule.event.AdmissionScheduleChangedEvent;
 import com.bamdoliro.maru.domain.schedule.domain.AdmissionSchedule;
 import com.bamdoliro.maru.domain.schedule.exception.FirstPassAlreadyExecutedException;
+import com.bamdoliro.maru.domain.schedule.exception.FirstPassScheduleChangedException;
 import com.bamdoliro.maru.domain.schedule.exception.ScheduleNotFoundException;
 import com.bamdoliro.maru.domain.schedule.service.AdmissionScheduleFacade;
 import com.bamdoliro.maru.shared.config.TimeConfig;
@@ -26,7 +27,7 @@ import java.util.concurrent.ScheduledFuture;
  * 활성 입학 일정의 selectFirstPassAt 시각에 1차 합격자 선발을 예약한다.
  * - 서버가 뜨면(ApplicationReadyEvent) 활성 일정 기준으로 예약한다.
  * - 일정이 등록/수정되면(AdmissionScheduleChangedEvent, 커밋 후) 기존 예약을 취소하고 다시 예약한다.
- * 여러 서버가 같은 시각에 실행해도 FirstPassSelectionExecution의 unique 제약으로 한 번만 실행된다.
+ * 여러 서버가 같은 시각에 실행해도 FirstPassSelectionExecution의 (일정, 실행 시각) unique 제약으로 한 번만 실행된다.
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -72,21 +73,23 @@ public class AdmissionScheduleTaskScheduler {
 
         Long scheduleId = schedule.getId();
         scheduledTask = admissionTaskScheduler.schedule(
-                () -> execute(scheduleId),
+                () -> execute(scheduleId, executionTime),
                 executionTime.atZone(TimeConfig.SERVICE_ZONE_ID).toInstant()
         );
         log.info("Scheduled first-pass selection for admission year {} at {}",
                 schedule.getAdmissionYear(), executionTime);
     }
 
-    private void execute(Long scheduleId) {
+    private void execute(Long scheduleId, LocalDateTime executionTime) {
         try {
-            executeFirstPassSelectionUseCase.execute(scheduleId);
-            log.info("Executed first-pass selection: {}", scheduleId);
+            executeFirstPassSelectionUseCase.execute(scheduleId, executionTime);
+            log.info("Executed first-pass selection: {} at {}", scheduleId, executionTime);
         } catch (FirstPassAlreadyExecutedException | DataIntegrityViolationException e) {
-            log.info("First-pass selection was already executed or claimed by another server: {}", scheduleId);
+            log.info("First-pass selection was already executed or claimed by another server: {} at {}", scheduleId, executionTime);
+        } catch (FirstPassScheduleChangedException e) {
+            log.info("Skip stale first-pass selection reservation: {} at {}", scheduleId, executionTime);
         } catch (Exception e) {
-            log.error("Failed to execute first-pass selection: {}", scheduleId, e);
+            log.error("Failed to execute first-pass selection: {} at {}", scheduleId, executionTime, e);
         }
     }
 }
