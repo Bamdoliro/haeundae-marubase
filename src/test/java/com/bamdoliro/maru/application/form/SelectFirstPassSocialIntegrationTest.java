@@ -4,7 +4,6 @@ import com.bamdoliro.maru.domain.form.domain.Form;
 import com.bamdoliro.maru.domain.form.domain.type.FormStatus;
 import com.bamdoliro.maru.domain.form.domain.type.FormType;
 import com.bamdoliro.maru.domain.form.domain.value.Score;
-import com.bamdoliro.maru.domain.form.service.CalculateFormScoreService;
 import com.bamdoliro.maru.infrastructure.persistence.form.FormRepository;
 import com.bamdoliro.maru.shared.fixture.FormFixture;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +30,7 @@ class SelectFirstPassSocialIntegrationTest {
     @BeforeEach
     void setUp() {
         formRepository = mock(FormRepository.class);
-        selectFirstPassUseCase = new SelectFirstPassUseCase(formRepository, new CalculateFormScoreService());
+        selectFirstPassUseCase = new SelectFirstPassUseCase(formRepository);
 
         given(formRepository.findApprovedRegularForm()).willReturn(List.of());
         given(formRepository.findApprovedSupernumeraryForm()).willReturn(List.of());
@@ -102,14 +101,16 @@ class SelectFirstPassSocialIntegrationTest {
 
         assertEquals(40, countFirstPassed(equalOpportunity));
         assertEquals(14, countFirstPassed(societyDiversity));
-        assertEquals(0, countChangedToRegular(equalOpportunity));
-        assertEquals(26, countChangedToRegular(societyDiversity));
         // 사회다양성 정원으로 합격해도 원래 전형은 그대로 유지한다.
         assertTrue(equalOpportunity.stream().allMatch(form -> form.getType() == FormType.NATIONAL_BASIC_LIVING));
+        // 사회다양성 탈락 26명은 일반전형으로 전환되지 않고 탈락 처리만 된다.
+        List<Form> societyDiversityRejected = societyDiversity.subList(14, 40);
+        assertFailedWithoutTypeChange(societyDiversityRejected, FormType.MULTICULTURAL);
+        assertEquals(0, countChangedToRegular(equalOpportunity) + countChangedToRegular(societyDiversity));
     }
 
     @Test
-    void 기회균등_탈락자가_사회다양성_정원에서도_밀리면_일반전형으로_전환된다() {
+    void 기회균등_탈락자가_사회다양성_정원에서도_밀리면_전형_전환_없이_탈락한다() {
         // 기회균등 탈락 13명(73~61점)은 사회다양성 상위 27명(130~117점)에 밀린다.
         List<Form> equalOpportunity = createForms(FormType.NATIONAL_BASIC_LIVING, 40, 100.0, 1.0);
         List<Form> societyDiversity = createForms(FormType.MULTICULTURAL, 40, 130.0);
@@ -119,9 +120,8 @@ class SelectFirstPassSocialIntegrationTest {
 
         assertEquals(27, countFirstPassed(equalOpportunity));
         assertEquals(27, countFirstPassed(societyDiversity));
-        List<Form> rejected = equalOpportunity.subList(27, 40);
-        assertTrue(rejected.stream().allMatch(form -> form.getChangedToRegular() && form.getType() == FormType.REGULAR));
-        assertTrue(rejected.stream().noneMatch(form -> form.getStatus() == FormStatus.FIRST_PASSED));
+        assertFailedWithoutTypeChange(equalOpportunity.subList(27, 40), FormType.NATIONAL_BASIC_LIVING);
+        assertFailedWithoutTypeChange(societyDiversity.subList(27, 40), FormType.MULTICULTURAL);
     }
 
     @Test
@@ -152,7 +152,7 @@ class SelectFirstPassSocialIntegrationTest {
 
         assertTrue(equalOpportunity.subList(0, 29).stream()
                 .allMatch(form -> form.getStatus() == FormStatus.FIRST_PASSED && !form.getChangedToRegular()));
-        assertTrue(equalOpportunity.get(29).getChangedToRegular());
+        assertFailedWithoutTypeChange(equalOpportunity.subList(29, 30), FormType.NATIONAL_BASIC_LIVING);
         assertEquals(27, countFirstPassed(societyDiversity));
     }
 
@@ -241,6 +241,14 @@ class SelectFirstPassSocialIntegrationTest {
         return formList.stream()
                 .filter(form -> form.getStatus() == FormStatus.FIRST_PASSED)
                 .count();
+    }
+
+    private static void assertFailedWithoutTypeChange(List<Form> formList, FormType originalType) {
+        assertTrue(formList.stream().allMatch(form ->
+                form.getStatus() == FormStatus.FIRST_FAILED
+                        && form.getType() == originalType
+                        && !form.getChangedToRegular()
+        ));
     }
 
     private long countChangedToRegular(List<Form> formList) {

@@ -2,7 +2,6 @@ package com.bamdoliro.maru.application.form;
 
 import com.bamdoliro.maru.domain.form.domain.Form;
 import com.bamdoliro.maru.domain.form.domain.type.FormType;
-import com.bamdoliro.maru.domain.form.service.CalculateFormScoreService;
 import com.bamdoliro.maru.infrastructure.persistence.form.FormRepository;
 import com.bamdoliro.maru.shared.annotation.UseCase;
 import com.bamdoliro.maru.shared.constants.FixedNumber;
@@ -27,7 +26,6 @@ public class SelectFirstPassUseCase {
             .thenComparing(Form::getId);
 
     private final FormRepository formRepository;
-    private final CalculateFormScoreService calculateFormScoreService;
 
     @Transactional
     public void execute() {
@@ -63,13 +61,13 @@ public class SelectFirstPassUseCase {
         );
 
         // 요강: 기회균등전형 우선선발에서 탈락한 지원자는 사회다양성전형 대상자에 포함시켜 전형한다.
-        // 사회다양성에서도 탈락해야 비로소 일반전형으로 전환된다.
+        // 사회다양성전형에서도 탈락한 지원자를 일반전형으로 전환한다는 근거는 요강에 없으므로, 전형 전환 없이 탈락 처리한다.
         List<Form> equalOpportunityRejected = selectAndCollectRejected(equalOpportunityFormList, quota.equalOpportunityCount());
         List<Form> societyDiversityCandidates = Stream.concat(societyDiversityFormList.stream(), equalOpportunityRejected.stream())
                 .sorted(FIRST_ROUND_ORDER)
                 .toList();
 
-        processForms(societyDiversityCandidates, quota.societyDiversityCount(), this::changeToRegularAndCalculateGradeAgain);
+        processForms(societyDiversityCandidates, quota.societyDiversityCount(), Form::firstFail);
 
         formRepository.flush();
         List<Form> regularFormList = formRepository.findApprovedRegularForm()
@@ -140,10 +138,6 @@ public class SelectFirstPassUseCase {
             }
         }
         return rejected;
-    }
-
-    private void changeToRegularAndCalculateGradeAgain(Form form) {
-        form.changeToRegularFirstRound(calculateFormScoreService);
     }
 
     private List<Form> classifyFormsByType(List<Form> formList, FormTypeFilter filter) {
