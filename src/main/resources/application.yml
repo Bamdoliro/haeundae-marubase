@@ -1,7 +1,7 @@
 server:
   tomcat:
     # 전체 자기소개서 PDF 등 대용량 내보내기 응답이 오래 걸려도 연결이 끊기지 않도록 여유를 둔다.
-    connection-timeout: 120000
+    connection-timeout: 300000
     keep-alive-timeout: 120000
 
 spring:
@@ -10,7 +10,7 @@ spring:
 
   mvc:
     async:
-      request-timeout: 120000
+      request-timeout: 300000
 
   jpa:
     database: postgresql
