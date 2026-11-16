@@ -2,6 +2,7 @@ package com.bamdoliro.maru.application.form;
 
 import com.bamdoliro.maru.domain.form.domain.Form;
 import com.bamdoliro.maru.domain.form.domain.type.FormStatus;
+import com.bamdoliro.maru.domain.form.domain.type.FormType;
 import com.bamdoliro.maru.domain.form.service.AssignExaminationNumberService;
 import com.bamdoliro.maru.domain.form.service.CalculateFormScoreService;
 import com.bamdoliro.maru.domain.user.domain.User;
@@ -22,8 +23,11 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
@@ -103,7 +107,10 @@ public class SelectSecondPassUseCaseTest {
     }
 
     @Test
-    void 합격자를_제외한_지원자는_모두_불합격_처리되고_1차_사회통합전형_탈락자는_원래_전형을_유지한다() {
+    void 합격자를_제외한_지원자는_모두_불합격_처리되고_사회통합전형_탈락자는_일반전형으로_전환되지_않는다() {
+        Map<Long, FormType> originalTypes = formRepository.findAll().stream()
+                .collect(Collectors.toMap(Form::getId, Form::getType));
+
         selectSecondPassUseCase.execute();
 
         List<Form> formList = formRepository.findAll();
@@ -112,10 +119,14 @@ public class SelectSecondPassUseCaseTest {
                 .toList();
         assertEquals((long) formList.size() - FixedNumber.TOTAL, failedFormList.size());
 
-        List<Form> firstFailedSocialIntegrationFormList = formList.stream()
-                .filter(Form::isFirstFailedNow)
+        // 1차, 2차 모두 사회통합전형 탈락자를 일반전형으로 전환하지 않으므로 모든 원서가 원래 전형을 유지한다.
+        assertTrue(formList.stream().noneMatch(Form::getChangedToRegular));
+        assertTrue(formList.stream().allMatch(form -> form.getType() == originalTypes.get(form.getId())));
+
+        List<Form> secondFailedSocialIntegrationFormList = formList.stream()
+                .filter(Form::isFailedNow)
                 .filter(form -> form.getType().isEqualOpportunity() || form.getType().isSocietyDiversity())
                 .toList();
-        assertTrue(firstFailedSocialIntegrationFormList.stream().noneMatch(Form::getChangedToRegular));
+        assertFalse(secondFailedSocialIntegrationFormList.isEmpty());
     }
 }
