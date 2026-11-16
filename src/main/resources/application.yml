@@ -1,6 +1,16 @@
+server:
+  tomcat:
+    # 전체 자기소개서 PDF 등 대용량 내보내기 응답이 오래 걸려도 연결이 끊기지 않도록 여유를 둔다.
+    connection-timeout: 120000
+    keep-alive-timeout: 120000
+
 spring:
   profiles:
     active: local
+
+  mvc:
+    async:
+      request-timeout: 120000
 
   jpa:
     database: postgresql
@@ -20,6 +30,10 @@ spring:
     driver-class-name: org.postgresql.Driver
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+    hikari:
+      # 무거운 내보내기 요청이 동시에 몰려도 커넥션 풀이 고갈되지 않도록 기본값(10)보다 늘린다.
+      maximum-pool-size: 15
+      connection-timeout: 30000
 
   cache:
     type: redis
