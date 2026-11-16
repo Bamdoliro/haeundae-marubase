@@ -11,6 +11,7 @@ import com.bamdoliro.maru.presentation.form.dto.response.*;
 import com.bamdoliro.maru.shared.auth.AuthenticationPrincipal;
 import com.bamdoliro.maru.shared.auth.Authority;
 import com.bamdoliro.maru.shared.response.CommonResponse;
+import com.bamdoliro.maru.shared.response.IdResponse;
 import com.bamdoliro.maru.shared.response.ListCommonResponse;
 import com.bamdoliro.maru.shared.response.SingleCommonResponse;
 import jakarta.validation.Valid;
@@ -72,6 +73,8 @@ public class FormController {
     private final QueryAdmissionAndPledgeUseCase queryAdmissionAndPledgeUseCase;
     private final ExportAllDocumentsUseCase exportAllDocumentsUseCase;
     private final ExportAllPersonalStatementSheetUseCase exportAllPersonalStatementSheetUseCase;
+    private final StartDocumentExportJobUseCase startDocumentExportJobUseCase;
+    private final QueryDocumentExportJobUseCase queryDocumentExportJobUseCase;
     private final GenerateTestFormUseCase generateTestFormUseCase;
     private final DeleteTestFormUseCase deleteTestFormUseCase;
 
@@ -210,6 +213,22 @@ public class FormController {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(exportAllDocumentsUseCase.execute());
+    }
+
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @PostMapping("/documents/export/jobs")
+    public SingleCommonResponse<IdResponse> startDocumentExportJob(
+            @AuthenticationPrincipal(authority = Authority.ADMIN) User user
+    ) {
+        return CommonResponse.ok(startDocumentExportJobUseCase.execute());
+    }
+
+    @GetMapping("/documents/export/jobs/{job-id}")
+    public SingleCommonResponse<DocumentExportJobResponse> queryDocumentExportJob(
+            @AuthenticationPrincipal(authority = Authority.ADMIN) User user,
+            @PathVariable(name = "job-id") Long jobId
+    ) {
+        return CommonResponse.ok(queryDocumentExportJobUseCase.execute(jobId));
     }
 
     @GetMapping("/documents/export/personal-statement-sheet")

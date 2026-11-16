@@ -822,6 +822,7 @@ include::{snippets}/form-controller-test/자동으로_2차_합격_여부를_결�
 include::{snippets}/form-controller-test/자동으로_2차_합격_여부를_결정할_때_최종_점수가_없는_원서가_존재하면_에러가_발생한다/http-response.adoc[]
 
 === 전체 자기소개서 다운로드
+요청 하나로 생성이 끝날 때까지 기다리는 동기 방식입니다. 원서가 많으면 오래 걸리므로 관리자 화면에서는 아래의 전체 자기소개서 PDF 생성 작업 API를 사용합니다.
 
 ==== 요청 형식
 
@@ -835,6 +836,53 @@ include::{snippets}/form-controller-test/모든_자기소개서를_pdf로_다운
 
 ===== 정상 응답
 include::{snippets}/form-controller-test/모든_자기소개서를_pdf로_다운받는다/http-response.adoc[]
+
+=== 전체 자기소개서 PDF 생성 작업 시작
+전체 자기소개서 PDF를 백그라운드에서 생성하는 작업을 만들고, 생성이 끝나기를 기다리지 않고 작업 id를 바로 응답합니다.
+응답받은 id로 작업 상태 조회 API를 주기적으로 호출해 COMPLETED가 되면 downloadUrl로 파일을 내려받습니다.
+
+* 서버는 PDF 생성을 동시에 2건까지만 처리하고, 나머지 작업은 대기(PENDING)합니다.
+* 대기 중인 작업이 너무 많으면 작업은 바로 FAILED가 되며 errorMessage에 사유가 담깁니다.
+
+==== 요청 형식
+
+===== Request Header
+include::{snippets}/form-controller-test/전체_자기소개서_PDF_생성_작업을_시작한다/request-headers.adoc[]
+
+==== 요청
+include::{snippets}/form-controller-test/전체_자기소개서_PDF_생성_작업을_시작한다/http-request.adoc[]
+
+==== 응답
+
+===== 정상 응답
+include::{snippets}/form-controller-test/전체_자기소개서_PDF_생성_작업을_시작한다/http-response.adoc[]
+include::{snippets}/form-controller-test/전체_자기소개서_PDF_생성_작업을_시작한다/response-fields.adoc[]
+
+=== 전체 자기소개서 PDF 생성 작업 조회
+작업 상태(PENDING, IN_PROGRESS, COMPLETED, FAILED)를 조회합니다. COMPLETED면 "전체 자기소개서.pdf" 이름으로 내려받는 presigned URL을, FAILED면 실패 사유를 함께 응답합니다.
+
+==== 요청 형식
+
+===== Request Header
+include::{snippets}/form-controller-test/완료된_전체_자기소개서_PDF_생성_작업을_조회하면_다운로드_URL이_함께_온다/request-headers.adoc[]
+
+===== Path Parameters
+include::{snippets}/form-controller-test/완료된_전체_자기소개서_PDF_생성_작업을_조회하면_다운로드_URL이_함께_온다/path-parameters.adoc[]
+
+==== 요청
+include::{snippets}/form-controller-test/완료된_전체_자기소개서_PDF_생성_작업을_조회하면_다운로드_URL이_함께_온다/http-request.adoc[]
+
+==== 응답
+
+===== 완료된 작업
+include::{snippets}/form-controller-test/완료된_전체_자기소개서_PDF_생성_작업을_조회하면_다운로드_URL이_함께_온다/http-response.adoc[]
+include::{snippets}/form-controller-test/완료된_전체_자기소개서_PDF_생성_작업을_조회하면_다운로드_URL이_함께_온다/response-fields.adoc[]
+
+===== 실패한 작업
+include::{snippets}/form-controller-test/실패한_전체_자기소개서_PDF_생성_작업을_조회하면_실패_사유가_온다/http-response.adoc[]
+
+===== 작업이 없는 경우
+include::{snippets}/form-controller-test/전체_자기소개서_PDF_생성_작업을_조회할_때_작업이_없으면_에러가_발생한다/http-response.adoc[]
 
 === 전체 자기소개서 엑셀 다운로드
 지원자 전체의 수험번호, 이름, 자기소개서 답변(1~3번 문항)을 엑셀 파일로 내려받습니다. 지원자 순서는 전체 자기소개서 PDF와 같습니다.
