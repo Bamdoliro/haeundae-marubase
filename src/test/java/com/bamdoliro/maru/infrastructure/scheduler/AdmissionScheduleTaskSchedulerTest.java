@@ -85,7 +85,25 @@ class AdmissionScheduleTaskSchedulerTest {
         verify(taskScheduler).schedule(task.capture(), any(Instant.class));
         task.getValue().run();
 
-        verify(executeFirstPassSelectionUseCase).execute(1L);
+        verify(executeFirstPassSelectionUseCase).execute(1L, ScheduleFixture.SELECT_FIRST_PASS_AT);
+    }
+
+    @Test
+    void 일정이_바뀌어_다시_예약된_작업은_바뀐_선발_시각으로_선발을_실행한다() {
+        given(admissionScheduleFacade.getCurrentSchedule()).willReturn(scheduleWithId(1L));
+        scheduler.scheduleOnStartup();
+
+        AdmissionSchedule changed = scheduleWithId(1L);
+        LocalDateTime newTime = ScheduleFixture.SELECT_FIRST_PASS_AT.plusHours(3);
+        ReflectionTestUtils.setField(changed, "selectFirstPassAt", newTime);
+        given(admissionScheduleFacade.getSchedule(1L)).willReturn(changed);
+        scheduler.reschedule(new AdmissionScheduleChangedEvent(1L));
+
+        ArgumentCaptor<Runnable> tasks = ArgumentCaptor.forClass(Runnable.class);
+        verify(taskScheduler, times(2)).schedule(tasks.capture(), any(Instant.class));
+        tasks.getAllValues().get(1).run();
+
+        verify(executeFirstPassSelectionUseCase).execute(1L, newTime);
     }
 
     @Test

@@ -56,10 +56,12 @@ class AdmissionScheduleTaskSchedulerIntegrationTest {
         LocalDateTime now = now();
         Long scheduleId = createScheduleUseCase.execute(request(now, now.plusSeconds(2), null)).getId();
 
-        awaitExecution();
+        awaitExecutionCount(1);
 
         assertEquals(1, executionRepository.count());
-        assertEquals(scheduleId, executionRepository.findAll().get(0).getSchedule().getId());
+        FirstPassSelectionExecution execution = executionRepository.findAll().get(0);
+        assertEquals(scheduleId, execution.getSchedule().getId());
+        assertEquals(now.plusSeconds(2), execution.getExecutionTime());
     }
 
     @Test
@@ -69,39 +71,83 @@ class AdmissionScheduleTaskSchedulerIntegrationTest {
 
         updateScheduleUseCase.execute(request(now, now.plusSeconds(2), 0L));
 
-        awaitExecution();
+        awaitExecutionCount(1);
         assertEquals(1, executionRepository.count());
     }
 
     @Test
-    void 같은_일정으로_다시_실행하면_선발하지_않는다() {
+    void 선발이_실행된_일정을_수정해_새_시각으로_예약하면_그_시각에_다시_실행된다() throws InterruptedException {
         LocalDateTime now = now();
-        Long scheduleId = createScheduleUseCase.execute(request(now, now.plusHours(1), null)).getId();
+        Long scheduleId = createScheduleUseCase.execute(request(now, now.plusSeconds(2), null)).getId();
+        awaitExecutionCount(1);
 
-        executeFirstPassSelectionUseCase.execute(scheduleId);
+        LocalDateTime changedTime = now().plusSeconds(2);
+        updateScheduleUseCase.execute(request(now, changedTime, 0L));
+        awaitExecutionCount(2);
 
-        assertThrows(FirstPassAlreadyExecutedException.class, () -> executeFirstPassSelectionUseCase.execute(scheduleId));
+        assertEquals(2, executionRepository.count());
+        assertTrue(executionRepository.existsByScheduleAndExecutionTime(
+                admissionScheduleRepository.findById(scheduleId).orElseThrow(), changedTime));
+    }
+
+    @Test
+    void 같은_일정이라도_시각을_바꿔서_다시_실행하면_성공한다() {
+        LocalDateTime now = now();
+        LocalDateTime firstTime = now.plusHours(1);
+        LocalDateTime changedTime = now.plusHours(2);
+        Long scheduleId = createScheduleUseCase.execute(request(now, firstTime, null)).getId();
+        executeFirstPassSelectionUseCase.execute(scheduleId, firstTime);
+
+        updateScheduleUseCase.execute(request(now, changedTime, 0L));
+        executeFirstPassSelectionUseCase.execute(scheduleId, changedTime);
+
+        assertEquals(2, executionRepository.count());
+    }
+
+    @Test
+    void 같은_일정_같은_시각으로는_중복_실행되지_않는다() {
+        LocalDateTime now = now();
+        LocalDateTime executionTime = now.plusHours(1);
+        Long scheduleId = createScheduleUseCase.execute(request(now, executionTime, null)).getId();
+
+        executeFirstPassSelectionUseCase.execute(scheduleId, executionTime);
+
+        assertThrows(FirstPassAlreadyExecutedException.class,
+                () -> executeFirstPassSelectionUseCase.execute(scheduleId, executionTime));
         assertEquals(1, executionRepository.count());
     }
 
     @Test
-    void 다른_서버가_같은_일정의_실행_기록을_먼저_남겼다면_unique_제약으로_막힌다() {
+    void 다른_서버가_같은_일정_같은_시각의_실행_기록을_먼저_남겼다면_unique_제약으로_막힌다() {
+        LocalDateTime now = now();
+        LocalDateTime executionTime = now.plusHours(1);
+        Long scheduleId = createScheduleUseCase.execute(request(now, executionTime, null)).getId();
+        AdmissionSchedule schedule = admissionScheduleRepository.findById(scheduleId).orElseThrow();
+        executionRepository.saveAndFlush(new FirstPassSelectionExecution(schedule, executionTime));
+
+        assertThrows(DataIntegrityViolationException.class,
+                () -> executionRepository.saveAndFlush(new FirstPassSelectionExecution(schedule, executionTime)));
+        assertEquals(1, executionRepository.count());
+    }
+
+    @Test
+    void 같은_일정이라도_실행_시각이_다르면_실행_기록을_따로_남길_수_있다() {
         LocalDateTime now = now();
         Long scheduleId = createScheduleUseCase.execute(request(now, now.plusHours(1), null)).getId();
         AdmissionSchedule schedule = admissionScheduleRepository.findById(scheduleId).orElseThrow();
-        executionRepository.saveAndFlush(new FirstPassSelectionExecution(schedule));
 
-        assertThrows(DataIntegrityViolationException.class,
-                () -> executionRepository.saveAndFlush(new FirstPassSelectionExecution(schedule)));
-        assertEquals(1, executionRepository.count());
+        executionRepository.saveAndFlush(new FirstPassSelectionExecution(schedule, now.plusHours(1)));
+        executionRepository.saveAndFlush(new FirstPassSelectionExecution(schedule, now.plusHours(2)));
+
+        assertEquals(2, executionRepository.count());
     }
 
-    private void awaitExecution() throws InterruptedException {
+    private void awaitExecutionCount(long expected) throws InterruptedException {
         long deadline = System.nanoTime() + WAIT_TIMEOUT.toNanos();
-        while (executionRepository.count() == 0 && System.nanoTime() < deadline) {
+        while (executionRepository.count() < expected && System.nanoTime() < deadline) {
             Thread.sleep(200);
         }
-        assertTrue(executionRepository.count() > 0, "1차 선발이 예약 시각에 실행되지 않았습니다.");
+        assertTrue(executionRepository.count() >= expected, "1차 선발이 예약 시각에 실행되지 않았습니다.");
     }
 
     private static LocalDateTime now() {
