@@ -3,6 +3,7 @@ package com.bamdoliro.maru.presentation.form;
 import com.bamdoliro.maru.domain.auth.exception.AuthorityMismatchException;
 import com.bamdoliro.maru.domain.form.exception.FormNotFoundException;
 import com.bamdoliro.maru.domain.form.domain.Form;
+import com.bamdoliro.maru.domain.form.domain.type.DocumentExportJobStatus;
 import com.bamdoliro.maru.domain.form.domain.type.FormStatus;
 import com.bamdoliro.maru.domain.form.domain.type.FormType;
 import com.bamdoliro.maru.domain.form.exception.*;
@@ -16,12 +17,14 @@ import com.bamdoliro.maru.presentation.form.dto.request.*;
 import com.bamdoliro.maru.presentation.form.dto.response.FormResultResponse;
 import com.bamdoliro.maru.presentation.form.dto.response.FormSimpleResponse;
 import com.bamdoliro.maru.presentation.form.dto.response.DeleteTestFormResponse;
+import com.bamdoliro.maru.presentation.form.dto.response.DocumentExportJobResponse;
 import com.bamdoliro.maru.presentation.form.dto.response.GenerateTestFormResponse;
 import com.bamdoliro.maru.presentation.form.dto.response.TestFormCountResponse;
 import com.bamdoliro.maru.shared.fixture.AuthFixture;
 import com.bamdoliro.maru.shared.fixture.FormFixture;
 import com.bamdoliro.maru.shared.fixture.SharedFixture;
 import com.bamdoliro.maru.shared.fixture.UserFixture;
+import com.bamdoliro.maru.shared.response.IdResponse;
 import com.bamdoliro.maru.shared.util.RestDocsTestSupport;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.MethodParameter;
@@ -32,6 +35,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.bamdoliro.maru.shared.constants.FileConstant.MB;
@@ -41,6 +45,7 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.requestHe
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -1661,6 +1666,132 @@ class FormControllerTest extends RestDocsTestSupport {
                 ));
 
         verify(exportAllDocumentsUseCase, times(1)).execute();
+    }
+
+    @Test
+    void 전체_자기소개서_PDF_생성_작업을_시작한다() throws Exception {
+        User user = UserFixture.createAdminUser();
+
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+        given(startDocumentExportJobUseCase.execute()).willReturn(new IdResponse(1L));
+
+        mockMvc.perform(post("/forms/documents/export/jobs")
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+
+                .andExpect(status().isAccepted())
+
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION)
+                                        .description("Bearer token")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("생성된 작업 id (상태 조회에 사용)")
+                        )
+                ));
+
+        verify(startDocumentExportJobUseCase, times(1)).execute();
+    }
+
+    @Test
+    void 완료된_전체_자기소개서_PDF_생성_작업을_조회하면_다운로드_URL이_함께_온다() throws Exception {
+        User user = UserFixture.createAdminUser();
+        LocalDateTime createdAt = LocalDateTime.of(2026, 11, 16, 10, 0, 0);
+        DocumentExportJobResponse response = new DocumentExportJobResponse(
+                1L,
+                DocumentExportJobStatus.COMPLETED,
+                "https://maru.bamdoliro.com/document-export/1.pdf",
+                null,
+                createdAt,
+                createdAt.plusSeconds(90)
+        );
+
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+        given(queryDocumentExportJobUseCase.execute(1L)).willReturn(response);
+
+        mockMvc.perform(get("/forms/documents/export/jobs/{job-id}", 1L)
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+
+                .andExpect(status().isOk())
+
+                .andDo(restDocs.document(
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION)
+                                        .description("Bearer token")
+                        ),
+                        pathParameters(
+                                parameterWithName("job-id")
+                                        .description("조회할 작업 id")
+                        ),
+                        responseFields(
+                                fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("작업 id"),
+                                fieldWithPath("data.status").type(JsonFieldType.STRING)
+                                        .description("작업 상태 (PENDING: 대기 중, IN_PROGRESS: 생성 중, COMPLETED: 완료, FAILED: 실패)"),
+                                fieldWithPath("data.downloadUrl").type(JsonFieldType.STRING).optional()
+                                        .description("다운로드용 presigned URL (COMPLETED일 때만, 파일명 \"전체 자기소개서.pdf\")"),
+                                fieldWithPath("data.errorMessage").type(JsonFieldType.STRING).optional()
+                                        .description("실패 사유 (FAILED일 때만)"),
+                                fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("작업 생성 시각"),
+                                fieldWithPath("data.updatedAt").type(JsonFieldType.STRING).description("마지막 상태 변경 시각")
+                        )
+                ));
+
+        verify(queryDocumentExportJobUseCase, times(1)).execute(1L);
+    }
+
+    @Test
+    void 실패한_전체_자기소개서_PDF_생성_작업을_조회하면_실패_사유가_온다() throws Exception {
+        User user = UserFixture.createAdminUser();
+        LocalDateTime createdAt = LocalDateTime.of(2026, 11, 16, 10, 0, 0);
+        DocumentExportJobResponse response = new DocumentExportJobResponse(
+                1L,
+                DocumentExportJobStatus.FAILED,
+                null,
+                "PDF 변환에 실패했습니다.",
+                createdAt,
+                createdAt.plusSeconds(30)
+        );
+
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+        given(queryDocumentExportJobUseCase.execute(1L)).willReturn(response);
+
+        mockMvc.perform(get("/forms/documents/export/jobs/{job-id}", 1L)
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+
+                .andExpect(status().isOk())
+
+                .andDo(restDocs.document());
+    }
+
+    @Test
+    void 전체_자기소개서_PDF_생성_작업을_조회할_때_작업이_없으면_에러가_발생한다() throws Exception {
+        User user = UserFixture.createAdminUser();
+
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+        given(queryDocumentExportJobUseCase.execute(1L)).willThrow(new DocumentExportJobNotFoundException());
+
+        mockMvc.perform(get("/forms/documents/export/jobs/{job-id}", 1L)
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+
+                .andExpect(status().isNotFound())
+
+                .andDo(restDocs.document());
     }
 
     @Test

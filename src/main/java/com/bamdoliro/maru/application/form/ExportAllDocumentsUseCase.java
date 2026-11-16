@@ -15,6 +15,7 @@ import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.utils.PdfMerger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayOutputStream;
 import java.util.List;
@@ -31,6 +32,11 @@ public class ExportAllDocumentsUseCase {
     private final FileService fileService;
     private final AdmissionScheduleFacade admissionScheduleFacade;
 
+    /**
+     * 백그라운드 스레드(ExecuteDocumentExportJobUseCase)에는 요청 단위 영속성 컨텍스트가 없으므로,
+     * 템플릿이 원서의 지연 로딩 연관 객체를 읽더라도 실패하지 않도록 읽기 전용 트랜잭션 안에서 실행한다.
+     */
+    @Transactional(readOnly = true)
     public ByteArrayResource execute() {
         List<Form> forms = formRepository.findAll();
         AdmissionSchedule schedule = admissionScheduleFacade.getCurrentSchedule();

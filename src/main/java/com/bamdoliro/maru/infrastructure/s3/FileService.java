@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.HeadObjectRequest;
@@ -75,6 +76,28 @@ public class FileService {
         } catch (S3Exception e) {
             throw accessFailed("download", fullFileName, e);
         }
+    }
+
+    /**
+     * 서버가 가진 바이트 배열을 S3에 직접 업로드하고, 저장된 객체 키를 돌려준다.
+     * 권한 부족(403) 등 S3 오류는 S3AccessFailedException.
+     */
+    public String upload(String folder, String fileName, byte[] content, String contentType) {
+        String fullFileName = createFileName(folder, fileName);
+        try {
+            s3Client.putObject(
+                    PutObjectRequest.builder()
+                            .bucket(bucket)
+                            .key(fullFileName)
+                            .contentType(contentType)
+                            .contentLength((long) content.length)
+                            .build(),
+                    RequestBody.fromBytes(content)
+            );
+        } catch (S3Exception e) {
+            throw accessFailed("upload", fullFileName, e);
+        }
+        return fullFileName;
     }
 
     public UrlResponse getPresignedUrl(String folder, String fileName, FileMetadata metadata, FileValidator validator) {
