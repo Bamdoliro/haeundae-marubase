@@ -1,6 +1,8 @@
 package com.bamdoliro.maru.application.form;
 
 import com.bamdoliro.maru.domain.form.domain.Form;
+import com.bamdoliro.maru.domain.form.domain.type.FormStatus;
+import com.bamdoliro.maru.domain.form.domain.type.FormType;
 import com.bamdoliro.maru.domain.form.service.AssignExaminationNumberService;
 import com.bamdoliro.maru.domain.form.service.CalculateFormScoreService;
 import com.bamdoliro.maru.domain.user.domain.User;
@@ -20,9 +22,13 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
 @ActiveProfiles("test")
@@ -97,5 +103,26 @@ class SelectFirstPassUseCaseTest {
         System.out.println("실제 합격자 수: " + passedFormCount);
 
         assertEquals(totalCount, passedFormCount);
+    }
+
+    @Test
+    void 사회통합전형에서_탈락한_지원자는_일반전형으로_전환되지_않고_원래_전형으로_탈락_처리된다() {
+        Map<Long, FormType> originalTypes = formRepository.findAll().stream()
+                .collect(Collectors.toMap(Form::getId, Form::getType));
+
+        selectFirstPassUseCase.execute();
+
+        List<Form> formList = formRepository.findAll();
+        assertTrue(formList.stream().noneMatch(Form::getChangedToRegular));
+        assertTrue(formList.stream().allMatch(form -> form.getType() == originalTypes.get(form.getId())));
+
+        List<Form> socialIntegrationFormList = formList.stream()
+                .filter(form -> form.getType().isEqualOpportunity() || form.getType().isSocietyDiversity())
+                .toList();
+        List<Form> rejected = socialIntegrationFormList.stream()
+                .filter(form -> !form.isFirstPassedNow())
+                .toList();
+        assertFalse(rejected.isEmpty());
+        assertTrue(rejected.stream().allMatch(form -> form.getStatus() == FormStatus.FIRST_FAILED));
     }
 }
