@@ -2,7 +2,6 @@ package com.bamdoliro.maru.application.form;
 
 import com.bamdoliro.maru.domain.form.domain.Form;
 import com.bamdoliro.maru.domain.form.domain.type.FormStatus;
-import com.bamdoliro.maru.domain.form.domain.type.FormType;
 import com.bamdoliro.maru.domain.form.service.AssignExaminationNumberService;
 import com.bamdoliro.maru.domain.form.service.CalculateFormScoreService;
 import com.bamdoliro.maru.domain.user.domain.User;
@@ -25,6 +24,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
 @ActiveProfiles("test")
@@ -103,14 +103,19 @@ public class SelectSecondPassUseCaseTest {
     }
 
     @Test
-    void 마이스터전형_또는_사회통합전형에서_불합격을_한다면_일반전형으로_다시_지원한다() {
+    void 합격자를_제외한_지원자는_모두_불합격_처리되고_1차_사회통합전형_탈락자는_원래_전형을_유지한다() {
         selectSecondPassUseCase.execute();
 
-        List<Form> failedFormList = formRepository.findByType(FormType.REGULAR)
-                .stream()
+        List<Form> formList = formRepository.findAll();
+        List<Form> failedFormList = formList.stream()
                 .filter(form -> form.isFailedNow() || form.isFirstFailedNow())
                 .toList();
+        assertEquals((long) formList.size() - FixedNumber.TOTAL, failedFormList.size());
 
-        assertEquals((long) formRepository.findAll().size() -  FixedNumber.TOTAL, failedFormList.size());
+        List<Form> firstFailedSocialIntegrationFormList = formList.stream()
+                .filter(Form::isFirstFailedNow)
+                .filter(form -> form.getType().isEqualOpportunity() || form.getType().isSocietyDiversity())
+                .toList();
+        assertTrue(firstFailedSocialIntegrationFormList.stream().noneMatch(Form::getChangedToRegular));
     }
 }
