@@ -1,9 +1,11 @@
 package com.bamdoliro.maru.infrastructure.persistence.form;
 
 import com.bamdoliro.maru.domain.form.domain.Form;
+import com.bamdoliro.maru.domain.form.domain.type.FormStatus;
 import com.bamdoliro.maru.domain.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,4 +18,6 @@ public interface FormRepository extends JpaRepository<Form, Long>, FormRepositor
     boolean existsByApplicant_RegistrationNumber(String registrationNumber);
 
     List<Form> findAllByUser_IsTestDataTrue();
+
+    List<Form> findByStatusIn(Collection<FormStatus> statuses);
 }
