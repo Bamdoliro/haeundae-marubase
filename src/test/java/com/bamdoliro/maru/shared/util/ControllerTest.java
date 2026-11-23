@@ -146,7 +146,7 @@ public abstract class ControllerTest {
     protected ExportFormUseCase exportFormUseCase;
 
     @MockBean
-    protected ExportAllDocumentsUseCase exportAllDocumentsUseCase;
+    protected DownloadAllDocumentsUseCase downloadAllDocumentsUseCase;
 
     @MockBean
     protected ExportAllPersonalStatementSheetUseCase exportAllPersonalStatementSheetUseCase;

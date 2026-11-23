@@ -29,6 +29,7 @@ import com.bamdoliro.maru.shared.util.RestDocsTestSupport;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -37,6 +38,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static com.bamdoliro.maru.shared.constants.FileConstant.MB;
 import static org.mockito.BDDMockito.*;
@@ -47,8 +49,10 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class FormControllerTest extends RestDocsTestSupport {
@@ -1649,14 +1653,20 @@ class FormControllerTest extends RestDocsTestSupport {
 
         given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
         given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
-        given(exportAllDocumentsUseCase.execute()).willReturn(new ByteArrayResource(file.getBytes()));
+        given(downloadAllDocumentsUseCase.execute())
+                .willReturn(CompletableFuture.completedFuture(new ByteArrayResource(file.getBytes())));
 
-        mockMvc.perform(get("/forms/documents/export")
+        MvcResult asyncResult = mockMvc.perform(get("/forms/documents/export")
                         .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
                         .accept(MediaType.APPLICATION_PDF)
                 )
+                .andExpect(request().asyncStarted())
+                .andReturn();
+
+        mockMvc.perform(asyncDispatch(asyncResult))
 
                 .andExpect(status().isOk())
+                .andExpect(content().bytes(file.getBytes()))
 
                 .andDo(restDocs.document(
                         requestHeaders(
@@ -1665,7 +1675,25 @@ class FormControllerTest extends RestDocsTestSupport {
                         )
                 ));
 
-        verify(exportAllDocumentsUseCase, times(1)).execute();
+        verify(downloadAllDocumentsUseCase, times(1)).execute();
+    }
+
+    @Test
+    void 이미_자기소개서_PDF를_생성하고_있으면_전체_다운로드_요청은_409를_반환한다() throws Exception {
+        User user = UserFixture.createAdminUser();
+
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+        willThrow(new DocumentExportInProgressException()).given(downloadAllDocumentsUseCase).execute();
+
+        mockMvc.perform(get("/forms/documents/export")
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+
+                .andExpect(status().isConflict())
+
+                .andDo(restDocs.document());
     }
 
     @Test
