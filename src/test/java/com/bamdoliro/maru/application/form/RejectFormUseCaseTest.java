@@ -4,6 +4,7 @@ import com.bamdoliro.maru.domain.form.domain.Form;
 import com.bamdoliro.maru.domain.form.domain.type.FormStatus;
 import com.bamdoliro.maru.domain.form.domain.type.FormType;
 import com.bamdoliro.maru.domain.form.exception.FormNotFoundException;
+import com.bamdoliro.maru.domain.form.exception.InvalidFormStatusException;
 import com.bamdoliro.maru.domain.form.service.FormFacade;
 import com.bamdoliro.maru.shared.fixture.FormFixture;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,7 @@ class RejectFormUseCaseTest {
     void 원서를_반려한다() {
         // given
         Form form = FormFixture.createForm(FormType.REGULAR);
+        form.submit();
         given(formFacade.getForm(form.getId())).willReturn(form);
 
         // when
@@ -51,5 +53,16 @@ class RejectFormUseCaseTest {
         // when and then
         assertThrows(FormNotFoundException.class, () -> rejectFormUseCase.execute(form.getId()));
         assertEquals(form.getStatus(), FormStatus.FINAL_SUBMITTED);
+    }
+
+    @Test
+    void 최종_제출_전인_초안_원서를_반려하면_에러가_발생한다() {
+        // given
+        Form form = FormFixture.createForm(FormType.REGULAR);
+        given(formFacade.getForm(form.getId())).willReturn(form);
+
+        // when and then
+        assertThrows(InvalidFormStatusException.class, () -> rejectFormUseCase.execute(form.getId()));
+        assertEquals(FormStatus.SUBMITTED, form.getStatus());
     }
 }
