@@ -7,8 +7,11 @@ import com.bamdoliro.maru.domain.user.domain.type.Authority;
 import com.bamdoliro.maru.shared.util.RandomCodeUtil;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 import static com.bamdoliro.maru.shared.util.RandomUtil.randomPhoneNumber;
@@ -48,8 +51,9 @@ public class UserFixture {
     }
 
     public static List<User> generateUserList(int size) {
+        Set<String> usedPhoneNumbers = new HashSet<>();
         return IntStream.range(0, size)
-                .mapToObj(i -> new User(RandomCodeUtil.generate(11), "김밤돌" + i, "비밀번호", Authority.USER))
+                .mapToObj(i -> new User(generateUniquePhoneNumber(() -> RandomCodeUtil.generate(11), usedPhoneNumbers), "김밤돌" + i, "비밀번호", Authority.USER))
                 .toList();
     }
 
@@ -57,9 +61,21 @@ public class UserFixture {
      * 시드를 고정한 Random을 넘기면 같은 사용자 목록이 재현된다.
      */
     public static List<User> generateUserList(int size, Random random) {
+        Set<String> usedPhoneNumbers = new HashSet<>();
         return IntStream.range(0, size)
-                .mapToObj(i -> new User(randomDigits(random, 11), "김밤돌" + i, "비밀번호", Authority.USER))
+                .mapToObj(i -> new User(generateUniquePhoneNumber(() -> randomDigits(random, 11), usedPhoneNumbers), "김밤돌" + i, "비밀번호", Authority.USER))
                 .toList();
+    }
+
+    /**
+     * 같은 목록 안에서 이미 쓴 전화번호가 나오면 다시 만든다. 사용자 저장 시 전화번호 unique 제약에 걸리지 않도록 한다.
+     */
+    private static String generateUniquePhoneNumber(Supplier<String> generator, Set<String> used) {
+        String phoneNumber;
+        do {
+            phoneNumber = generator.get();
+        } while (!used.add(phoneNumber));
+        return phoneNumber;
     }
 
     private static String randomDigits(Random random, int count) {
