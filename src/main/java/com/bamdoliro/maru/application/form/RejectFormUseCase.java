@@ -1,6 +1,7 @@
 package com.bamdoliro.maru.application.form;
 
 import com.bamdoliro.maru.domain.form.domain.Form;
+import com.bamdoliro.maru.domain.form.exception.InvalidFormStatusException;
 import com.bamdoliro.maru.domain.form.service.FormFacade;
 import com.bamdoliro.maru.shared.annotation.UseCase;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,14 @@ public class RejectFormUseCase {
     @Transactional
     public void execute(Long id) {
         Form form = formFacade.getForm(id);
+        validate(form);
+
         form.reject();
+    }
+
+    private void validate(Form form) {
+        if (form.isSubmitted()) {
+            throw new InvalidFormStatusException();
+        }
     }
 }
