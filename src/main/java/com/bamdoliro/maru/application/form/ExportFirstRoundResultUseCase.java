@@ -30,7 +30,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
@@ -151,11 +150,14 @@ public class ExportFirstRoundResultUseCase {
         setCell(row, 10, Boolean.TRUE.equals(form.isFirstPassed()) ? "합격" : "불합격", styles.data9);
         setCell(row, 11, rank, styles.data9);
 
-        List<Subject> subjectList = form.getGrade().getSubjectListValue();
+        // 검정고시 과목(학년/학기 0)은 학기 구분이 없으므로 4개 학기 칸에 같은 성취도를 채운다.
         int column = 12;
         for (int[] semester : SEMESTERS) {
+            List<Subject> subjectList = form.getGrade().getSubjectList()
+                    .getSubjectListForSemester(semester[0], semester[1])
+                    .getValue();
             for (String subjectName : SUBJECTS) {
-                setCell(row, column++, achievementLevel(subjectList, semester[0], semester[1], subjectName), styles.data9);
+                setCell(row, column++, achievementLevel(subjectList, subjectName), styles.data9);
             }
         }
 
@@ -194,11 +196,9 @@ public class ExportFirstRoundResultUseCase {
         return "중학교" + graduationType.getDescription().replace(" ", "");
     }
 
-    private String achievementLevel(List<Subject> subjectList, int grade, int semester, String subjectName) {
+    private String achievementLevel(List<Subject> subjectList, String subjectName) {
         return subjectList.stream()
-                .filter(subject -> Objects.equals(subject.getGrade(), grade)
-                        && Objects.equals(subject.getSemester(), semester)
-                        && subjectName.equals(subject.getSubjectName()))
+                .filter(subject -> subjectName.equals(subject.getSubjectName()))
                 .findFirst()
                 .map(subject -> subject.getAchievementLevel().getDescription())
                 .orElse(null);
