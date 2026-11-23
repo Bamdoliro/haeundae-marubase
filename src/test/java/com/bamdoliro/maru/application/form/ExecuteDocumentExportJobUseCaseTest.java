@@ -47,6 +47,9 @@ class ExecuteDocumentExportJobUseCaseTest {
     @Mock
     private FileService fileService;
 
+    @Mock
+    private DocumentExportLock documentExportLock;
+
     private DocumentExportJob job;
 
     @BeforeEach
@@ -77,6 +80,7 @@ class ExecuteDocumentExportJobUseCaseTest {
         assertEquals("document-export/3.pdf", job.getS3Key());
         assertNull(job.getErrorMessage());
         verify(documentExportJobRepository, times(2)).save(job);
+        verify(documentExportLock).release();
     }
 
     @Test
@@ -91,6 +95,7 @@ class ExecuteDocumentExportJobUseCaseTest {
         assertNull(job.getS3Key());
         verify(fileService, never()).upload(anyString(), anyString(), any(), anyString());
         verify(documentExportJobRepository, times(2)).save(job);
+        verify(documentExportLock).release();
     }
 
     @Test
@@ -133,5 +138,6 @@ class ExecuteDocumentExportJobUseCaseTest {
 
         assertThrows(DocumentExportJobNotFoundException.class, () -> executeDocumentExportJobUseCase.execute(3L));
         verify(exportAllDocumentsUseCase, never()).execute();
+        verify(documentExportLock).release();
     }
 }

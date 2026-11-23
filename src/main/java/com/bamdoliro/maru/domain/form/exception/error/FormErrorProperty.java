@@ -22,7 +22,8 @@ public enum FormErrorProperty implements ErrorProperty {
     OUT_OF_ADMISSION_AND_PLEDGE_PERIOD(HttpStatus.FORBIDDEN, "지금은 입학 등록원 및 서약서 제출 기간이 아닙니다."),
     EXAMINATION_NUMBER_EXHAUSTED(HttpStatus.INTERNAL_SERVER_ERROR, "부여할 수 있는 수험번호가 없습니다."),
     TEST_DATA_UNIQUE_VALUE_EXHAUSTED(HttpStatus.INTERNAL_SERVER_ERROR, "테스트 데이터에 쓸 중복되지 않는 값을 만들지 못했습니다. 다시 시도해주세요."),
-    DOCUMENT_EXPORT_JOB_NOT_FOUND(HttpStatus.NOT_FOUND, "전체 자기소개서 PDF 생성 작업을 찾을 수 없습니다.")
+    DOCUMENT_EXPORT_JOB_NOT_FOUND(HttpStatus.NOT_FOUND, "전체 자기소개서 PDF 생성 작업을 찾을 수 없습니다."),
+    DOCUMENT_EXPORT_IN_PROGRESS(HttpStatus.CONFLICT, "이미 전체 자기소개서 PDF를 생성하고 있습니다. 끝난 뒤 다시 시도해주세요.")
     ;
 
     private final HttpStatus status;

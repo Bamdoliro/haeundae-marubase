@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor
 @RequestMapping("/forms")
@@ -71,7 +72,7 @@ public class FormController {
     private final SelectSecondPassUseCase selectSecondPassUseCase;
     private final GenerateAllAdmissionTicketUseCase generateAllAdmissionTicketUseCase;
     private final QueryAdmissionAndPledgeUseCase queryAdmissionAndPledgeUseCase;
-    private final ExportAllDocumentsUseCase exportAllDocumentsUseCase;
+    private final DownloadAllDocumentsUseCase downloadAllDocumentsUseCase;
     private final ExportAllPersonalStatementSheetUseCase exportAllPersonalStatementSheetUseCase;
     private final StartDocumentExportJobUseCase startDocumentExportJobUseCase;
     private final QueryDocumentExportJobUseCase queryDocumentExportJobUseCase;
@@ -207,12 +208,13 @@ public class FormController {
     }
 
     @GetMapping("/documents/export")
-    public ResponseEntity<Resource> exportDocuments(
+    public CompletableFuture<ResponseEntity<Resource>> exportDocuments(
             @AuthenticationPrincipal(authority = Authority.ADMIN) User use
     ) {
-        return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(exportAllDocumentsUseCase.execute());
+        return downloadAllDocumentsUseCase.execute()
+                .thenApply(pdf -> ResponseEntity.ok()
+                        .contentType(MediaType.APPLICATION_PDF)
+                        .<Resource>body(pdf));
     }
 
     @ResponseStatus(HttpStatus.ACCEPTED)

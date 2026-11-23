@@ -48,12 +48,12 @@ class ExportAllPersonalStatementSheetUseCaseTest {
     }
 
     @Test
-    void 지원자_전체의_수험번호_이름_자기소개서를_findAll_순서대로_엑셀에_담는다() throws IOException {
+    void 지원자_전체의_수험번호_이름_자기소개서를_내보내기_대상_순서대로_엑셀에_담는다() throws IOException {
         // given
         Form regular = formWithDocument(FormType.REGULAR, 1001L, "학습경험", "지원동기", "인성");
         Form equalOpportunity = formWithDocument(FormType.NATIONAL_BASIC_LIVING, 2001L, "가", "나", "다");
         Form societyDiversity = formWithDocument(FormType.MULTICULTURAL, 3001L, "A", "B", "C");
-        given(formRepository.findAll()).willReturn(List.of(regular, equalOpportunity, societyDiversity));
+        given(formRepository.findDocumentExportTargets()).willReturn(List.of(regular, equalOpportunity, societyDiversity));
 
         // when
         Resource resource = useCase.execute();
@@ -75,7 +75,7 @@ class ExportAllPersonalStatementSheetUseCaseTest {
             assertTrue(statementStyle.getWrapText());
             assertFalse(sheet.getRow(1).getCell(0).getCellStyle().getWrapText());
         }
-        verify(formRepository, times(1)).findAll();
+        verify(formRepository, times(1)).findDocumentExportTargets();
     }
 
     @Test
@@ -84,7 +84,7 @@ class ExportAllPersonalStatementSheetUseCaseTest {
         Form noDocument = FormFixture.createForm(FormType.REGULAR);
         ReflectionTestUtils.setField(noDocument, "document", null);
         Form partiallyEmpty = formWithDocument(FormType.REGULAR, 1002L, null, "", null);
-        given(formRepository.findAll()).willReturn(List.of(noDocument, partiallyEmpty));
+        given(formRepository.findDocumentExportTargets()).willReturn(List.of(noDocument, partiallyEmpty));
 
         // when
         Resource resource = useCase.execute();
@@ -104,7 +104,7 @@ class ExportAllPersonalStatementSheetUseCaseTest {
 
     @Test
     void 지원자가_없으면_헤더만_있는_엑셀을_내려준다() throws IOException {
-        given(formRepository.findAll()).willReturn(List.of());
+        given(formRepository.findDocumentExportTargets()).willReturn(List.of());
 
         try (Workbook workbook = read(useCase.execute())) {
             Sheet sheet = workbook.getSheetAt(0);

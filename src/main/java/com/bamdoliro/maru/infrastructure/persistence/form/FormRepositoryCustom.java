@@ -13,6 +13,7 @@ import java.util.List;
 public interface FormRepositoryCustom {
 
     List<Form> findByStatus(FormStatus status);
+    List<Form> findDocumentExportTargets();
     List<Form> findByType(FormType type);
     List<Form> findByCategory(FormType.Category category);
     List<Form> findApprovedSpecialForm();

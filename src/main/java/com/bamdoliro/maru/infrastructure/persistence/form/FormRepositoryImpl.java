@@ -35,6 +35,20 @@ public class FormRepositoryImpl implements FormRepositoryCustom {
                 .fetch();
     }
 
+    /**
+     * 전체 자기소개서 PDF/시트 내보내기 대상.
+     * 최종 제출 전(SUBMITTED)이거나 반려된(REJECTED) 원서는 심사 대상이 아니므로 제외한다.
+     * PDF와 자기소개서 시트가 같은 순서를 쓰도록 id 순으로 정렬한다.
+     */
+    @Override
+    public List<Form> findDocumentExportTargets() {
+        return queryFactory
+                .selectFrom(form)
+                .where(form.status.notIn(FormStatus.SUBMITTED, FormStatus.REJECTED))
+                .orderBy(form.id.asc())
+                .fetch();
+    }
+
     @Override
     public List<Form> findByType(FormType type) {
         return queryFactory

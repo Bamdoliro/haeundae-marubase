@@ -38,7 +38,7 @@ public class ExportAllDocumentsUseCase {
      */
     @Transactional(readOnly = true)
     public ByteArrayResource execute() {
-        List<Form> forms = formRepository.findAll();
+        List<Form> forms = formRepository.findDocumentExportTargets();
         AdmissionSchedule schedule = admissionScheduleFacade.getCurrentSchedule();
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

@@ -25,8 +25,8 @@ public class ExportAllPersonalStatementSheetUseCase {
     private final XlsxGenerator xlsxGenerator;
 
     public Resource execute() throws IOException {
-        // 자기소개서 PDF 전체 발급(ExportAllDocumentsUseCase)과 같은 순서를 쓰기 위해 findAll() 기본 순서를 그대로 사용한다.
-        List<Form> formList = formRepository.findAll();
+        // 자기소개서 PDF 전체 발급(ExportAllDocumentsUseCase)과 같은 대상, 같은 순서를 쓴다.
+        List<Form> formList = formRepository.findDocumentExportTargets();
 
         List<Function<Form, Object>> columnList = List.of(
                 Form::getExaminationNumber,

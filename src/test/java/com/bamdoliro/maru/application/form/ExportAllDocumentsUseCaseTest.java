@@ -65,7 +65,7 @@ class ExportAllDocumentsUseCaseTest {
                 FormFixture.createForm(FormType.SPECIAL_ADMISSION)
         );
 
-        given(formRepository.findAll()).willReturn(formEntities);
+        given(formRepository.findDocumentExportTargets()).willReturn(formEntities);
         given(admissionScheduleFacade.getCurrentSchedule()).willReturn(ScheduleFixture.createSchedule(2027, true));
         given(processTemplateService.execute(any(String.class), any())).willReturn("html");
         given(generatePdfService.execute(any(String.class))).willReturn(new ByteArrayOutputStream());
@@ -75,7 +75,7 @@ class ExportAllDocumentsUseCaseTest {
         exportAllDocumentsUseCase.execute();
 
         // then
-        verify(formRepository, times(1)).findAll();
+        verify(formRepository, times(1)).findDocumentExportTargets();
         verify(processTemplateService, times(4)).execute(any(String.class), any());
         verify(generatePdfService, times(4)).execute(any(String.class));
         verify(mergePdfService, times(4)).execute(any(PdfMerger.class), any(ByteArrayOutputStream.class));
@@ -85,7 +85,7 @@ class ExportAllDocumentsUseCaseTest {
     @Test
     void 서류에_DB_입학_일정의_학년도를_넣는다() {
         // given
-        given(formRepository.findAll()).willReturn(List.of(FormFixture.createForm(FormType.REGULAR)));
+        given(formRepository.findDocumentExportTargets()).willReturn(List.of(FormFixture.createForm(FormType.REGULAR)));
         AdmissionSchedule schedule = ScheduleFixture.createSchedule(2031, true);
         given(admissionScheduleFacade.getCurrentSchedule()).willReturn(schedule);
         given(processTemplateService.execute(any(String.class), any())).willReturn("html");
