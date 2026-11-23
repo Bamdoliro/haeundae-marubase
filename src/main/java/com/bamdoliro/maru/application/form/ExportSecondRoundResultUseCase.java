@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.function.Function;
 
@@ -39,7 +40,7 @@ public class ExportSecondRoundResultUseCase {
                 form -> form.getStatus().getDescription(),
                 form -> form.getApplicant().getName(),
                 form -> form.getApplicant().getGender().getDescription(),
-                form -> form.getApplicant().getBirthday(),
+                form -> form.getApplicant().getBirthday().format(DateTimeFormatter.BASIC_ISO_DATE),
                 form -> form.getEducation().getSchool().getLocation(),
                 form -> form.getEducation().getGraduationTypeToString(),
                 form -> form.getEducation().getSchool().getName(),
