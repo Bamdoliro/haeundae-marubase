@@ -231,10 +231,11 @@ class AdminFormLogAspectTest {
     }
 
     @Test
-    void 제출_상태_원서를_승인하면_DB에_SUBMITTED에서_APPROVED로_남는다() throws Exception {
+    void 최종제출_상태_원서를_승인하면_DB에_FINAL_SUBMITTED에서_APPROVED로_남는다() throws Exception {
         Form submitted = FormFixture.createRandomBusanForm(userRepository.save(UserFixture.createUser()));
         assignExaminationNumberService.execute(submitted);
         calculateFormScoreService.execute(submitted);
+        submitted.submit();
         submitted = formRepository.save(submitted);
 
         mockMvc.perform(patch("/forms/{form-id}/approve", submitted.getId())
@@ -244,7 +245,7 @@ class AdminFormLogAspectTest {
         List<Map<String, Object>> rows = statusChangeRows();
         assertEquals(1, rows.size());
         assertEquals(((Number) rows.get(0).get("FORM_ID")).longValue(), submitted.getId());
-        assertEquals("SUBMITTED", rows.get(0).get("BEFORE_STATUS"));
+        assertEquals("FINAL_SUBMITTED", rows.get(0).get("BEFORE_STATUS"));
         assertEquals("APPROVED", rows.get(0).get("AFTER_STATUS"));
     }
 
