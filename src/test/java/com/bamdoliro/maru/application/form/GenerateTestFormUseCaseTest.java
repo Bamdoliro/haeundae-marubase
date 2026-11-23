@@ -17,6 +17,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -31,8 +32,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willAnswer;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -104,6 +107,30 @@ class GenerateTestFormUseCaseTest {
         assertEquals(6, forms.stream().map(form -> form.getUser().getPhoneNumber()).distinct().count());
         assertEquals(6, forms.stream().map(Form::getExaminationNumber).distinct().count());
         verify(assignExaminationNumberService, times(6)).execute(any(Form.class));
+    }
+
+    @Test
+    void 테스트_원서는_확인_중_단계를_거쳐_승인_상태가_된다() {
+        // given
+        given(userRepository.save(any(User.class))).willAnswer(invocation -> invocation.getArgument(0));
+        Form[] generated = new Form[1];
+        willAnswer(invocation -> {
+            generated[0] = spy((Form) invocation.callRealMethod());
+            return generated[0];
+        }).given(randomFormGenerator).generate(any(User.class), eq(FormType.REGULAR), any(), anyString(), anyString());
+
+        // when
+        useCase.execute(new GenerateTestFormRequest(List.of(new TestFormCountRequest(FormType.REGULAR, 1))));
+
+        // then
+        Form form = generated[0];
+        InOrder order = inOrder(form);
+        order.verify(form).submit();
+        order.verify(form).payFee();
+        order.verify(form).receive();
+        order.verify(form).approve();
+        assertEquals(FormStatus.APPROVED, form.getStatus());
+        verify(formRepository).save(form);
     }
 
     @Test
