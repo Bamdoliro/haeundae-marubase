@@ -61,4 +61,38 @@ class ScheduleValidationAspectTest {
         assertThrows(ScheduleNotFoundException.class,
                 () -> aspectAt(ScheduleFixture.APPLICATION_FORM_START).validateApplicationFormPeriod());
     }
+
+    @Test
+    void 원서_접수_시작부터_마감까지는_정식_접수_요청이_통과한다() {
+        given(admissionScheduleFacade.getCurrentSchedule()).willReturn(ScheduleFixture.createSchedule(2027, true));
+
+        assertDoesNotThrow(() -> aspectAt(ScheduleFixture.VISIT_SUBMISSION_AT).validateFormSubmissionPeriod());
+        assertDoesNotThrow(() -> aspectAt(ScheduleFixture.APPLICATION_FORM_END).validateFormSubmissionPeriod());
+    }
+
+    @Test
+    void 원서_작성_기간이라도_접수_시작_전이면_정식_접수_요청에서_에러가_발생한다() {
+        given(admissionScheduleFacade.getCurrentSchedule()).willReturn(ScheduleFixture.createSchedule(2027, true));
+
+        assertThrows(OutOfApplicationFormPeriodException.class,
+                () -> aspectAt(ScheduleFixture.VISIT_SUBMISSION_AT.minusSeconds(1)).validateFormSubmissionPeriod());
+        assertThrows(OutOfApplicationFormPeriodException.class,
+                () -> aspectAt(ScheduleFixture.APPLICATION_FORM_START).validateFormSubmissionPeriod());
+    }
+
+    @Test
+    void 원서_접수_마감_후면_정식_접수_요청에서_에러가_발생한다() {
+        given(admissionScheduleFacade.getCurrentSchedule()).willReturn(ScheduleFixture.createSchedule(2027, true));
+
+        assertThrows(OutOfApplicationFormPeriodException.class,
+                () -> aspectAt(ScheduleFixture.APPLICATION_FORM_END.plusSeconds(1)).validateFormSubmissionPeriod());
+    }
+
+    @Test
+    void 정식_접수_요청에서_활성_일정이_없으면_에러가_발생한다() {
+        given(admissionScheduleFacade.getCurrentSchedule()).willThrow(new ScheduleNotFoundException());
+
+        assertThrows(ScheduleNotFoundException.class,
+                () -> aspectAt(ScheduleFixture.VISIT_SUBMISSION_AT).validateFormSubmissionPeriod());
+    }
 }

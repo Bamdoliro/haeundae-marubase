@@ -15,6 +15,7 @@ import com.bamdoliro.maru.infrastructure.s3.constants.FolderConstant;
 import com.bamdoliro.maru.infrastructure.thymeleaf.ProcessTemplateService;
 import com.bamdoliro.maru.infrastructure.thymeleaf.Templates;
 import com.bamdoliro.maru.shared.annotation.UseCase;
+import com.bamdoliro.maru.shared.annotation.ValidateFormSubmissionPeriod;
 import com.bamdoliro.maru.shared.constants.Schedule;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
@@ -40,6 +41,7 @@ public class ExportFormUseCase {
     private final FileService fileService;
     private final AdmissionScheduleFacade admissionScheduleFacade;
 
+    @ValidateFormSubmissionPeriod
     public ByteArrayResource execute(User user) {
         Form form = formFacade.getForm(user);
         AdmissionSchedule schedule = admissionScheduleFacade.getCurrentSchedule();

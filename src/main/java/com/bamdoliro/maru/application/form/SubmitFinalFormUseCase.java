@@ -5,7 +5,7 @@ import com.bamdoliro.maru.domain.form.exception.FormAlreadySubmittedException;
 import com.bamdoliro.maru.domain.form.service.FormFacade;
 import com.bamdoliro.maru.domain.user.domain.User;
 import com.bamdoliro.maru.shared.annotation.UseCase;
-import com.bamdoliro.maru.shared.annotation.ValidateApplicationFormPeriod;
+import com.bamdoliro.maru.shared.annotation.ValidateFormSubmissionPeriod;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +16,7 @@ public class SubmitFinalFormUseCase {
     private final FormFacade formFacade;
 
     @Transactional
-    @ValidateApplicationFormPeriod
+    @ValidateFormSubmissionPeriod
     public void execute(User user) {
         Form form = formFacade.getForm(user);
         validateFormStatus(form);
