@@ -51,11 +51,16 @@ public class FileService {
         return getDownloadPresignedUrl(folder, fileName, contentType, createAttachmentContentDisposition(displayFileName));
     }
 
+    /**
+     * 이미 업로드된 파일을 조회/다운로드할 때 쓴다. S3에 파일이 없으면 null을 돌려준다.
+     */
     private String getDownloadPresignedUrl(String folder, String fileName, String contentType, String contentDisposition) {
         String fullFileName = createFileName(folder, fileName);
-        GetObjectPresignRequest request = getGenerateDownloadPresignedUrlRequest(bucket, fullFileName, contentType, contentDisposition);
+        if (!existsInS3(fullFileName)) {
+            return null;
+        }
 
-        return request != null ? s3Presigner.presignGetObject(request).url().toString() : null;
+        return s3Presigner.presignGetObject(getGenerateDownloadPresignedUrlRequest(bucket, fullFileName, contentType, contentDisposition)).url().toString();
     }
 
     /**
@@ -103,7 +108,8 @@ public class FileService {
     public UrlResponse getPresignedUrl(String folder, String fileName, FileMetadata metadata, FileValidator validator) {
         return new UrlResponse(
                 getUploadPresignedUrl(folder, fileName, metadata, validator),
-                getDownloadPresignedUrl(folder, fileName)
+                // 업로드 주소를 발급하는 시점에는 S3에 파일이 아직 없는 게 정상이라, 존재 확인 없이 바로 다운로드 주소를 만든다.
+                s3Presigner.presignGetObject(getGenerateDownloadPresignedUrlRequest(bucket, createFileName(folder, fileName), null, null)).url().toString()
         );
     }
 
@@ -121,18 +127,21 @@ public class FileService {
                 .build();
     }
 
-    private GetObjectPresignRequest getGenerateDownloadPresignedUrlRequest(String bucket, String fileName, String contentType, String contentDisposition) {
+    private boolean existsInS3(String fileName) {
         try {
             s3Client.headObject(HeadObjectRequest.builder()
                     .bucket(bucket)
                     .key(fileName)
                     .build());
+            return true;
         } catch (NoSuchKeyException e) {
-            return null;
+            return false;
         } catch (S3Exception e) {
             throw accessFailed("headObject", fileName, e);
         }
+    }
 
+    private GetObjectPresignRequest getGenerateDownloadPresignedUrlRequest(String bucket, String fileName, String contentType, String contentDisposition) {
         return GetObjectPresignRequest.builder()
                 .signatureDuration(Duration.ofMinutes(60 * 10))
                 .getObjectRequest(GetObjectRequest.builder()
