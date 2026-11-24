@@ -10,7 +10,7 @@ import com.bamdoliro.maru.domain.user.domain.User;
 import com.bamdoliro.maru.infrastructure.persistence.form.FormRepository;
 import com.bamdoliro.maru.presentation.form.dto.request.SubmitFormRequest;
 import com.bamdoliro.maru.shared.annotation.UseCase;
-import com.bamdoliro.maru.shared.annotation.ValidateApplicationFormPeriod;
+import com.bamdoliro.maru.shared.annotation.ValidateFormSubmissionPeriod;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -39,7 +39,7 @@ public class SubmitFormUseCase {
     private final AssignExaminationNumberService assignExaminationNumberService;
     private final ExaminationNumberLock examinationNumberLock;
 
-    @ValidateApplicationFormPeriod
+    @ValidateFormSubmissionPeriod
     @Transactional
     public void execute(User user, SubmitFormRequest request) {
         // 중복 제출 검사부터 저장까지 한 번에 하나의 제출만 진행되도록 직렬화한다.

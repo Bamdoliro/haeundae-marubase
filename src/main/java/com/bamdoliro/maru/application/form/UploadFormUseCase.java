@@ -10,7 +10,7 @@ import com.bamdoliro.maru.infrastructure.s3.dto.request.FileMetadata;
 import com.bamdoliro.maru.infrastructure.s3.dto.response.UrlResponse;
 import com.bamdoliro.maru.infrastructure.s3.validator.DefaultFileValidator;
 import com.bamdoliro.maru.shared.annotation.UseCase;
-import com.bamdoliro.maru.shared.annotation.ValidateApplicationFormPeriod;
+import com.bamdoliro.maru.shared.annotation.ValidateFormSubmissionPeriod;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 
@@ -23,7 +23,7 @@ public class UploadFormUseCase {
     private final FileService fileService;
     private final FormFacade formFacade;
 
-    @ValidateApplicationFormPeriod
+    @ValidateFormSubmissionPeriod
     public UrlResponse execute(User user, FileMetadata fileMetadata) {
         Form form = formFacade.getForm(user);
         validateFormStatus(form);

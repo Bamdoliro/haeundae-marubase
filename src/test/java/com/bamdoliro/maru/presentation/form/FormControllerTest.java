@@ -1895,6 +1895,26 @@ class FormControllerTest extends RestDocsTestSupport {
     }
 
     @Test
+    void 원서를_pdf로_다운받을_때_원서_접수_기간이_아니면_에러가_발생한다() throws Exception {
+        User user = UserFixture.createUser();
+
+        given(authenticationArgumentResolver.supportsParameter(any(MethodParameter.class))).willReturn(true);
+        given(authenticationArgumentResolver.resolveArgument(any(), any(), any(), any())).willReturn(user);
+        doThrow(new OutOfApplicationFormPeriodException()).when(exportFormUseCase).execute(user);
+
+        mockMvc.perform(get("/forms/export")
+                        .header(HttpHeaders.AUTHORIZATION, AuthFixture.createAuthHeader())
+                        .accept(MediaType.APPLICATION_JSON)
+                )
+
+                .andExpect(status().isForbidden())
+
+                .andDo(restDocs.document());
+
+        verify(exportFormUseCase, times(1)).execute(user);
+    }
+
+    @Test
     void 원서를_pdf로_다운받을_때_pdf변환에_실패했다면_에러가_발생한다() throws Exception {
         User user = UserFixture.createUser();
 

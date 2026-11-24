@@ -11,6 +11,7 @@ import com.bamdoliro.maru.infrastructure.pdf.MergePdfService;
 import com.bamdoliro.maru.infrastructure.pdf.exception.FailedToExportPdfException;
 import com.bamdoliro.maru.infrastructure.s3.FileService;
 import com.bamdoliro.maru.infrastructure.thymeleaf.ProcessTemplateService;
+import com.bamdoliro.maru.shared.config.TimeConfig;
 import com.bamdoliro.maru.shared.constants.Schedule;
 import com.bamdoliro.maru.shared.fixture.FormFixture;
 import com.bamdoliro.maru.shared.fixture.ScheduleFixture;
@@ -22,9 +23,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.ByteArrayOutputStream;
+import java.time.Clock;
+import java.time.LocalDate;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -60,6 +64,11 @@ class ExportFormUseCaseTest {
 
     @Mock
     private FileService fileService;
+
+    private static final LocalDate TODAY = LocalDate.of(2026, 10, 28);
+
+    @Spy
+    private Clock serviceClock = Clock.fixed(TODAY.atStartOfDay(TimeConfig.SERVICE_ZONE_ID).plusHours(10).toInstant(), TimeConfig.SERVICE_ZONE_ID);
 
     @Test
     void 일반전형_원서를_pdf로_다운받는다() {
@@ -180,5 +189,25 @@ class ExportFormUseCaseTest {
         Map<String, Object> formMap = formMapCaptor.getValue();
         assertEquals(2031, formMap.get("year"));
         assertEquals(Schedule.toShortLocaleString(ScheduleFixture.APPLICATION_FORM_END), formMap.get("applicationDeadline"));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    void 지원자가_출력하는_서류에는_출력하는_날짜를_넣는다() {
+        // given
+        User user = UserFixture.createUser();
+        Form form = FormFixture.createForm(FormType.REGULAR);
+        given(formFacade.getForm(user)).willReturn(form);
+        given(admissionScheduleFacade.getCurrentSchedule()).willReturn(ScheduleFixture.createSchedule(2027, true));
+        given(processTemplateService.execute(any(String.class), any())).willReturn("html");
+        given(generatePdfService.execute(any(String.class))).willReturn(new ByteArrayOutputStream());
+
+        // when
+        exportFormUseCase.execute(user);
+
+        // then
+        ArgumentCaptor<Map<String, Object>> formMapCaptor = ArgumentCaptor.forClass(Map.class);
+        verify(processTemplateService, times(5)).execute(any(String.class), formMapCaptor.capture());
+        assertEquals(TODAY, formMapCaptor.getValue().get("documentDate"));
     }
 }

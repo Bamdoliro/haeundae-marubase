@@ -225,7 +225,7 @@
                 본인은 사회통합 전형 지원 자격에 적합하게 지원하였음을 서약하며,
                     지원 자격을 준수하지 않거나 지원자격이 없음에도 증명서 위조 등 부정한 방법으로 합격한 사실이 확인될 경우에는 합격 및 입학이 취소될 수 있음을 확인합니다.
                 </p>
-                <p class="sub-title bold" th:text="${#dates.format(#dates.createNow(),'yyyy년 MM월 dd일')}"></p>
+                <p class="sub-title bold" th:text="${#temporals.format(documentDate,'yyyy년 MM월 dd일')}"></p>
                 <p class="regular" th:text="${'지원자:  ' + form.applicant.name + '  (인)'}"></p>
                 <p class="regular" th:text="${'학부모:  ' + form.parent.name + '  (인)'}"></p>
             </th>
@@ -236,7 +236,7 @@
                 <p class="sub-title">
                     위의 사항이 사실과 틀림없음을 확인함
                 </p>
-                <p class="sub-title" th:text="${#dates.format(#dates.createNow(),'yyyy년 MM월 dd일')}"></p>
+                <p class="sub-title" th:text="${#temporals.format(documentDate,'yyyy년 MM월 dd일')}"></p>
                 <span class="sub-title" th:unless="${form.education.isQualificationExamination()}" th:text="${'확인자: ' + form.education.school.name+ '장   (직인)'}"></span>
                 <div style="text-align: right; margin-top: 20px;">
                     <h2 class="school">해운대 고등학교장 귀하</h2>

@@ -7,9 +7,12 @@ import com.bamdoliro.maru.domain.form.domain.value.*;
 import com.bamdoliro.maru.domain.form.service.CalculateFormScoreService;
 import com.bamdoliro.maru.domain.user.domain.User;
 import com.bamdoliro.maru.infrastructure.persistence.converter.LongEncryptedConverter;
+import com.bamdoliro.maru.shared.config.TimeConfig;
 import com.bamdoliro.maru.shared.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -66,6 +69,11 @@ public class Form extends BaseTimeEntity {
     @Column(nullable = false, length = 30)
     private FormStatus status;
 
+    // 지원자가 원서를 최종 제출한 시각. 관리자가 출력하는 서류의 서명란 날짜로 쓴다.
+    // 이미 저장된 원서 행이 있는 DB에서 ddl-auto: update로 NOT NULL 컬럼을 바로 추가하면 실패하므로 nullable로 둔다.
+    @Column(nullable = true)
+    private LocalDateTime finalSubmittedAt;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "user_id", unique = true)
     private User user;
@@ -87,6 +95,7 @@ public class Form extends BaseTimeEntity {
 
     public void submit() {
         this.status = FormStatus.FINAL_SUBMITTED;
+        this.finalSubmittedAt = LocalDateTime.now(TimeConfig.SERVICE_ZONE_ID);
     }
 
     public void arrive() {

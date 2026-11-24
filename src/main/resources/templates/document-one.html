@@ -236,7 +236,7 @@
         <div class="horizontal-space"></div>
 
         <div class="signature-area">
-            <p th:text="${#dates.format(#dates.createNow(),'yyyy년 MM월 dd일')}">2025년 11월 12일</p>
+            <p th:text="${#temporals.format(documentDate,'yyyy년 MM월 dd일')}">2025년 11월 12일</p>
             <p>
                 <span>지원자 </span>
                 <span th:text="${form.applicant.name}">염일영</span>

@@ -11,6 +11,7 @@ import com.bamdoliro.maru.infrastructure.s3.constants.FolderConstant;
 import com.bamdoliro.maru.infrastructure.s3.dto.request.FileMetadata;
 import com.bamdoliro.maru.infrastructure.s3.validator.DefaultFileValidator;
 import com.bamdoliro.maru.shared.config.DatabaseClearExtension;
+import com.bamdoliro.maru.shared.config.FixedClockConfig;
 import com.bamdoliro.maru.shared.fixture.FormFixture;
 import com.bamdoliro.maru.shared.fixture.ScheduleFixture;
 import com.bamdoliro.maru.shared.fixture.UserFixture;
@@ -21,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
@@ -36,6 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ActiveProfiles("test")
 @ExtendWith(DatabaseClearExtension.class)
 @SpringBootTest
+@Import(FixedClockConfig.class)
 class ExportFormUseCaseSpringBootTest {
 
     @Autowired

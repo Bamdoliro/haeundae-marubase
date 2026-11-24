@@ -9,13 +9,14 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 
 /**
- * 서비스 시각을 ScheduleFixture의 원서 접수 기간 안으로 고정한다.
- * 원서 접수 기간 검사(ScheduleValidationAspect)를 거치는 통합 테스트에서 활성 일정과 함께 쓴다.
+ * 서비스 시각을 ScheduleFixture의 원서 접수 기간(visitSubmissionAt ~ applicationFormEnd) 안으로 고정한다.
+ * 이 시각은 원서 작성 기간(applicationFormStart ~ applicationFormEnd)에도 들어가므로 두 기간 검사를 모두 통과한다.
+ * 기간 검사(ScheduleValidationAspect)를 거치는 통합 테스트에서 활성 일정과 함께 쓴다.
  */
 @TestConfiguration
 public class FixedClockConfig {
 
-    public static final LocalDateTime NOW = ScheduleFixture.APPLICATION_FORM_START.plusDays(1);
+    public static final LocalDateTime NOW = ScheduleFixture.VISIT_SUBMISSION_AT.plusDays(1);
 
     @Primary
     @Bean

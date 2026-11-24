@@ -1,10 +1,14 @@
 package com.bamdoliro.maru.domain.form.domain;
 
 import com.bamdoliro.maru.domain.form.domain.type.FormType;
+import com.bamdoliro.maru.shared.config.TimeConfig;
 import com.bamdoliro.maru.shared.fixture.FormFixture;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -107,5 +111,19 @@ class FormTest {
 
         form.noShow();
         assertFalse(form.isPassed());
+    }
+
+    @Test
+    void 최종_제출하면_제출_시각이_기록된다() {
+        Form form = FormFixture.createForm(FormType.REGULAR);
+        assertNull(form.getFinalSubmittedAt());
+
+        LocalDateTime before = LocalDateTime.now(TimeConfig.SERVICE_ZONE_ID);
+        form.submit();
+        LocalDateTime after = LocalDateTime.now(TimeConfig.SERVICE_ZONE_ID);
+
+        assertNotNull(form.getFinalSubmittedAt());
+        assertFalse(form.getFinalSubmittedAt().isBefore(before));
+        assertFalse(form.getFinalSubmittedAt().isAfter(after));
     }
 }
