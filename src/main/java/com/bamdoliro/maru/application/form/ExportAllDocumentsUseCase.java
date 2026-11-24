@@ -18,6 +18,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,10 +47,12 @@ public class ExportAllDocumentsUseCase {
             PdfMerger pdfMerger = new PdfMerger(mergedDocument);
 
             for(Form form : forms) {
-                Map<String, Object> documentMap = Map.of(
-                        "form", form,
-                        "year", schedule.getAdmissionYear()
-                );
+                // 관리자가 언제 출력하든 서명란에는 지원자가 최종 제출한 날짜를 찍는다.
+                // 제출 시각이 없는 기존 원서는 날짜가 비므로, null을 허용하지 않는 Map.of 대신 HashMap을 쓴다.
+                Map<String, Object> documentMap = new HashMap<>();
+                documentMap.put("form", form);
+                documentMap.put("year", schedule.getAdmissionYear());
+                documentMap.put("documentDate", form.getFinalSubmittedAt());
 
                 String html1 = processTemplateService.execute(Templates.DOCUMENT_ONE, documentMap);
                 ByteArrayOutputStream pdfStream1 = generatePdfService.execute(html1);

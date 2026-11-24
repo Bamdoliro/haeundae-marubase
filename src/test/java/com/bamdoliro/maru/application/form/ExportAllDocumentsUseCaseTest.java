@@ -99,4 +99,24 @@ class ExportAllDocumentsUseCaseTest {
         verify(processTemplateService, times(2)).execute(any(String.class), documentMapCaptor.capture());
         assertEquals(2031, documentMapCaptor.getValue().get("year"));
     }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    void 관리자가_출력하는_서류에는_지원자가_최종_제출한_날짜를_넣는다() {
+        // given
+        Form form = FormFixture.createForm(FormType.REGULAR);
+        form.submit();
+        given(formRepository.findDocumentExportTargets()).willReturn(List.of(form));
+        given(admissionScheduleFacade.getCurrentSchedule()).willReturn(ScheduleFixture.createSchedule(2027, true));
+        given(processTemplateService.execute(any(String.class), any())).willReturn("html");
+        given(generatePdfService.execute(any(String.class))).willReturn(new ByteArrayOutputStream());
+
+        // when
+        exportAllDocumentsUseCase.execute();
+
+        // then
+        ArgumentCaptor<Map<String, Object>> documentMapCaptor = ArgumentCaptor.forClass(Map.class);
+        verify(processTemplateService, times(2)).execute(any(String.class), documentMapCaptor.capture());
+        assertEquals(form.getFinalSubmittedAt(), documentMapCaptor.getValue().get("documentDate"));
+    }
 }

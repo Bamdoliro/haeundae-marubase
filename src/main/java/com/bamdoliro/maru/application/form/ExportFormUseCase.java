@@ -26,6 +26,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ByteArrayResource;
 
 import java.io.ByteArrayOutputStream;
+import java.time.Clock;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -40,6 +42,7 @@ public class ExportFormUseCase {
     private final MergePdfService mergePdfService;
     private final FileService fileService;
     private final AdmissionScheduleFacade admissionScheduleFacade;
+    private final Clock serviceClock;
 
     @ValidateFormSubmissionPeriod
     public ByteArrayResource execute(User user) {
@@ -56,6 +59,8 @@ public class ExportFormUseCase {
         formMap.put("grade32", subjectMap.getSubjectListOf(3, 2));
         formMap.put("subjectList", getSubjectList(form));
         formMap.put("year", schedule.getAdmissionYear());
+        // 지원자는 최종 제출 전에 원서를 출력해 서명하므로, 서명란에는 출력하는 날짜를 찍는다.
+        formMap.put("documentDate", LocalDate.now(serviceClock));
         formMap.put("applicationDeadline", Schedule.toShortLocaleString(schedule.getApplicationFormEnd()));
         formMap.put("identificationPictureUri", fileService.getDownloadPresignedUrl(FolderConstant.IDENTIFICATION_PICTURE, user.getUuid().toString()));
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
