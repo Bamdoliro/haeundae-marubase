@@ -25,7 +25,6 @@ import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 import software.amazon.awssdk.services.s3.model.HeadObjectRequest;
-import software.amazon.awssdk.services.s3.model.HeadObjectResponse;
 import software.amazon.awssdk.services.s3.model.S3Exception;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
@@ -38,6 +37,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -77,7 +77,6 @@ class FileServiceTest {
         PresignedGetObjectRequest getPresignedRequest = mock(PresignedGetObjectRequest.class);
         given(getPresignedRequest.url()).willReturn(new URL(url));
 
-        given(s3Client.headObject(any(HeadObjectRequest.class))).willReturn(HeadObjectResponse.builder().build());
         given(s3Presigner.presignPutObject(any(PutObjectPresignRequest.class))).willReturn(putPresignedRequest);
         given(s3Presigner.presignGetObject(any(GetObjectPresignRequest.class))).willReturn(getPresignedRequest);
 
@@ -89,6 +88,10 @@ class FileServiceTest {
         // then
         verify(s3Presigner, times(1)).presignPutObject(any(PutObjectPresignRequest.class));
         verify(s3Presigner, times(1)).presignGetObject(any(GetObjectPresignRequest.class));
+        // 업로드 주소를 발급하는 시점에는 S3에 파일이 없는 게 정상이므로 존재 확인을 하지 않는다.
+        verify(s3Client, never()).headObject(any(HeadObjectRequest.class));
+        assertNotNull(response.getDownloadUrl());
+        assertEquals(url, response.getDownloadUrl());
     }
 
     @Test
